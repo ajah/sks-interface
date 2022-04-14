@@ -1,0 +1,8 @@
+{
+  "short_name": "Nonprofit Knowledge Project",
+  "name": "Nonprofit Knowledge Project",
+  "start_url": ".",
+  "display": "standalone",
+  "theme_color": "#000000",
+  "background_color": "#ffffff"
+}

@@ -1,0 +1,62 @@
+.fas.fa-brain {
+  font-size: 25px;
+  margin-right: 10px;
+}
+
+.fas.fa-hands-helping {
+  font-size: 25px;
+  margin-right: 15px;
+}
+
+.hp-img {
+  max-height: 232px;
+}
+
+.feature-icon {
+  color: rgba(14, 160, 255, 0.8);
+}
+.features {
+  text-align: center;
+}
+
+.search-btn {
+  color: rgba(14, 160, 255, 0.8);
+}
+
+.portfolio-block form {
+  box-shadow: none;
+  max-width: 1800px;
+  padding: 10px;
+}
+
+li {
+  font-size: larger;
+  margin-top: 10px;
+}
+
+.welcome-p {
+  text-align: left;
+}
+.aboutus-p {
+  text-align: left;
+}
+
+.welcome-h1 {
+  text-align: left;
+}
+
+.welcome-img {
+  margin: auto;
+  display: block;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.navbar-icon {
+  margin-right: 15px;
+  font-size: 30px;
+}
+
+.card-title {
+  text-align: center;
+}
