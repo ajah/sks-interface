@@ -20,7 +20,7 @@ const Row = (props) => (
     <td>
       <div className="">
         <a
-          href={`http://0.0.0.0:3000/activities/${props.act_sks_id}`}
+          href={`https://sks-interface-l5jum.ondigitalocean.app/activities/${props.act_sks_id}`}
           target="_blank"
           rel="noopener noreferrer"
         >
@@ -50,7 +50,6 @@ export default class AllActs extends Component {
     const ent_sks_id = url.pathname.split("/")[2];
 
     await axios
-      // .get(`http://localhost:5000/activities/byentity/${ent_sks_id}`)
       .get(
         `https://sks-server-hbl9d.ondigitalocean.app/activities/byentity/${ent_sks_id}`
       )

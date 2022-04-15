@@ -24,7 +24,7 @@ const RecipientOrgBox = (props) => (
             </td>
             <td>
               <a
-                href={`http://0.0.0.0:3000/entities/${props.org_redirect}`}
+                href={`https://sks-interface-l5jum.ondigitalocean.app/entities/${props.org_redirect}`}
                 target="_blank"
                 rel="noopener noreferrer"
               >
@@ -127,7 +127,6 @@ export default class ActPage extends Component {
     const url = new URL(window.location.href);
     const npk_id = url.pathname.split("/")[2];
     await axios
-      // .get(`http://localhost:5000/activities/${npk_id}`)
       .get(`https://sks-server-hbl9d.ondigitalocean.app/activities/${npk_id}`)
       .then((res) => {
         this.setState({
@@ -162,7 +161,6 @@ export default class ActPage extends Component {
 
   async getEntitiesData() {
     if (this.state.org_redirect !== undefined) {
-      // const url = `http://localhost:5000/entities/${this.state.org_redirect}`;
       const url = `https://sks-server-hbl9d.ondigitalocean.app/entities/${this.state.org_redirect}`;
       await axios
         .get(url)

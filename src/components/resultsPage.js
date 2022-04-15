@@ -58,7 +58,6 @@ export default class ResultsPage extends Component {
     const filter = parsed.filter;
     axios
       .get(
-        // `http://localhost:5000/search?q=${encodeURI(query)}&filter=${filter}`
         `https://sks-server-hbl9d.ondigitalocean.app/search?q=${encodeURI(
           query
         )}&filter=${filter}`
@@ -111,13 +110,13 @@ export default class ResultsPage extends Component {
         municipality = hit._source.grant_municipality;
         region = hit._source.grant_region;
         type = "activity";
-        url = `http://0.0.0.0:3000/activities/${hit._source.act_sks_id}`;
+        url = `https://sks-interface-l5jum.ondigitalocean.app/activities/${hit._source.act_sks_id}`;
       } else if (hit._index === "entities") {
         name = hit._source.name;
         municipality = hit._source.location_municipality;
         region = hit._source.location_region;
         type = "entity";
-        url = `http://0.0.0.0:3000/entities/${hit._source.ent_sks_id}`;
+        url = `https://sks-interface-l5jum.ondigitalocean.app/entities/${hit._source.ent_sks_id}`;
       }
       return (
         <Row
