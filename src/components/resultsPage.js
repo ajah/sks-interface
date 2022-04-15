@@ -10,7 +10,7 @@ function Badge(props) {
   if (type === "activity") {
     return <span className="badge badge-primary">Activity</span>;
   } else if (type === "entity") {
-    return <span className="badge badge-secondary">Entity</span>;
+    return <span className="badge bg-primary">Entity</span>;
   } else {
     return "";
   }
@@ -20,19 +20,18 @@ const Row = (props) => (
   <tr>
     <td>
       <div>
-        <a href={`http://0.0.0.0:3000/activities/${props.result.act_sks_id}`}>
-          {props.result.grant_title}
-        </a>
+        <a href={props.url}>{props.name}</a>
       </div>
     </td>
     <td>
       <div>
-        {props.result.grant_municipality}, {props.result.grant_region}
+        {props.municipality}
+        {props.region ? `, ${props.region}` : ""}
       </div>
     </td>
     <td>
       <div>
-        <Badge type={props.result.type} />
+        <Badge type={props.type} />
       </div>
     </td>
   </tr>
@@ -101,8 +100,32 @@ export default class ResultsPage extends Component {
   }
 
   tableRows() {
+    // console.log("hello");
     return this.state.results.map((hit) => {
-      return <Row result={hit._source} key={hit._id} />;
+      let name, municipality, region, type, url;
+      if (hit._index === "activities") {
+        name = hit._source.grant_title;
+        municipality = hit._source.grant_municipality;
+        region = hit._source.grant_region;
+        type = "activity";
+        url = `http://0.0.0.0:3000/activities/${hit._source.act_sks_id}`;
+      } else if (hit._index === "entities") {
+        name = hit._source.name;
+        municipality = hit._source.location_municipality;
+        region = hit._source.location_region;
+        type = "entity";
+        url = `http://0.0.0.0:3000/entities/${hit._source.ent_sks_id}`;
+      }
+      return (
+        <Row
+          name={name}
+          municipality={municipality}
+          region={region}
+          type={type}
+          url={url}
+          key={hit._id}
+        />
+      );
     });
   }
 
@@ -162,7 +185,7 @@ export default class ResultsPage extends Component {
     }
 
     const queryParams = queryString.parse(window.location.search);
-    const newQueries = { ...queryParams, filter: filter.toString() };
+    // const newQueries = { ...queryParams, filter: filter.toString() };
     const orig_q = queryParams["q"];
     console.log(queryParams["q"]);
 
@@ -173,11 +196,9 @@ export default class ResultsPage extends Component {
       window.location.reload(false);
     }
 
-    history.push(
-      `/results?q=${encodeURI(orig_q)}&filters=${filter.toString()}`
-    );
+    history.push(`/results?q=${encodeURI(orig_q)}&filter=${filter.toString()}`);
     window.location.reload(false);
-    console.log(queryString.stringify(newQueries));
+    // console.log(queryString.stringify(newQueries));
   };
 
   render() {
@@ -377,7 +398,9 @@ export default class ResultsPage extends Component {
                     <table className="table table-striped">
                       <thead className="thead-light">
                         <tr>
-                          <th scope="col">Name</th>
+                          <th style={{ width: "55%" }} scope="col">
+                            Name
+                          </th>
                           <th scope="col">Location</th>
                           <th scope="col">Type</th>
                         </tr>
