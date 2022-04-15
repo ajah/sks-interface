@@ -50,7 +50,10 @@ export default class AllActs extends Component {
     const ent_sks_id = url.pathname.split("/")[2];
 
     await axios
-      .get(`http://localhost:5000/activities/byentity/${ent_sks_id}`)
+      // .get(`http://localhost:5000/activities/byentity/${ent_sks_id}`)
+      .get(
+        `https://sks-server-hbl9d.ondigitalocean.app/activities/byentity/${ent_sks_id}`
+      )
       .then((response) => {
         this.setState({
           activities: response["data"],

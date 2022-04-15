@@ -127,8 +127,8 @@ export default class ActPage extends Component {
     const url = new URL(window.location.href);
     const npk_id = url.pathname.split("/")[2];
     await axios
-      // .get(`http://0.0.0.0:5000/testactivity`)
-      .get(`http://localhost:5000/activities/${npk_id}`)
+      // .get(`http://localhost:5000/activities/${npk_id}`)
+      .get(`https://sks-server-hbl9d.ondigitalocean.app/activities/${npk_id}`)
       .then((res) => {
         this.setState({
           date: res["data"][0]["date"],
@@ -162,7 +162,8 @@ export default class ActPage extends Component {
 
   async getEntitiesData() {
     if (this.state.org_redirect !== undefined) {
-      const url = `http://localhost:5000/entities/${this.state.org_redirect}`;
+      // const url = `http://localhost:5000/entities/${this.state.org_redirect}`;
+      const url = `https://sks-server-hbl9d.ondigitalocean.app/entities/${this.state.org_redirect}`;
       await axios
         .get(url)
         .then((res) => {

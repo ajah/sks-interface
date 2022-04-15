@@ -15,7 +15,12 @@ class Search extends Component {
 
   async getInfo() {
     await axios
-      .get(`http://localhost:5000/search?q=${encodeURI(this.state.query)}`)
+      // .get(`http://localhost:5000/search?q=${encodeURI(this.state.query)}`)
+      .get(
+        `https://sks-server-hbl9d.ondigitalocean.app/search?q=${encodeURI(
+          this.state.query
+        )}`
+      )
       .then(({ data }) => {
         this.setState({
           results: data,

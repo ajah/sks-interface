@@ -58,7 +58,10 @@ export default class ResultsPage extends Component {
     const filter = parsed.filter;
     axios
       .get(
-        `http://localhost:5000/search?q=${encodeURI(query)}&filter=${filter}`
+        // `http://localhost:5000/search?q=${encodeURI(query)}&filter=${filter}`
+        `https://sks-server-hbl9d.ondigitalocean.app/search?q=${encodeURI(
+          query
+        )}&filter=${filter}`
       )
       .then(({ data }) => {
         this.setState({
