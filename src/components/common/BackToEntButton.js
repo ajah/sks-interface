@@ -6,9 +6,7 @@ export default function BackToEntButton() {
 
   return (
     <div>
-      <a
-        href={`https://sks-interface-l5jum.ondigitalocean.app/entities/${ent_sks_id}`}
-      >
+      <a href={`/entities/${ent_sks_id}`}>
         <button className="btn btn-outline-primary">
           Back to Organization
         </button>

@@ -24,7 +24,7 @@ const RecipientOrgBox = (props) => (
             </td>
             <td>
               <a
-                href={`https://sks-interface-l5jum.ondigitalocean.app/entities/${props.org_redirect}`}
+                href={`/entities/${props.org_redirect}`}
                 target="_blank"
                 rel="noopener noreferrer"
               >
@@ -243,7 +243,7 @@ export default class ActPage extends Component {
               <table>
                 <tbody>
                   <tr>
-                    <td className="pr-4">
+                    <td style={{ width: "35%" }} className="pr-4">
                       <strong>{this.state.funding_type}</strong>
                     </td>
                     <td>{this.currencyFormat(this.state.funding_amount)}</td>

@@ -28,6 +28,14 @@ export default class Navbar extends Component {
                 </a>
               </li>
               <li className="nav-item">
+                <a
+                  className="nav-link active"
+                  href="/results/?q=&filter=activity,entity"
+                >
+                  Search
+                </a>
+              </li>
+              <li className="nav-item">
                 <a className="nav-link active" href="/about-us">
                   About
                 </a>
@@ -40,11 +48,6 @@ export default class Navbar extends Component {
                   Test Search
                 </a>
               </li> */}
-              <li className="nav-item">
-                <a className="nav-link active" href="/">
-                  Contact
-                </a>
-              </li>
             </ul>
           </div>
           <section></section>

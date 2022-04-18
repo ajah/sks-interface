@@ -20,7 +20,7 @@ const Row = (props) => (
     <td>
       <div className="">
         <a
-          href={`https://sks-interface-l5jum.ondigitalocean.app/activities/${props.act_sks_id}`}
+          href={`/activities/${props.act_sks_id}`}
           target="_blank"
           rel="noopener noreferrer"
         >

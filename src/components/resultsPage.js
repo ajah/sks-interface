@@ -110,13 +110,13 @@ export default class ResultsPage extends Component {
         municipality = hit._source.grant_municipality;
         region = hit._source.grant_region;
         type = "activity";
-        url = `https://sks-interface-l5jum.ondigitalocean.app/activities/${hit._source.act_sks_id}`;
+        url = `/activities/${hit._source.act_sks_id}`;
       } else if (hit._index === "entities") {
         name = hit._source.name;
         municipality = hit._source.location_municipality;
         region = hit._source.location_region;
         type = "entity";
-        url = `https://sks-interface-l5jum.ondigitalocean.app/entities/${hit._source.ent_sks_id}`;
+        url = `/entities/${hit._source.ent_sks_id}`;
       }
       return (
         <Row

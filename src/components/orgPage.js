@@ -20,7 +20,7 @@ const Row = (props) => (
     <td>
       <div className="">
         <a
-          href={`http://0.0.0.0:3000/activities/${props.act_npk_id}`}
+          href={`/activities/${props.act_npk_id}`}
           target="_blank"
           rel="noopener noreferrer"
         >
@@ -77,14 +77,14 @@ export default class OrgPage extends Component {
     }
   }
 
-  formatDatapoints(datapoint) {
-    let result = "";
-    if (datapoint == null) {
-      result = "Unavailable";
-    } else result = datapoint;
+  // formatDatapoints(datapoint) {
+  //   let result = "";
+  //   if (datapoint == null) {
+  //     result = "Unavailable";
+  //   } else result = datapoint;
 
-    return result;
-  }
+  //   return result;
+  // }
 
   async componentDidMount() {
     const url = new URL(window.location.href);
@@ -211,7 +211,7 @@ export default class OrgPage extends Component {
                     <td>
                       <strong>Number of Employees</strong>
                     </td>
-                    <td>{this.formatDatapoints(this.state.employees)}</td>
+                    <td>{Math.trunc(this.state.employees)}</td>
                   </tr>
                   <tr>
                     <td>
@@ -282,7 +282,7 @@ export default class OrgPage extends Component {
                 )}
                 {this.state.activities.length >= 5 ? (
                   <a
-                    href={`http://0.0.0.0:3000/activitiesbyent/${this.state.ent_sks_id}`}
+                    href={`https://sks-interface-l5jum.ondigitalocean.app/activitiesbyent/${this.state.ent_sks_id}`}
                     target="_blank"
                     rel="noopener noreferrer"
                   >
