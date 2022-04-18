@@ -54,7 +54,7 @@ class Search extends Component {
         <form className="" onSubmit={this.handleSubmit}>
           <div className="row">
             <div className="col-2 ">
-              <h2 className="text-end">Search:</h2>
+              <h2 className="text-end">Search</h2>
             </div>
             <div className="col-8 ">
               <div className="form-text">

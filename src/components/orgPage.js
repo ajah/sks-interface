@@ -282,7 +282,7 @@ export default class OrgPage extends Component {
                 )}
                 {this.state.activities.length >= 5 ? (
                   <a
-                    href={`https://sks-interface-l5jum.ondigitalocean.app/activitiesbyent/${this.state.ent_sks_id}`}
+                    href={`/activitiesbyent/${this.state.ent_sks_id}`}
                     target="_blank"
                     rel="noopener noreferrer"
                   >

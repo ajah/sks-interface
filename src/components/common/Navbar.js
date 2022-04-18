@@ -10,7 +10,7 @@ export default class Navbar extends Component {
         <div className="container">
           <FontAwesomeIcon className="navbar-icon" icon={faHandsHelping} />
           <a className="navbar-brand logo" href="/">
-            Nonprofit Knowledge Project
+            Sector Knowledge Sharing Project
           </a>
           <button
             data-bs-toggle="collapse"
@@ -40,14 +40,6 @@ export default class Navbar extends Component {
                   About
                 </a>
               </li>
-              {/* <li className="nav-item">
-                <a
-                  className="nav-link active"
-                  href="/results?q=accessibility&filter=activity,entity"
-                >
-                  Test Search
-                </a>
-              </li> */}
             </ul>
           </div>
           <section></section>
