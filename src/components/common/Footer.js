@@ -6,7 +6,7 @@ export default function Footer() {
       <footer className="page-footer pt-5">
         <div className="container">
           <div className="links">
-            <p>© Sector Knowledge Project 2022</p>
+            <p>© Sector Knowledge Hub 2022</p>
           </div>
         </div>
       </footer>

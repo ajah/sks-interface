@@ -1,7 +1,7 @@
 import React, { Component } from "react";
-import img5 from "./../assets/img/nonprofits/brad-weaver-7IBmf8uH4WY-unsplash.jpg";
-import img2 from "./../assets/img/nonprofits/joel-muniz-qvzjG2pF4bE-unsplash.jpg";
-import img4 from "./../assets/img/nonprofits/tyler-lagalo-ZU94isADXDs-unsplash.jpg";
+// import img5 from "./../assets/img/nonprofits/brad-weaver-7IBmf8uH4WY-unsplash.jpg";
+// import img2 from "./../assets/img/nonprofits/joel-muniz-qvzjG2pF4bE-unsplash.jpg";
+// import img4 from "./../assets/img/nonprofits/tyler-lagalo-ZU94isADXDs-unsplash.jpg";
 import "./../assets/css/styles.css";
 import TypesSection from "./typesSection";
 import SearchBar from "./searchBar";
@@ -12,7 +12,7 @@ export default class HomePage extends Component {
       <main className="page landing-page">
         <section className="portfolio-block block-intro">
           <div className="container">
-            <div className="p-2 mb-3 bg-light round-3">
+            <div className="p-2 bg-light round-3">
               <div className="container-fluid py-5">
                 <div className="row">
                   <div className="col">
@@ -35,11 +35,11 @@ export default class HomePage extends Component {
             </div>
           </div>
         </section>
+        <SearchBar />
         <section>
           <TypesSection />
         </section>
-        <SearchBar />
-        <section className="portfolio-block">
+        {/* <section className="portfolio-block">
           <div className="container">
             <div className="row g-0">
               <div className="col-md-6 col-lg-4 item zoom-on-hover">
@@ -59,7 +59,7 @@ export default class HomePage extends Component {
               </div>
             </div>
           </div>
-        </section>
+        </section> */}
       </main>
     );
   }
