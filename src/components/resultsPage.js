@@ -57,14 +57,14 @@ export default class ResultsPage extends Component {
     const query = parsed.q;
     const filter = parsed.filter;
     axios
-      // .get(
-      //   `https://sks-server-hbl9d.ondigitalocean.app/search?q=${encodeURI(
-      //     query
-      //   )}&filter=${filter}`
-      // )
       .get(
-        `http://127.0.0.1:5000/search?q=${encodeURI(query)}&filter=${filter}`
+        `https://sks-server-hbl9d.ondigitalocean.app/search?q=${encodeURI(
+          query
+        )}&filter=${filter}`
       )
+      // .get(
+      //   `http://127.0.0.1:5000/search?q=${encodeURI(query)}&filter=${filter}`
+      // )
       .then(({ data }) => {
         this.setState({
           total: data.total.value, // take out .value for ES7
