@@ -56,37 +56,27 @@ export default class ResultsPage extends Component {
     const parsed = queryString.parse(this.props.location.search);
     const query = parsed.q;
     const filter = parsed.filter;
-    axios
-      .get(
-        `https://sks-server-hbl9d.ondigitalocean.app/search?q=${encodeURI(
-          query
-        )}&filter=${filter}`
-      )
-      // .get(
-      //   `http://127.0.0.1:5000/search?q=${encodeURI(query)}&filter=${filter}`
-      // )
-      .then(({ data }) => {
-        this.setState({
-          total: data.total.value, // take out .value for ES7
-          results: data.hits,
-        });
-        let activities = [];
-        let entities = [];
-        data.hits.forEach((el) => {
-          if (el._source.type === "activity") {
-            activities.push(el);
-          } else if (el._source.type === "entity") {
-            entities.push(el);
-          }
-        });
-        this.setState({
-          act_total: activities.length,
-          ent_total: entities.length,
-        });
-      })
-      .catch((error) => console.log(error));
 
-    console.log(filter);
+    axios
+      .all([
+        axios.get(
+          `https://sks-server-hbl9d.ondigitalocean.app/search?q=${encodeURI(
+            query
+          )}&filter=${filter}`
+        ),
+        axios.get(`http://127.0.0.1:5000/count?q=${encodeURI(query)}`),
+      ])
+      .then(
+        axios.spread((search, count) => {
+          this.setState({
+            results: search["data"]["hits"],
+            total: count["data"]["*"],
+            act_total: count["data"]["activities"],
+            ent_total: count["data"]["entities"],
+          });
+        })
+      );
+
     if (!filter.includes("activity")) {
       this.setState({
         inc_activities: false,
@@ -96,16 +86,9 @@ export default class ResultsPage extends Component {
         inc_entities: false,
       });
     }
-    this.generateQuery();
-  }
-
-  generateQuery() {
-    const currentURL = new URL(window.location.href);
-    console.log(currentURL);
   }
 
   tableRows() {
-    // console.log("hello");
     return this.state.results.map((hit) => {
       let name, municipality, region, type, url;
       if (hit._index === "activities") {
@@ -222,31 +205,29 @@ export default class ResultsPage extends Component {
                   <div className="">
                     <form>
                       <hr />
-                      <div class="form-check">
+                      <div className="form-check">
                         <input
-                          class="form-check-input"
+                          className="form-check-input"
                           type="checkbox"
                           checked={this.state.inc_entities}
                           id="defaultCheck1"
                           name="entity"
                           onChange={this.handleFilters}
                         />
-                        <label class="form-check-label" for="defaultCheck1">
+                        <label className="form-check-label">
                           Organizations
                         </label>
                       </div>
-                      <div class="form-check">
+                      <div className="form-check">
                         <input
-                          class="form-check-input"
+                          className="form-check-input"
                           type="checkbox"
                           checked={this.state.inc_activities}
                           id="defaultCheck2"
                           name="activity"
                           onChange={this.handleFilters}
                         />
-                        <label class="form-check-label" for="defaultCheck2">
-                          Activities
-                        </label>
+                        <label className="form-check-label">Activities</label>
                       </div>
                     </form>
                     <hr />
