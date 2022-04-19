@@ -10,7 +10,7 @@ function Badge(props) {
   if (type === "activity") {
     return <span className="badge badge-primary">Activity</span>;
   } else if (type === "entity") {
-    return <span className="badge bg-primary">Entity</span>;
+    return <span className="badge bg-primary">Organization</span>;
   } else {
     return "";
   }
@@ -205,7 +205,7 @@ export default class ResultsPage extends Component {
               {/* <div className="col-2"> */}
               <div className="row">
                 <div className="col">
-                  <h4 className="mt-3">Filters</h4>
+                  <h4 className="mt-3">Filter Your Search</h4>
                   <div className="">
                     <form>
                       <hr />
@@ -392,7 +392,7 @@ export default class ResultsPage extends Component {
                             Name
                           </th>
                           <th scope="col">Location</th>
-                          <th scope="col">Type</th>
+                          <th scope="col">Record Type</th>
                         </tr>
                       </thead>
                       <tbody>{this.tableRows()}</tbody>

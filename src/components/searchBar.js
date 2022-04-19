@@ -62,7 +62,7 @@ class Search extends Component {
                   className="form-control ps-4 pe-4 rounded-pill"
                   type="text"
                   name="search"
-                  placeholder="Enter search terms here"
+                  placeholder="Enter search terms here separated by commas"
                   onChange={(e) => this.setState({ query: e.target.value })}
                 ></input>
               </div>

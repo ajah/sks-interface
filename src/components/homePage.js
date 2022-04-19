@@ -13,22 +13,28 @@ export default class HomePage extends Component {
         <section className="portfolio-block block-intro">
           <div className="container">
             <div className="p-2 bg-light round-3">
-              <div className="container-fluid py-5">
+              <div className="container-fluid pt-5">
                 <div className="row">
                   <div className="col">
                     <h1 className="display-5 fw-bold m-4 welcome-h1 text-center">
-                      Welcome!
+                      Sector Knowledge Sharing Hub (Beta)
                     </h1>
                     <p className="welcome-p m-4 text-center">
-                      This prototype was built to show what common, open source
-                      infrastructure for the nonprofit sector would look like
-                      and could be used for. The information we have gathered
-                      focuses on existing open data sources about nonprofit
-                      organizations, grants, and evaluations. We think this
-                      information can be used in various ways by the sector;
-                      from helping to learn more about the sector, to program
-                      design and shared learnings.
+                      The SKS Hub is a prototype project intended to demonstrate
+                      the value of shared, open knowledge infrastructure for the
+                      nonprofit sector. The Hub collects information from
+                      existing data sources about nonprofit organizations and
+                      their activities, and makes it possible to search, filter,
+                      and navigate this information for sector leaders,
+                      advocates, researchers, and practitioners. To use the
+                      tool, simply search the data by choosing keywords related
+                      to your particular interests or focus, and use the filters
+                      and controls on the search page to further refine your
+                      results.
                     </p>
+                    <a href="/about-us">
+                      <p>To learn more, click here</p>
+                    </a>
                   </div>
                 </div>
               </div>

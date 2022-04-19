@@ -10,7 +10,7 @@ export default class Navbar extends Component {
         <div className="container">
           <FontAwesomeIcon className="navbar-icon" icon={faHandsHelping} />
           <a className="navbar-brand logo" href="/">
-            Sector Knowledge Sharing Project
+            Sector Knowledge Sharing Hub
           </a>
           <button
             data-bs-toggle="collapse"

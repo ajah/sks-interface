@@ -113,6 +113,7 @@ export default class OrgPage extends Component {
           data_source: response["data"][0]["data_source"],
           legal_status_date: response["data"][0]["legal_status_date"],
           record_type: response["data"][0]["record_type"],
+          external_id: response["data"][0]["external_id"],
           loading: false,
         });
       })
@@ -179,7 +180,7 @@ export default class OrgPage extends Component {
                     <td>
                       <strong>Business Number</strong>
                     </td>
-                    <td>TBD</td>
+                    <td>{this.state.external_id}</td>
                   </tr>
                   <tr>
                     <td>

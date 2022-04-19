@@ -46,11 +46,11 @@ class TypesSection extends Component {
               <div className="col-4">
                 <MdDescription size="60px" className="feature-icon mb-3" />
                 <h3 className="name">
-                  <strong>Documents</strong>
+                  <strong>Documents (Coming Soon)</strong>
                 </h3>
                 <p className="description">
                   Additional information about the activities and organization
-                  (eg. evaluation reports, activity reports)
+                  (e.g. evaluation reports, activity reports)
                   <br />
                 </p>
               </div>
