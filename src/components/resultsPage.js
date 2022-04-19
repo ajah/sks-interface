@@ -75,7 +75,7 @@ export default class ResultsPage extends Component {
           this.setState({
             results: search["data"]["hits"],
             total: count["data"]["*"],
-            act_total: count["data"]["activities"],
+            act_total: count["data"]["new-activities"],
             ent_total: count["data"]["entities"],
           });
         })
@@ -95,7 +95,8 @@ export default class ResultsPage extends Component {
   tableRows() {
     return this.state.results.map((hit) => {
       let name, municipality, region, type, url;
-      if (hit._index === "activities") {
+      // if (hit._index === "activities") {
+      if (hit._index === "new-activities") {
         name = hit._source.grant_title;
         municipality = hit._source.grant_municipality;
         region = hit._source.grant_region;
