@@ -98,6 +98,10 @@ export default class ActPage extends Component {
       loading: true,
       org_redirect: "",
       recip_legal_name: "",
+      recip_business_number: "",
+      recip_designation_type: "",
+      recip_focus_area: "",
+      recip_website: "",
     };
   }
 
@@ -151,7 +155,7 @@ export default class ActPage extends Component {
           source_id: res["data"][0]["source_id"],
           source_url: res["data"][0]["source_url"],
           loading: false,
-          org_redirect: res["data"][0]["ent_npk_id"],
+          org_redirect: res["data"][0]["ent_sks_id"],
         });
       })
       .catch((error) => console.log(error));
@@ -167,12 +171,13 @@ export default class ActPage extends Component {
         .then((res) => {
           this.setState({
             recip_legal_name: res["data"][0]["name"],
-            recip_business_number: res["data"][0]["BN"],
+            recip_business_number: res["data"][0]["external_id"],
             recip_designation_type: res["data"][0]["legal_designation_type"],
             recip_focus_area: res["data"][0]["focus_area"],
             recip_website: res["data"][0]["website"],
           });
         })
+        .then(console.log("entity info retrieved"))
         .catch((error) => console.log(error));
     } else {
       console.log("No entity was found");
@@ -187,8 +192,8 @@ export default class ActPage extends Component {
           <div className="row">
             <div className="pb-3">
               <div className="card-body shadow-lg p-5 m-5 text-center">
-                <div class="spinner-border" role="status">
-                  <span class="sr-only">Loading...</span>
+                <div className="spinner-border" role="status">
+                  <span className="sr-only">Loading...</span>
                 </div>
                 <div className="text-center">
                   Results may take up to 10 seconds to load
@@ -201,7 +206,7 @@ export default class ActPage extends Component {
     }
 
     let recipientBox;
-    const hasOrg = this.state.recip_business_number;
+    const hasOrg = this.state.org_redirect;
     if (hasOrg) {
       recipientBox = (
         <RecipientOrgBox
