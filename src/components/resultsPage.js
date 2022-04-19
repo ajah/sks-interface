@@ -64,7 +64,11 @@ export default class ResultsPage extends Component {
             query
           )}&filter=${filter}`
         ),
-        axios.get(`http://127.0.0.1:5000/count?q=${encodeURI(query)}`),
+        axios.get(
+          `https://sks-server-hbl9d.ondigitalocean.app/count?q=${encodeURI(
+            query
+          )}`
+        ),
       ])
       .then(
         axios.spread((search, count) => {
