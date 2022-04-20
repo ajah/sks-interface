@@ -1,0 +1,7 @@
+.portfolio-block {
+  padding-bottom: 50px;
+}
+
+.portfolio-block.block-intro p {
+  font-size: 1.3em;
+}

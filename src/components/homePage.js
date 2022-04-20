@@ -2,9 +2,10 @@ import React, { Component } from "react";
 // import img5 from "./../assets/img/nonprofits/brad-weaver-7IBmf8uH4WY-unsplash.jpg";
 // import img2 from "./../assets/img/nonprofits/joel-muniz-qvzjG2pF4bE-unsplash.jpg";
 // import img4 from "./../assets/img/nonprofits/tyler-lagalo-ZU94isADXDs-unsplash.jpg";
-import "./../assets/css/styles.css";
+// import "./../assets/css/styles.css";
 import TypesSection from "./typesSection";
 import SearchBar from "./searchBar";
+import "./homePage.css";
 
 export default class HomePage extends Component {
   render() {
@@ -16,7 +17,7 @@ export default class HomePage extends Component {
               <div className="container-fluid pt-5">
                 <div className="row">
                   <div className="col">
-                    <h1 className="display-5 fw-bold m-4 welcome-h1 text-center">
+                    <h1 className=" fw-bold m-4 welcome-h1 text-center">
                       Sector Knowledge Sharing Hub (Beta)
                     </h1>
                     <p className="welcome-p m-4 text-center">
@@ -31,6 +32,26 @@ export default class HomePage extends Component {
                       to your particular interests or focus, and use the filters
                       and controls on the search page to further refine your
                       results.
+                    </p>
+                    <p className="text-start">
+                      This information can be used by:
+                      <ul>
+                        <li className="fs-5">
+                          Nonprofit organizations to find and connect with
+                          organizations working in the same focus area within
+                          the same geographical location.
+                        </li>
+                        <li className="fs-5">
+                          Advocacy organizations to understand the level of
+                          funding being received by the organizations and
+                          communities they advocate for.
+                        </li>
+                        <li className="fs-5">
+                          Foundations to explore funding gaps or opportunities
+                          in their focus area or region that are currently not
+                          being met.
+                        </li>
+                      </ul>
                     </p>
                     <a href="/about-us">
                       <p>To learn more, click here</p>
