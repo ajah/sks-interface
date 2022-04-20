@@ -74,7 +74,7 @@ export default class ResultsPage extends Component {
         axios.spread((search, count) => {
           this.setState({
             results: search["data"]["hits"],
-            total: count["data"]["*"],
+            total: count["data"]["new-activities,entities"],
             act_total: count["data"]["new-activities"],
             ent_total: count["data"]["entities"],
           });
