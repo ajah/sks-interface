@@ -60,12 +60,12 @@ export default class ResultsPage extends Component {
     axios
       .all([
         axios.get(
-          `https://sks-server-hbl9d.ondigitalocean.app/search?q=${encodeURI(
+          `https://sks-server-ajah-ttwto.ondigitalocean.app/search?q=${encodeURI(
             query
           )}&filter=${filter}`
         ),
         axios.get(
-          `https://sks-server-hbl9d.ondigitalocean.app/count?q=${encodeURI(
+          `https://sks-server-ajah-ttwto.ondigitalocean.app/count?q=${encodeURI(
             query
           )}`
         ),

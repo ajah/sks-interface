@@ -91,7 +91,9 @@ export default class OrgPage extends Component {
     const ent_sks_id = url.pathname.split("/")[2];
 
     await axios
-      .get(`https://sks-server-hbl9d.ondigitalocean.app/entities/${ent_sks_id}`)
+      .get(
+        `https://sks-server-ajah-ttwto.ondigitalocean.app/entities/${ent_sks_id}`
+      )
       .then((response) => {
         this.setState({
           FPE: response["data"][0]["FPE"],
@@ -125,7 +127,7 @@ export default class OrgPage extends Component {
 
   async getActivitiesData(ent_sks_id) {
     if (ent_sks_id) {
-      const url = `https://sks-server-hbl9d.ondigitalocean.app/activities/mostrecentbyent/${ent_sks_id}`;
+      const url = `https://sks-server-ajah-ttwto.ondigitalocean.app/activities/mostrecentbyent/${ent_sks_id}`;
       await axios
         .get(url)
         .then((res) => {

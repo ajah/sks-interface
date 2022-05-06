@@ -16,7 +16,7 @@ class Search extends Component {
   async getInfo() {
     await axios
       .get(
-        `https://sks-server-hbl9d.ondigitalocean.app/search?q=${encodeURI(
+        `https://sks-server-ajah-ttwto.ondigitalocean.app/search?q=${encodeURI(
           this.state.query
         )}`
       )
