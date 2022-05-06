@@ -167,7 +167,7 @@ export default class ActPage extends Component {
 
   async getEntitiesData() {
     if (this.state.org_redirect !== undefined) {
-      const url = `https://sks-server-ajah-ttwto/entities/${this.state.org_redirect}`;
+      const url = `https://sks-server-ajah-ttwto.ondigitalocean.app/entities/${this.state.org_redirect}`;
       await axios
         .get(url)
         .then((res) => {
