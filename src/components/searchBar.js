@@ -33,7 +33,7 @@ const Search = (props) => {
     
     if (searchQuery && (searchQuery1 !== searchQuery2) /* && (searchQuery2 !== searchQuery3) */) {
 
-      console.log("busta", searchQuery1, searchQuery2, searchQuery3)
+      console.log(searchQuery1, searchQuery2, searchQuery3)
 
     searchContext.searchHandler(searchQuery);
 
@@ -55,10 +55,12 @@ const Search = (props) => {
         }
       }
 
+
   };
 
 
   const setCurrentQuery = (query) => {
+   
 
     setSearchQuery(query)
 
@@ -82,7 +84,6 @@ const Search = (props) => {
 
     console.log("totalquery", totalQuery)
     console.log(searchCounter)
-   
 
   }
 
@@ -90,19 +91,17 @@ const Search = (props) => {
  const handleTotalQuery = (query) => {
 
   if (searchQuery1 && searchQuery2 && searchQuery3) {
-    setTotalQuery(searchQuery1+'+'+searchQuery2+'+'+searchQuery3)
+    setTotalQuery(searchQuery1+'+'+searchQuery2+'+'+query)
 
   }
   else if (searchQuery1 && searchQuery2) {
-    setTotalQuery(searchQuery1+'+'+searchQuery2)
+    setTotalQuery(searchQuery1+'+'+query)
   }
   else {
     setTotalQuery(query)
   } 
 
- /*  setTotalQuery(searchContext.searchArray.join('+'))
-  console.log("totalQuery", searchContext)
- */
+  
  }
 
   const removeQuery = (query) => {
@@ -135,13 +134,13 @@ const Search = (props) => {
 
   window.history.pushState('page2', 'Title', `/results?q=${searchContext.searchArray.join("+")}&filter=activity,entity`);
 
-  searchContext.searchArrayT(searchContext.searchArray)
-
   setSearchCounter(searchCounter-1)
 
   console.log("heres the array", searchContext)
 
   searchContext.searchHandler('');
+
+  
 
   }
 
@@ -186,18 +185,9 @@ const Search = (props) => {
     <div className="container pb-3 pt-1 mt-1">
       <form className="">
         <div className="row">
-          <div className="col-2 ">
-            
-            <h2 className="text-end">Search</h2>
-
-            
-          </div>
+        <div className="col-2"></div>
+        <div className="col-5 inter-bar">
           
-
-          
-          <div className="col-8 ">
-
-          <div className="inter-bar">
                  {searchContext.searchArray.map((query, key) => {
             return (
               <div className="search-query border col-2 ps-3 rounded-pill">
@@ -214,13 +204,29 @@ const Search = (props) => {
 
           })}
           </div>
+
+        </div>
+        <div className="row">
+          
+          <div className="col-2 ">
             
-            <div className="inter-bar">
+            <h2 className="text-end">Search</h2>
+
+          </div>
+          
+          
+
+          
+          <div className="col-8 ">
+         
+
+            
+            <div className="">
           </div>
             <div className="form-text">
               <input
                 contenteditable="true"
-                className="form-control ps-4 pe-4 rounded-pill inter-bar"
+                className="form-control ps-4 pe-4 rounded-pill"
                 type="text"
                 name="search"
                 placeholder="Enter search terms here separated by commas"

@@ -20,16 +20,12 @@ const SearchContextProvider = (props) => {
     searchArray.push(query)
     setSearchArray(searchArray);
   };
-
-  const searchArrayT = () => {
-    setSearchArray(searchArray);
-  };
-
+  
   return (
     <SearchContext.Provider
       value={{ 
           query: query, searchHandler: searchHandler,
-          searchArray: searchArray, searchArrayHandler: searchArrayHandler, searchArrayT
+          searchArray: searchArray, searchArrayHandler: searchArrayHandler,
         }}
     >
       {props.children}
