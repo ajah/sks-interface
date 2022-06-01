@@ -128,10 +128,11 @@ export default class ActPage extends Component {
   }
 
   async componentDidMount() {
+    
     const url = new URL(window.location.href);
     const npk_id = url.pathname.split("/")[2];
     await axios
-      .get(`https://sks-server-hbl9d.ondigitalocean.app/activities/${npk_id}`)
+    .get(`https://sks-server-hbl9d.ondigitalocean.app/activities/${npk_id}`)
       .then((res) => {
         this.setState({
           date: res["data"][0]["date"],
@@ -205,8 +206,11 @@ export default class ActPage extends Component {
       );
     }
 
+  
+
     let recipientBox;
     const hasOrg = this.state.org_redirect;
+    let resultArray = Object.entries(this.state);
     if (hasOrg) {
       recipientBox = (
         <RecipientOrgBox
@@ -231,6 +235,7 @@ export default class ActPage extends Component {
     } else {
       expectedResults = <NoResults />;
     }
+
 
     return (
       <div className="container bg-light mt-5 p-5 gap-2">
@@ -257,43 +262,64 @@ export default class ActPage extends Component {
                     <td>
                       <strong>Program Name</strong>
                     </td>
-                    <td>{this.state.program_name}</td>
+                    {this.state.program_name.length > 0 
+                    ? <td>{this.state.program_name}</td>
+                    : <td>Data not available</td>
+  }
                   </tr>
                   <tr>
                     <td>
                       <strong>{this.state.date_type}</strong>
                     </td>
-                    <td>{this.state.date}</td>
+                    {this.state.date.length > 0 
+                    ?<td>{this.state.date}</td>
+                    :<td>Data not available</td>
+  }
                   </tr>
                   <tr>
                     <td>
                       <strong>{this.state.end_date_type}</strong>
                     </td>
-                    <td>{this.state.end_date}</td>
+                    {this.state.date.end_date
+                    ?<td>{this.state.end_date}</td>
+                    :<td>Data not available</td>
+  }
                   </tr>
                   <tr>
                     <td>
                       <strong>City</strong>
                     </td>
-                    <td>{this.state.grant_municipality}</td>
+                    {this.state.grant_municipality.length > 0 
+                    ?<td>{this.state.grant_municipality}</td>
+                    :<td>Data not available</td>
+  }
                   </tr>
                   <tr>
                     <td>
                       <strong>Province</strong>
                     </td>
-                    <td>{this.state.grant_region}</td>
+                    {this.state.grant_region
+                    ?<td>{this.state.grant_region}</td>
+                    :<td>Data not available</td>
+  }
                   </tr>
                   <tr>
                     <td>
                       <strong>Source ID</strong>
                     </td>
-                    <td>{this.state.source_id}</td>
+                    {this.state.source_id
+                    ?<td>{this.state.source_id}</td>
+                    :<td>Data not available</td>
+  }
                   </tr>
                   <tr>
                     <td>
                       <strong>Source Authority</strong>
                     </td>
-                    <td>{this.state.source_authority}</td>
+                    {this.state.source_authority
+                    ?<td>{this.state.source_authority}</td>
+                    :<td>Data not available</td>
+  }
                   </tr>
                   <tr>
                     <td>
@@ -338,19 +364,22 @@ export default class ActPage extends Component {
                     <td>
                       <strong>Recipient ID</strong>
                     </td>
-                    <td>Not available</td>
+                    <td>Data not available</td>
                   </tr>
                   <tr>
                     <td>
                       <strong>Funder</strong>
                     </td>
-                    <td>{this.state.funder}</td>
+                    {this.state.funder
+                    ?<td>{this.state.funder}</td>
+                    :<td>Data not available</td>
+  }
                   </tr>
                   <tr>
                     <td>
                       <strong>Funder ID</strong>
                     </td>
-                    <td>Not available</td>
+                    <td>Data not available</td>
                   </tr>
                 </tbody>
               </table>
@@ -367,7 +396,7 @@ export default class ActPage extends Component {
               </div>
               <div>
                 <strong>Actual Results:</strong>
-                <p>Not available yet.</p>
+                <p>Data not available yet.</p>
               </div>
             </div>
             <br />
@@ -396,8 +425,12 @@ export default class ActPage extends Component {
                 </table> */}
               </div>
             </div>
+            
             <br />
+            
           </div>
+        </div>
+        <div>
         </div>
       </div>
     );
