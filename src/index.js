@@ -4,9 +4,13 @@ import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 
+import SearchContextProvider from "./context/search-context";
+
 ReactDOM.render(
   <React.StrictMode>
+  <SearchContextProvider>
     <App />
+    </SearchContextProvider>
   </React.StrictMode>,
   document.getElementById('root')
 );

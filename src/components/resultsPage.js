@@ -1,8 +1,11 @@
-import React, { Component } from "react";
+import React, { Component, useContext } from "react";
 import "./../assets/css/styles.css";
 import axios from "axios";
 import queryString from "query-string";
 import SearchBar from "./searchBar";
+import { Link } from "react-router-dom";
+import { SearchContext } from "../context/search-context";
+
 // import { GoTriangleDown } from "react-icons/go";
 
 function Badge(props) {
@@ -20,7 +23,11 @@ const Row = (props) => (
   <tr>
     <td>
       <div>
-        <a href={props.url}>{props.name}</a>
+        {/* <a href={props.url}>{props.name}</a> */}
+
+  
+                <Link to={props.url} >{props.name}</Link>
+          
       </div>
     </td>
     <td>
@@ -38,6 +45,9 @@ const Row = (props) => (
 );
 
 export default class ResultsPage extends Component {
+
+  static contextType = SearchContext;
+
   constructor(props) {
     super(props);
     this.state = {
@@ -47,22 +57,47 @@ export default class ResultsPage extends Component {
       act_total: "",
       ent_total: "",
       inc_activities: true,
-      inc_entities: true,
+      inc_entities: true, 
+      contextState: '',
+      filter: ['activity', 'entity'],
+      
       // query: "",
     };
   }
 
+
+  
+
+  
+  
   componentDidMount() {
+    console.log("here")
     const parsed = queryString.parse(this.props.location.search);
-    const query = parsed.q;
-    const filter = parsed.filter;
+    let query = '';
+    const filter = this.state.filter;
+    //console.log(filter)
+
+
+    if (this.context.searchArray.length > 1) {
+      query = this.context.searchArray.join('+')
+      
+    }
+    else if (this.context.searchArray[0]) {
+      query = this.context.searchArray[0]
+    }
+
+    else {
+      query = queryString.parse(window.location.search).q;
+      //console.log("hereasdfa", query)
+    }
+    //console.log("here", query)
 
     axios
       .all([
         axios.get(
           `https://sks-server-ajah-ttwto.ondigitalocean.app/search?q=${encodeURI(
             query
-          )}&filter=${filter}`
+          )}&filter=${filter.toString()}`
         ),
         axios.get(
           `https://sks-server-ajah-ttwto.ondigitalocean.app/count?q=${encodeURI(
@@ -77,11 +112,16 @@ export default class ResultsPage extends Component {
             total: count["data"]["new-activities,entities"],
             act_total: count["data"]["new-activities"],
             ent_total: count["data"]["entities"],
+            contextState: this.context,
           });
+          window.history.pushState('page2', 'Title', `/results?q=${query}&filter=${filter.toString()}`)
         })
+
       );
 
-    if (!filter.includes("activity")) {
+    
+
+   /*  if (!filter.includes("activity")) {
       this.setState({
         inc_activities: false,
       });
@@ -89,6 +129,19 @@ export default class ResultsPage extends Component {
       this.setState({
         inc_entities: false,
       });
+    } */
+  }
+
+  componentDidUpdate() {
+    // Typical usage (don't forget to compare props):
+    if (this.state.contextState !== this.context) {
+
+      console.log("herezzzzz", this.contextState)
+      console.log("2222222",  this.context)
+      
+      this.componentDidMount()
+
+      //console.log(this.context)
     }
   }
 
@@ -123,43 +176,87 @@ export default class ResultsPage extends Component {
   }
 
   handleFilters = (e) => {
+    if (!this.state.filter.includes(e.target.name)) {
+      this.state.filter.push(e.target.name)
+    }
+    /* console.log("hello", this.context.query)
+
+    const parsed = queryString.parse(this.props.location.search);
+    const query =  this.context.query;
+    const filter = parsed.filter;
+  
+
+
+    axios
+      .all([
+        axios.get(
+          `https://sks-server-hbl9d.ondigitalocean.app/search?q=${encodeURI(
+            query
+          )}&filter=${filter}`
+        ),
+        axios.get(
+          `https://sks-server-hbl9d.ondigitalocean.app/count?q=${encodeURI(
+            query
+          )}`
+        ),
+      ])
+      .then(
+        axios.spread((search, count) => {
+          this.setState({
+            results: search["data"]["hits"],
+            total: count["data"]["new-activities,entities"],
+            act_total: count["data"]["new-activities"],
+            ent_total: count["data"]["entities"],
+          });
+        })
+      ); */
     const value =
-      e.target.type === "checkbox" ? e.target.checked : e.target.value;
+e.target.type === "checkbox" ? e.target.checked : e.target.value;
     const name = e.target.name;
 
-    const queryParams = queryString.parse(window.location.search);
-    const filters = queryParams["filter"].split(",");
+    console.log(value)
 
-    if ((name === "entity") & (value === false)) {
-      this.setState({
-        inc_entities: false,
-      });
-    } else if ((name === "activity") & (value === false)) {
-      this.setState({
-        inc_activities: false,
-      });
-    } else if ((name === "entity") & (value === true)) {
-      this.setState({
-        inc_entities: true,
-      });
-    } else if ((name === "activity") & (value === true)) {
-      this.setState({
-        inc_activities: true,
-      });
+    const queryParams = queryString.parse(window.location.search);
+    const filters = this.state.filter
+
+    if (value === true) {
+     filters.push(name)
+     this.setState({
+      filter: filters
+    })
+    //this.componentDidMount()
+    console.log(filters, value)
+     
     }
+
     const index = filters.indexOf(name);
-    if (index > -1) {
-      filters.splice(index, 1); // 2nd parameter means remove one item only
-    }
+
+    
 
     this.setState({
+      filter: filters
+    })
+    
+    
+    if (index > -1) {
+      
+      filters.splice(index, 1); // 2nd parameter means remove one item only
+      this.setState({
+        filter: filters
+      })
+    }
+
+
+    this.componentDidMount();
+  /*   this.setState({
       queryParams: filters,
     });
 
     this.setState({
       queryParams: name,
-    });
+    }); */
   };
+  
 
   handleButton = (e) => {
     e.preventDefault();
@@ -177,7 +274,7 @@ export default class ResultsPage extends Component {
       filter.push("activity,entity"); //.push("entity"); //
     }
 
-    const queryParams = queryString.parse(window.location.search);
+  /*   const queryParams = queryString.parse(window.location.search);
     // const newQueries = { ...queryParams, filter: filter.toString() };
     const orig_q = queryParams["q"];
     console.log(queryParams["q"]);
@@ -187,11 +284,12 @@ export default class ResultsPage extends Component {
     if (filter) {
       history.push(`/results?q=${orig_q}&filter=${filter.toString()}`);
       window.location.reload(false);
+      setFilter(filter.toString)
     }
 
     history.push(`/results?q=${encodeURI(orig_q)}&filter=${filter.toString()}`);
     window.location.reload(false);
-    // console.log(queryString.stringify(newQueries));
+    // console.log(queryString.stringify(newQueries)); */
   };
 
   render() {
@@ -199,7 +297,7 @@ export default class ResultsPage extends Component {
       <main className="page projects-page mt-5">
         <div className="container ">
           <div className="row mt-5" id="SearchBar">
-            <SearchBar />
+            <SearchBar/>
           </div>
           <div className="row">
             <div className="col-2 border border-3">
@@ -214,7 +312,7 @@ export default class ResultsPage extends Component {
                         <input
                           className="form-check-input"
                           type="checkbox"
-                          checked={this.state.inc_entities}
+                          checked={this.state.filter.includes('entity')}
                           id="defaultCheck1"
                           name="entity"
                           onChange={this.handleFilters}
@@ -227,7 +325,7 @@ export default class ResultsPage extends Component {
                         <input
                           className="form-check-input"
                           type="checkbox"
-                          checked={this.state.inc_activities}
+                          checked={this.state.filter.includes('activity')}
                           id="defaultCheck2"
                           name="activity"
                           onChange={this.handleFilters}
