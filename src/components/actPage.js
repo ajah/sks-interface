@@ -128,11 +128,10 @@ export default class ActPage extends Component {
   }
 
   async componentDidMount() {
-    
     const url = new URL(window.location.href);
     const npk_id = url.pathname.split("/")[2];
     await axios
-    .get(`https://sks-server-hbl9d.ondigitalocean.app/activities/${npk_id}`)
+      .get(`https://sks-server-hbl9d.ondigitalocean.app/activities/${npk_id}`)
       .then((res) => {
         this.setState({
           date: res["data"][0]["date"],
@@ -206,8 +205,6 @@ export default class ActPage extends Component {
       );
     }
 
-  
-
     let recipientBox;
     const hasOrg = this.state.org_redirect;
     let resultArray = Object.entries(this.state);
@@ -216,9 +213,9 @@ export default class ActPage extends Component {
         <RecipientOrgBox
           recip_legal_name={this.state.recip_legal_name}
           recip_business_number={this.state.recip_business_number}
-          recip_designation_type={this.state.legal_designation_type}
-          recip_focus_area={this.state.focus_area}
-          recip_website={this.state.website}
+          recip_designation_type={this.state.recip_designation_type}
+          recip_focus_area={this.state.recip_focus_area}
+          recip_website={this.state.recip_website}
           org_redirect={this.state.org_redirect}
         />
       );
@@ -235,7 +232,6 @@ export default class ActPage extends Component {
     } else {
       expectedResults = <NoResults />;
     }
-
 
     return (
       <div className="container bg-light mt-5 p-5 gap-2">
@@ -262,64 +258,71 @@ export default class ActPage extends Component {
                     <td>
                       <strong>Program Name</strong>
                     </td>
-                    {this.state.program_name.length > 0 
-                    ? <td>{this.state.program_name}</td>
-                    : <td>Data not available</td>
-  }
+                    {this.state.program_name.length > 0 ? (
+                      <td>{this.state.program_name}</td>
+                    ) : (
+                      <td>Data not available</td>
+                    )}
                   </tr>
                   <tr>
                     <td>
                       <strong>{this.state.date_type}</strong>
                     </td>
-                    {this.state.date.length > 0 
-                    ?<td>{this.state.date}</td>
-                    :<td>Data not available</td>
-  }
+                    {this.state.date.length > 0 ? (
+                      <td>{this.state.date}</td>
+                    ) : (
+                      <td>Data not available</td>
+                    )}
                   </tr>
                   <tr>
                     <td>
                       <strong>{this.state.end_date_type}</strong>
                     </td>
-                    {this.state.date.end_date
-                    ?<td>{this.state.end_date}</td>
-                    :<td>Data not available</td>
-  }
+                    {this.state.date.end_date ? (
+                      <td>{this.state.end_date}</td>
+                    ) : (
+                      <td>Data not available</td>
+                    )}
                   </tr>
                   <tr>
                     <td>
                       <strong>City</strong>
                     </td>
-                    {this.state.grant_municipality.length > 0 
-                    ?<td>{this.state.grant_municipality}</td>
-                    :<td>Data not available</td>
-  }
+                    {this.state.grant_municipality.length > 0 ? (
+                      <td>{this.state.grant_municipality}</td>
+                    ) : (
+                      <td>Data not available</td>
+                    )}
                   </tr>
                   <tr>
                     <td>
                       <strong>Province</strong>
                     </td>
-                    {this.state.grant_region
-                    ?<td>{this.state.grant_region}</td>
-                    :<td>Data not available</td>
-  }
+                    {this.state.grant_region ? (
+                      <td>{this.state.grant_region}</td>
+                    ) : (
+                      <td>Data not available</td>
+                    )}
                   </tr>
                   <tr>
                     <td>
                       <strong>Source ID</strong>
                     </td>
-                    {this.state.source_id
-                    ?<td>{this.state.source_id}</td>
-                    :<td>Data not available</td>
-  }
+                    {this.state.source_id ? (
+                      <td>{this.state.source_id}</td>
+                    ) : (
+                      <td>Data not available</td>
+                    )}
                   </tr>
                   <tr>
                     <td>
                       <strong>Source Authority</strong>
                     </td>
-                    {this.state.source_authority
-                    ?<td>{this.state.source_authority}</td>
-                    :<td>Data not available</td>
-  }
+                    {this.state.source_authority ? (
+                      <td>{this.state.source_authority}</td>
+                    ) : (
+                      <td>Data not available</td>
+                    )}
                   </tr>
                   <tr>
                     <td>
@@ -370,10 +373,11 @@ export default class ActPage extends Component {
                     <td>
                       <strong>Funder</strong>
                     </td>
-                    {this.state.funder
-                    ?<td>{this.state.funder}</td>
-                    :<td>Data not available</td>
-  }
+                    {this.state.funder ? (
+                      <td>{this.state.funder}</td>
+                    ) : (
+                      <td>Data not available</td>
+                    )}
                   </tr>
                   <tr>
                     <td>
@@ -425,13 +429,11 @@ export default class ActPage extends Component {
                 </table> */}
               </div>
             </div>
-            
+
             <br />
-            
           </div>
         </div>
-        <div>
-        </div>
+        <div></div>
       </div>
     );
   }
