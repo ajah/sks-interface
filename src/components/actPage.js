@@ -28,7 +28,11 @@ const RecipientOrgBox = (props) => (
                 target="_blank"
                 rel="noopener noreferrer"
               >
-                {props.recip_legal_name}
+                {props.recip_legal_name ? (
+                  <td>{props.recip_legal_name}</td>
+                ) : (
+                  <td>Data not available</td>
+                )}
               </a>
             </td>
           </tr>
@@ -36,26 +40,50 @@ const RecipientOrgBox = (props) => (
             <td>
               <strong>Business Number</strong>
             </td>
-            <td>{props.recip_business_number}</td>
+            <td>
+              {props.recip_business_number ? (
+                <td>{props.recip_business_number}</td>
+              ) : (
+                <td>Data not available</td>
+              )}
+            </td>
           </tr>
           <tr>
             <td>
               <strong>Designation Type</strong>
             </td>
-            <td>{props.recip_designation_type}</td>
+            <td>
+              {props.recip_designation_type ? (
+                <td>{props.recip_designation_type}</td>
+              ) : (
+                <td>Data not available</td>
+              )}
+            </td>
           </tr>
           <tr>
             <td>
               <strong>Focus Area</strong>
             </td>
-            <td>{props.recip_focus_area}</td>
+            <td>
+              {props.recip_focus_area ? (
+                <td>{props.recip_focus_area}</td>
+              ) : (
+                <td>Data not available</td>
+              )}
+            </td>
           </tr>
           <tr>
             <td>
               <strong>Website</strong>
             </td>
             <td>
-              <a href={props.recip_website}>{props.recip_website}</a>
+              {props.recip_website ? (
+                <a href={"http://".concat(props.recip_website)}>
+                  {props.recip_website}
+                </a>
+              ) : (
+                <td>Data not available</td>
+              )}
             </td>
           </tr>
         </tbody>
