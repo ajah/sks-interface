@@ -1,12 +1,11 @@
 import React from "react";
-import {useLocation} from 'react-router-dom'
+import { useHistory } from "react-router-dom";
 
 export default function BackButton() {
-  const history = useLocation();
-  console.log(history)
+  const history = useHistory();
   return (
     <div>
-      <button className="btn btn-outline-primary">
+      <button className="btn btn-outline-primary" onClick={history.goBack}>
         Go Back to Results
       </button>
     </div>

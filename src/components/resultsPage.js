@@ -60,6 +60,7 @@ export default class ResultsPage extends Component {
       inc_entities: true, 
       contextState: '',
       filter: ['activity', 'entity'],
+      globalQuery: '',
       
       // query: "",
     };
@@ -74,15 +75,30 @@ export default class ResultsPage extends Component {
     console.log("here")
     const parsed = queryString.parse(this.props.location.search);
     let query = '';
-    const filter = this.state.filter;
+    let filter = this.state.filter;
+    let isRidirect = false;
     //console.log(filter)
 
+    if (queryString.parse(window.location.search).filter === "entity") {
 
-    if (this.context.searchArray.length > 1) {
+
+
+    isRidirect = true;
+    filter = "entity";
+    this.state.inc_activities = false;
+    this.state.inc_entities = true;
+    this.state.filter.splice(0,1)
+
+    }
+
+    console.log(queryString.parse(window.location.search))
+
+
+    if (this.context.searchArray.length > 1 && (isRidirect === false)) {
       query = this.context.searchArray.join('+')
       
     }
-    else if (this.context.searchArray[0]) {
+    else if (this.context.searchArray[0] && isRidirect === false) {
       query = this.context.searchArray[0]
     }
 
@@ -115,6 +131,9 @@ export default class ResultsPage extends Component {
             contextState: this.context,
           });
           window.history.pushState('page2', 'Title', `/results?q=${query}&filter=${filter.toString()}`)
+          this.setState({
+            globalQuery: queryString.parse(window.location.search).q
+           });
         })
 
       );
@@ -178,7 +197,10 @@ export default class ResultsPage extends Component {
   handleFilters = (e) => {
     if (!this.state.filter.includes(e.target.name)) {
       this.state.filter.push(e.target.name)
+      window.history.pushState('page2', 'Title', `/results?q=${this.state.globalQuery}&filter=${this.state.filter.join(",")}`)
     }
+
+    
     /* console.log("hello", this.context.query)
 
     const parsed = queryString.parse(this.props.location.search);
@@ -230,6 +252,8 @@ e.target.type === "checkbox" ? e.target.checked : e.target.value;
     }
 
     const index = filters.indexOf(name);
+
+    
 
     
 

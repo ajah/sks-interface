@@ -26,10 +26,13 @@ const Search = (props) => {
   const [totalQuery, setTotalQuery] = React.useState("");
   const [searchArray, setSearchArray] = React.useState([]);
   const [searchCounter, setSearchCounter] = React.useState(0)
+  const [okArray, setOkArray] = React.useState([])
 
   let searchString = '';
 
-  const searchQueryHandler = () => {
+  const searchQueryHandler = (e) => {
+
+    e.preventDefault();
     
     if (searchQuery && (searchQuery1 !== searchQuery2) /* && (searchQuery2 !== searchQuery3) */) {
 
@@ -55,11 +58,19 @@ const Search = (props) => {
         }
       }
 
+      setSearchQuery('');
 
+      setOkArray(searchContext.searchArray)
+
+      console.log(okArray)
   };
 
 
-  const setCurrentQuery = (query) => {
+  const setCurrentQuery = (e) => {
+
+    e.preventDefault()
+
+    let query = e.target.value
    
 
     setSearchQuery(query)
@@ -85,6 +96,7 @@ const Search = (props) => {
     console.log("totalquery", totalQuery)
     console.log(searchCounter)
 
+    
   }
 
 
@@ -104,32 +116,36 @@ const Search = (props) => {
   
  }
 
-  const removeQuery = (query) => {
+  const removeQuery = (query, key) => {
   /* const newArray = searchArray.splice(key, 1)
   console.log(searchArray)
   setSearchArray(newArray) */
 
-  if (searchQuery1 === query) {
+  console.log('okarray', okArray, query)
+
+   if (searchQuery1 === query.query) {
     setSearchQuery1('')
   }
-  else if (searchQuery2 === query) {
+  else if (searchQuery2 === query.query) {
     setSearchQuery2('')
   }
-  else if (searchQuery3 === query) {
+  else if (searchQuery3 === query.query) {
     setSearchQuery3('')
   }
+   
+
   
 
-  const index = searchContext.searchArray.indexOf(query)
+  searchContext.searchArray.splice(query.key, 1)
 
-  searchContext.searchArray.splice(index, 1)
+   setOkArray(searchContext.searchArray)
 
   if (!searchContext.searchArray) {
 
     setSearchQuery('')
   }
 
-  handleTotalQuery(query)
+  //handleTotalQuery(query)
   
 
   window.history.pushState('page2', 'Title', `/results?q=${searchContext.searchArray.join("+")}&filter=activity,entity`);
@@ -140,6 +156,7 @@ const Search = (props) => {
 
   searchContext.searchHandler('');
 
+  console.log("after removed", searchContext.searchArray)
   
 
   }
@@ -183,12 +200,12 @@ const Search = (props) => {
 
   return (
     <div className="container pb-3 pt-1 mt-1">
-      <form className="">
+      <form className="" onSubmit={e => searchQueryHandler(e)}>
         <div className="row">
         <div className="col-2"></div>
         <div className="col-5 inter-bar">
           
-                 {searchContext.searchArray.map((query, key) => {
+                 {okArray.map((query, key) => {
             return (
               <div className="search-query border col-2 ps-3 rounded-pill">
                 {query}
@@ -196,7 +213,7 @@ const Search = (props) => {
                 <FontAwesomeIcon transform="right-15" onClick={() => removeQuery({query})} icon={faTimesCircle} />
                 </Link> */}
                 <div className="mx-auto" size="sm">
-                <FontAwesomeIcon className="remove-query" onClick={() => removeQuery({query})} icon={faTimesCircle} />
+                <FontAwesomeIcon className="remove-query" onClick={() => removeQuery({query, key})} icon={faTimesCircle} />
                 </div>
               </div>
             )
@@ -230,8 +247,9 @@ const Search = (props) => {
                 type="text"
                 name="search"
                 placeholder="Enter search terms here separated by commas"
+                value={searchQuery}
 
-                onInput={(e) => setCurrentQuery(e.target.value)}
+                onInput={(e) => setCurrentQuery(e)}
               ></input>
                   
 
@@ -243,7 +261,7 @@ const Search = (props) => {
             <Link
               className="btn btn-primary ps-4 pe-4 rounded-pill mx-auto"
               onClick={searchQueryHandler}
-              to={`/results?q=${totalQuery}&filter=activity,entity`}
+              to={`/results?q=${searchContext.searchArray.join("+")}&filter=activity,entity`}
             >
               <FontAwesomeIcon icon={faSearch} />
             </Link>

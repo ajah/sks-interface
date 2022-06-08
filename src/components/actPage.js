@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import axios from "axios";
 import "./actPage.css";
 import BackButton from "./common/BackButton";
+import { SearchContext } from "../context/search-context";
 
 const NoOrgBox = () => (
   <div id="recipient_org">
@@ -95,6 +96,9 @@ const NoResults = () => (
 );
 
 export default class ActPage extends Component {
+
+  static contextType = SearchContext;
+  
   constructor(props) {
     super(props);
     this.state = {
@@ -288,7 +292,7 @@ export default class ActPage extends Component {
                     </td>
                     {this.state.program_name.length > 0 
                     ? <td>{this.state.program_name}</td>
-                    : <td>Data not available</td>
+                    : <td>No data available</td>
   }
                   </tr>
                   <tr>
@@ -297,7 +301,7 @@ export default class ActPage extends Component {
                     </td>
                     {this.state.date.length > 0 
                     ?<td>{this.state.date}</td>
-                    :<td>Data not available</td>
+                    :<td>No data available</td>
   }
                   </tr>
                   <tr>
@@ -306,7 +310,7 @@ export default class ActPage extends Component {
                     </td>
                     {this.state.date.end_date
                     ?<td>{this.state.end_date}</td>
-                    :<td>Data not available</td>
+                    :<td>No data available</td>
   }
                   </tr>
                   <tr>
@@ -315,7 +319,7 @@ export default class ActPage extends Component {
                     </td>
                     {this.state.grant_municipality.length > 0 
                     ?<td>{this.state.grant_municipality}</td>
-                    :<td>Data not available</td>
+                    :<td>No data available</td>
   }
                   </tr>
                   <tr>
@@ -324,7 +328,7 @@ export default class ActPage extends Component {
                     </td>
                     {this.state.grant_region
                     ?<td>{this.state.grant_region}</td>
-                    :<td>Data not available</td>
+                    :<td>No data available</td>
   }
                   </tr>
                   <tr>
@@ -333,7 +337,7 @@ export default class ActPage extends Component {
                     </td>
                     {this.state.source_id
                     ?<td>{this.state.source_id}</td>
-                    :<td>Data not available</td>
+                    :<td>No data available</td>
   }
                   </tr>
                   <tr>
@@ -342,7 +346,7 @@ export default class ActPage extends Component {
                     </td>
                     {this.state.source_authority
                     ?<td>{this.state.source_authority}</td>
-                    :<td>Data not available</td>
+                    :<td>No data available</td>
   }
                   </tr>
                   <tr>
@@ -388,7 +392,7 @@ export default class ActPage extends Component {
                     <td>
                       <strong>Recipient ID</strong>
                     </td>
-                    <td>Data not available</td>
+                    <td>No data available</td>
                   </tr>
                   <tr>
                     <td>
@@ -396,14 +400,14 @@ export default class ActPage extends Component {
                     </td>
                     {this.state.funder
                     ?<td>{this.state.funder}</td>
-                    :<td>Data not available</td>
+                    :<td>No data available</td>
   }
                   </tr>
                   <tr>
                     <td>
                       <strong>Funder ID</strong>
                     </td>
-                    <td>Data not available</td>
+                    <td>No data available</td>
                   </tr>
                 </tbody>
               </table>
@@ -420,7 +424,7 @@ export default class ActPage extends Component {
               </div>
               <div>
                 <strong>Actual Results:</strong>
-                <p>Data not available yet.</p>
+                <p>No data available yet.</p>
               </div>
             </div>
             <br />
