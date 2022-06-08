@@ -28,7 +28,11 @@ const RecipientOrgBox = (props) => (
                 target="_blank"
                 rel="noopener noreferrer"
               >
-                {props.recip_legal_name}
+                {props.recip_legal_name ? (
+                  <td>{props.recip_legal_name}</td>
+                ) : (
+                  <td>Data not available</td>
+                )}
               </a>
             </td>
           </tr>
@@ -36,26 +40,46 @@ const RecipientOrgBox = (props) => (
             <td>
               <strong>Business Number</strong>
             </td>
-            <td>{props.recip_business_number}</td>
+
+            {props.recip_business_number ? (
+              <td>{props.recip_business_number}</td>
+            ) : (
+              <td>Data not available</td>
+            )}
           </tr>
           <tr>
             <td>
               <strong>Designation Type</strong>
             </td>
-            <td>{props.recip_designation_type}</td>
+
+            {props.recip_designation_type ? (
+              <td>{props.recip_designation_type}</td>
+            ) : (
+              <td>Data not available</td>
+            )}
           </tr>
           <tr>
             <td>
               <strong>Focus Area</strong>
             </td>
-            <td>{props.recip_focus_area}</td>
+            {props.recip_focus_area ? (
+              <td>{props.recip_focus_area}</td>
+            ) : (
+              <td>Data not available</td>
+            )}
           </tr>
           <tr>
             <td>
               <strong>Website</strong>
             </td>
             <td>
-              <a href={props.recip_website}>{props.recip_website}</a>
+              {props.recip_website ? (
+                <a href={"http://".concat(props.recip_website)}>
+                  {props.recip_website}
+                </a>
+              ) : (
+                <td>Data not available</td>
+              )}
             </td>
           </tr>
         </tbody>
@@ -214,9 +238,9 @@ export default class ActPage extends Component {
         <RecipientOrgBox
           recip_legal_name={this.state.recip_legal_name}
           recip_business_number={this.state.recip_business_number}
-          recip_designation_type={this.state.legal_designation_type}
-          recip_focus_area={this.state.focus_area}
-          recip_website={this.state.website}
+          recip_designation_type={this.state.recip_designation_type}
+          recip_focus_area={this.state.recip_focus_area}
+          recip_website={this.state.recip_website}
           org_redirect={this.state.org_redirect}
         />
       );
@@ -259,43 +283,72 @@ export default class ActPage extends Component {
                     <td>
                       <strong>Program Name</strong>
                     </td>
-                    <td>{this.state.program_name}</td>
+                    {this.state.program_name.length > 0 ? (
+                      <td>{this.state.program_name}</td>
+                    ) : (
+                      <td>Data not available</td>
+                    )}
                   </tr>
                   <tr>
                     <td>
                       <strong>{this.state.date_type}</strong>
                     </td>
-                    <td>{this.state.date}</td>
+                    {this.state.date.length > 0 ? (
+                      <td>{this.state.date}</td>
+                    ) : (
+                      <td>Data not available</td>
+                    )}
                   </tr>
                   <tr>
                     <td>
                       <strong>{this.state.end_date_type}</strong>
                     </td>
-                    <td>{this.state.end_date}</td>
+                    {this.state.date.end_date ? (
+                      <td>{this.state.end_date}</td>
+                    ) : (
+                      <td>Data not available</td>
+                    )}
                   </tr>
                   <tr>
                     <td>
                       <strong>City</strong>
                     </td>
-                    <td>{this.state.grant_municipality}</td>
+
+                    {this.state.grant_municipality.length > 0 ? (
+                      <td>{this.state.grant_municipality}</td>
+                    ) : (
+                      <td>Data not available</td>
+                    )}
                   </tr>
                   <tr>
                     <td>
                       <strong>Province</strong>
                     </td>
-                    <td>{this.state.grant_region}</td>
+                    {this.state.grant_region ? (
+                      <td>{this.state.grant_region}</td>
+                    ) : (
+                      <td>Data not available</td>
+                    )}
                   </tr>
                   <tr>
                     <td>
                       <strong>Source ID</strong>
                     </td>
-                    <td>{this.state.source_id}</td>
+                    {this.state.source_id ? (
+                      <td>{this.state.source_id}</td>
+                    ) : (
+                      <td>Data not available</td>
+                    )}
                   </tr>
                   <tr>
                     <td>
                       <strong>Source Authority</strong>
                     </td>
-                    <td>{this.state.source_authority}</td>
+                    {this.state.source_authority ? (
+                      <td>{this.state.source_authority}</td>
+                    ) : (
+                      <td>Data not available</td>
+                    )}
                   </tr>
                   <tr>
                     <td>
@@ -346,7 +399,11 @@ export default class ActPage extends Component {
                     <td>
                       <strong>Funder</strong>
                     </td>
-                    <td>{this.state.funder}</td>
+                    {this.state.funder ? (
+                      <td>{this.state.funder}</td>
+                    ) : (
+                      <td>Data not available</td>
+                    )}
                   </tr>
                   <tr>
                     <td>
