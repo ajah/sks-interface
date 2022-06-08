@@ -72,7 +72,6 @@ export default class ResultsPage extends Component {
   
   
   componentDidMount() {
-    console.log("here")
     const parsed = queryString.parse(this.props.location.search);
     let query = '';
     let filter = this.state.filter;
@@ -90,8 +89,6 @@ export default class ResultsPage extends Component {
     this.state.filter.splice(0,1)
 
     }
-
-    console.log(queryString.parse(window.location.search))
 
 
     if (this.context.searchArray.length > 1 && (isRidirect === false)) {

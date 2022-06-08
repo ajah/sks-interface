@@ -36,24 +36,24 @@ const Search = (props) => {
     
     if (searchQuery && (searchQuery1 !== searchQuery2) /* && (searchQuery2 !== searchQuery3) */) {
 
-      console.log(searchQuery1, searchQuery2, searchQuery3)
+      //console.log(searchQuery1, searchQuery2, searchQuery3)
 
     searchContext.searchHandler(searchQuery);
 
     if (searchCounter===0) {
     searchContext.searchArrayHandler(searchQuery1)
-    console.log("here[[1[")
+    //console.log("here[[1[")
     setSearchCounter(searchCounter + 1);
     
     }
     if (searchCounter===1 && (searchQuery1 !== searchQuery2) && searchQuery2) {
       searchContext.searchArrayHandler(searchQuery2)
-      console.log("here[[2[", searchQuery2)
+     // console.log("here[[2[", searchQuery2)
       setSearchCounter(searchCounter + 1);
       }
       if (searchCounter===2 && (searchQuery2 !== searchQuery3) && searchQuery3) {
         searchContext.searchArrayHandler(searchQuery3)
-        console.log("here[[3[", searchQuery3)
+        //console.log("here[[3[", searchQuery3)
         setSearchCounter(searchCounter + 1);
         }
       }
@@ -62,7 +62,7 @@ const Search = (props) => {
 
       setOkArray(searchContext.searchArray)
 
-      console.log(okArray)
+     // console.log(okArray)
   };
 
 
@@ -82,7 +82,7 @@ const Search = (props) => {
 
     else if (searchCounter===1) {
       setSearchQuery2(query)
-      console.log("searchquery2", searchQuery2)
+      //console.log("searchquery2", searchQuery2)
     }
     else if(searchCounter===2){
       setSearchQuery3(query)
@@ -93,8 +93,8 @@ const Search = (props) => {
 
     
 
-    console.log("totalquery", totalQuery)
-    console.log(searchCounter)
+    //console.log("totalquery", totalQuery)
+   // console.log(searchCounter)
 
     
   }
@@ -121,7 +121,7 @@ const Search = (props) => {
   console.log(searchArray)
   setSearchArray(newArray) */
 
-  console.log('okarray', okArray, query)
+  //console.log('okarray', okArray, query)
 
    if (searchQuery1 === query.query) {
     setSearchQuery1('')
@@ -152,11 +152,10 @@ const Search = (props) => {
 
   setSearchCounter(searchCounter-1)
 
-  console.log("heres the array", searchContext)
+ // console.log("heres the array", searchContext)
 
   searchContext.searchHandler('');
 
-  console.log("after removed", searchContext.searchArray)
   
 
   }
