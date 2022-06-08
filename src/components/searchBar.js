@@ -32,7 +32,13 @@ const Search = (props) => {
 
   const searchQueryHandler = (e) => {
 
+
+    if (!props.isHome) {
+
     e.preventDefault();
+
+
+    }
     
     if (searchQuery && (searchQuery1 !== searchQuery2) /* && (searchQuery2 !== searchQuery3) */) {
 

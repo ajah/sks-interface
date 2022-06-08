@@ -66,7 +66,7 @@ export default class HomePage extends Component {
             </div>
           </div>
         </section>
-        <SearchBar />
+        <SearchBar isHome="true"/>
         <section>
           <TypesSection />
         </section>
