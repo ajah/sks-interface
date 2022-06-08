@@ -34,27 +34,31 @@ export default class HomePage extends Component {
                       results.
                     </p>
                     <p className="text-start">
-                      This information can be used by:
+                      We explored various ways this prototype could support
+                      different organization in their work, including:
                       <ul>
                         <li className="fs-5">
-                          Nonprofit organizations to find and connect with
+                          Helping nonprofit organizations to find other
                           organizations working in the same focus area within
-                          the same geographical location.
+                          the same geographical location, in order to connect
+                          with them and share resources.
                         </li>
                         <li className="fs-5">
-                          Advocacy organizations to understand the level of
-                          funding being received by the organizations and
-                          communities they advocate for.
+                          Enabling advocacy organizations to find and segment
+                          organizations that represent the communities they
+                          advocate for, in order to understand the level of
+                          funding being received by these organizations.
                         </li>
                         <li className="fs-5">
-                          Foundations to explore funding gaps or opportunities
-                          in their focus area or region that are currently not
-                          being met.
+                          Assisting foundations to find the activities being
+                          carried out in their focus area or region, in order to
+                          explore funding gaps or opportunities that are
+                          currently not being met in these areas.
                         </li>
                       </ul>
                     </p>
                     <a href="/about-us">
-                      <p>To learn more, click here</p>
+                      <p>To learn more, read our about us page.</p>
                     </a>
                   </div>
                 </div>

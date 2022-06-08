@@ -19,7 +19,16 @@ export default class AboutUs extends Component {
                     <p className="">
                       <span className="fw-bold">Who is involved?</span>
                       <br />
-                      The SKS Hub, led by{" "}
+                      The{" "}
+                      <a
+                        href="https://sectorknowledge.ca/"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        {" "}
+                        Sector Knowledge Sharing (SKS) Hub
+                      </a>
+                      , led by{" "}
                       <a
                         href="https://www.ajah.ca/"
                         target="_blank"
@@ -36,26 +45,31 @@ export default class AboutUs extends Component {
                       >
                         Powered by Data
                       </a>
-                      , is part of a bigger initiative called the{" "}
+                      , was developed as part of the DEAL Strategy, a larger
+                      initiative headed by the{" "}
                       <a
-                        href="https://theonn.ca/our-work/data-priorities/deal-strategy/"
+                        href="https://theonn.ca/"
                         target="_blank"
                         rel="noopener noreferrer"
                       >
-                        DEAL (Data, Evidence-use and Learning) Strategy
+                        {" "}
+                        Ontario Nonprofit Network
                       </a>{" "}
-                      headed by the Ontario Nonprofit Network with support from
-                      the{" "}
+                      , in partnership with Ajah and Powered by Data and with
+                      support from the{" "}
                       <a href="https://www.otf.ca/">
                         Ontario Trillium Foundation
                       </a>
-                      . The DEAL Strategy is exploring different shared
-                      approaches to connecting the Ontario nonprofit sector’s
-                      data and knowledge to support learning and
-                      evidence-informed decision-making. The objective of this
-                      project is to support better programs and services, public
-                      policy development, and outcomes for communities across
-                      Ontario.
+                      . The{" "}
+                      <a href="https://theonn.ca/our-work/data-priorities/deal-strategy/">
+                        DEAL (Data, Evidence-use and Learning) Strategy
+                      </a>{" "}
+                      is exploring different shared approaches to connecting the
+                      Ontario nonprofit sector’s data and knowledge to support
+                      learning and evidence-informed decision-making. The
+                      objective of this project is to support better programs
+                      and services, public policy development, and outcomes for
+                      communities across Ontario.
                     </p>
                     {/* <p className="fw-bold">
                       What is the purpose of the SKS Hub?
@@ -86,7 +100,7 @@ export default class AboutUs extends Component {
                       </span>
                       <br />
                       The data currently being used is publicly accessible and
-                      comes from the federal government. This is the data we
+                      comes from federal government sources. This is the data we
                       collected and its sources:
                       <ul>
                         <li className="fs-5">
@@ -105,7 +119,7 @@ export default class AboutUs extends Component {
                           data from the federal Grants & Contributions database.
                           This data allows us to understand more about the
                           activities and programs carried out by organizations
-                          in the nonprofit sector.
+                          in the nonprofit sector.{" "}
                           <a href="https://open.canada.ca/data/en/dataset/432527ab-7aac-45b5-81d6-7597107a7013/resource/1d15a62f-5656-49ad-8c88-f40ce689d831">
                             Source
                           </a>
@@ -125,14 +139,15 @@ export default class AboutUs extends Component {
                     <p>
                       <span className="fw-bold">Can I access the data?</span>
                       <br />
-                      The Hub’s data can be found in a public{" "}
+                      The Hub’s data data has been normalized, aggregated, and
+                      made available in a public{" "}
                       <a href="https://github.com/ajah/skshub-data">
                         Github repository
                       </a>{" "}
-                      stored in 3 separate CSVs. This is the cleaned data from
-                      the sources above. You can also download the data related
-                      to a search query directly from the interface by clicking
-                      the download button found at the bottom of the page.{" "}
+                      stored in 3 separate CSVs. You can also download the data
+                      related to a search query directly from the interface by
+                      clicking the download button found at the bottom of the
+                      page.{" "}
                     </p>
                     <p>
                       <span className="fw-bold">
@@ -141,17 +156,16 @@ export default class AboutUs extends Component {
                       <br />
                       The SKS Hub is a collaborative open project, and we
                       encourage anyone to give us feedback or suggestions on how
-                      to make it better. We have created a project on Github
-                      (link coming soon) where you can see the upcoming updates
-                      (short term and long term), the known bugs/issues and
-                      provide feedback or suggestions. If you would like to talk
-                      to us more about this project, have any questions or would
-                      like to discuss how to use the Hub to help your work
-                      please send an email to{" "}
-                      <a href="mailto:dani.arellano@ajah.ca">
-                        dani.arellano@ajah.ca
-                      </a>
-                      .
+                      to make it better. If you would like to talk to us more
+                      about this project, have any questions or would like to
+                      discuss how to use the SKS Hub to help your work please{" "}
+                      <a href="/contact">get in touch with us here.</a> We have
+                      created a{" "}
+                      <a href="https://github.com/ajah/skshub-data">
+                        project on Github
+                      </a>{" "}
+                      where you can see the upcoming updates features and the
+                      known bugs/issues.
                     </p>
                   </div>
                 </div>
