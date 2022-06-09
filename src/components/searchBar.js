@@ -37,8 +37,19 @@ const Search = (props) => {
 
     e.preventDefault();
 
-
     }
+  
+    if (props.isHome) {
+
+      e.preventDefault();
+      window.history.pushState('page2', 'Title', `/results?q=${searchQuery}&filter=activity,entity`);
+      window.location.reload(true);
+      
+    }
+
+
+
+   
     
     if (searchQuery && (searchQuery1 !== searchQuery2) /* && (searchQuery2 !== searchQuery3) */) {
 
@@ -68,6 +79,7 @@ const Search = (props) => {
 
       setOkArray(searchContext.searchArray)
 
+  
      // console.log(okArray)
   };
 
@@ -154,8 +166,6 @@ const Search = (props) => {
   //handleTotalQuery(query)
   
 
-  window.history.pushState('page2', 'Title', `/results?q=${searchContext.searchArray.join("+")}&filter=activity,entity`);
-
   setSearchCounter(searchCounter-1)
 
  // console.log("heres the array", searchContext)
@@ -205,7 +215,7 @@ const Search = (props) => {
 
   return (
     <div className="container pb-3 pt-1 mt-1">
-      <form className="" onSubmit={e => searchQueryHandler(e)}>
+      <form className="" onSubmit={(e) => searchQueryHandler(e)}>
         <div className="row">
         <div className="col-2"></div>
         <div className="col-5 inter-bar">
@@ -251,7 +261,7 @@ const Search = (props) => {
                 className="form-control ps-4 pe-4 rounded-pill"
                 type="text"
                 name="search"
-                placeholder="Enter search terms here separated by commas"
+                placeholder="Enter search terms here"
                 value={searchQuery}
 
                 onInput={(e) => setCurrentQuery(e)}
