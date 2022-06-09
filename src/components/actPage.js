@@ -378,14 +378,32 @@ export default class ActPage extends Component {
                       <strong>Recipient Organization</strong>
                     </td>
                     <td>
+                      
                       {" "}
-                      <Link
-                        to={`/results/?q=${encodeURI(
-                          this.state.recipient_organization
-                        )}&filter=entity`}
-                      >
-                        {this.state.recipient_organization}
-                      </Link>
+
+                      {this.state.recip_legal_name
+
+                        
+                     
+                      ?<a
+                      href={`/entities/${this.state.org_redirect}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      {this.state.recip_legal_name ? (
+                        <td>{this.state.recip_legal_name}</td>
+                      ) : (
+                        <td>Data not available</td>
+                      )}
+                    </a>
+                     :<Link
+                     to={`/results/?q=${encodeURI(
+                       this.state.recipient_organization
+                     )}&filter=entity`}
+                   >
+                     {this.state.recipient_organization}
+                   </Link>
+  }
                     </td>
                   </tr>
                   <tr>
