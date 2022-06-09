@@ -3,6 +3,8 @@ import "./Navbar.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faHandsHelping } from "@fortawesome/free-solid-svg-icons";
 
+import { Link } from "react-router-dom";
+
 export default class Navbar extends Component {
   render() {
     return (
@@ -23,10 +25,9 @@ export default class Navbar extends Component {
           <div className="collapse navbar-collapse" id="navbarNav">
             <ul className="navbar-nav ms-auto">
               <li className="nav-item">
-                <a className="nav-link active" href="/">
-                  Home
-                </a>
+                <Link className="nav-link active" to="/" >Home</Link>
               </li>
+
               <li className="nav-item">
                 <a
                   className="nav-link active"
@@ -36,9 +37,10 @@ export default class Navbar extends Component {
                 </a>
               </li>
               <li className="nav-item">
-                <a className="nav-link active" href="/about-us">
-                  About
-                </a>
+                <Link className="nav-link active" to="/about-us" >About</Link>
+              </li>
+              <li className="nav-item">
+                <Link className="nav-link active" to="/contact" >Contact</Link>
               </li>
             </ul>
           </div>
