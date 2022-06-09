@@ -182,51 +182,79 @@ export default class OrgPage extends Component {
                     <td>
                       <strong>Business Number</strong>
                     </td>
-                    <td>{this.state.external_id}</td>
+                    {this.state.external_id ? (
+                      <td>{this.state.external_id}</td>
+                    ) : (
+                      <td>No data available</td>
+                    )}
                   </tr>
                   <tr>
                     <td>
                       <strong>Designation Type</strong>
                     </td>
-                    <td>{this.state.legal_designation_type}</td>
+                    {this.state.legal_designation_type ? (
+                      <td>{this.state.legal_designation_type}</td>
+                    ) : (
+                      <td>No data available</td>
+                    )}
                   </tr>
                   <tr>
                     <td>
                       <strong>Focus Area</strong>
                     </td>
-                    <td>{this.state.focus_area}</td>
+                    {this.state.focus_area ? (
+                      <td>{this.state.focus_area}</td>
+                    ) : (
+                      <td>No data available</td>
+                    )}
                   </tr>
                   <tr>
                     <td>
                       <strong>Website</strong>
                     </td>
-                    <td>
-                      <a
-                        href={"http://".concat(this.state.website)}
-                        target="_blank"
-                        rel={"noopener noreferrer"}
-                      >
-                        {this.state.website}
-                      </a>
-                    </td>
+                    {this.state.website ? (
+                      <td>
+                        <a
+                          href={"http://".concat(this.state.website)}
+                          target="_blank"
+                          rel={"noopener noreferrer"}
+                        >
+                          {this.state.website}
+                        </a>
+                      </td>
+                    ) : (
+                      <td>No data available</td>
+                    )}
                   </tr>
                   <tr>
                     <td>
                       <strong>Number of Employees</strong>
                     </td>
-                    <td>{Math.trunc(this.state.employees)}</td>
+                    {this.state.employees ? (
+                      <td>{Math.trunc(this.state.employees)}</td>
+                    ) : (
+                      <td>No data available</td>
+                    )}
                   </tr>
                   <tr>
                     <td>
                       <strong>{this.state.revenue_year} Revenue</strong>
                     </td>
-                    <td>{this.currencyFormat(this.state.revenue)}</td>
+                    {this.state.revenue ? (
+                      <td>{this.currencyFormat(this.state.revenue)}</td>
+                    ) : (
+                      <td>No data available</td>
+                    )}
                   </tr>
                   <tr>
                     <td>
                       <strong>Fiscal Period (MM-DD)</strong>
                     </td>
-                    <td>{this.fpeFormat(this.state.FPE)}</td>
+                    {this.state.FPE ? (
+                      <td>{this.fpeFormat(this.state.FPE)}</td>
+                    ) : (
+                      <td>No data available</td>
+                    )}
                   </tr>
                 </tbody>
               </table>
