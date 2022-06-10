@@ -6,3 +6,7 @@ body {
   max-height: 10px;
   font-size: 10px;
 }
+
+.search-warn {
+  font-size: 8pt;
+}

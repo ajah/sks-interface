@@ -24,17 +24,15 @@ const RecipientOrgBox = (props) => (
               <strong>Legal Name</strong>
             </td>
             <td>
-              <a
-                href={`/entities/${props.org_redirect}`}
-                target="_blank"
-                rel="noopener noreferrer"
+              <Link
+                to={`/entities/${props.org_redirect}`}
               >
                 {props.recip_legal_name ? (
                   <td>{props.recip_legal_name}</td>
                 ) : (
                   <td>Data not available</td>
                 )}
-              </a>
+              </Link>
             </td>
           </tr>
           <tr>
@@ -382,18 +380,20 @@ export default class ActPage extends Component {
                     <td>
                       {" "}
                       {this.state.recip_legal_name ? (
-                        <a
-                          href={`/entities/${this.state.org_redirect}`}
-                          target="_blank"
-                          rel="noopener noreferrer"
+                        <Link
+                          to={`/entities/${this.state.org_redirect}`}
                         >
                           {this.state.recip_legal_name ? (
                             <td>{this.state.recip_legal_name}</td>
                           ) : (
                             <td>Data not available</td>
                           )}
-                        </a>
-                      ) : (
+                        </Link>
+                      ) : ( 
+                        <div>
+                        <div className="search-warn">
+                        No further information was found for this organization because this activity is not linked to an organization via a Business Number. Click the recipient organization link below to search the database for this organization by its legal name
+                        </div>
                         <Link
                           to={`/results/?q=${encodeURI(
                             this.state.recipient_organization
@@ -401,6 +401,7 @@ export default class ActPage extends Component {
                         >
                           {this.state.recipient_organization}
                         </Link>
+                        </div>
                       )}
                     </td>
                   </tr>
