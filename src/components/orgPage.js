@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import axios from "axios";
 import "./orgPage.css";
 import BackButton from "./common/BackButton";
+import { Link } from "react-router-dom";
 
 // const url = new URL(window.location.href);
 // const ent_npk_id = url.pathname.split("/")[2];
@@ -19,13 +20,12 @@ const Row = (props) => (
   <tr>
     <td>
       <div className="">
-        <a
-          href={`/activities/${props.act_npk_id}`}
-          target="_blank"
-          rel="noopener noreferrer"
+        <Link
+          to={`/activities/${props.act_npk_id}`}
+    
         >
           {props.grant_title}
-        </a>
+        </Link>
       </div>
     </td>
     <td>
@@ -312,13 +312,11 @@ export default class OrgPage extends Component {
                   "No activities associated with this organization"
                 )}
                 {this.state.activities.length >= 5 ? (
-                  <a
-                    href={`/activitiesbyent/${this.state.ent_sks_id}`}
-                    target="_blank"
-                    rel="noopener noreferrer"
+                  <Link
+                    to={`/activitiesbyent/${this.state.ent_sks_id}`}
                   >
                     <span> See a complete list of grants here</span>
-                  </a>
+                  </Link>
                 ) : (
                   ""
                 )}

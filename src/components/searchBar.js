@@ -1,6 +1,7 @@
 // import React, { Component } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSearch, faTimesCircle } from "@fortawesome/free-solid-svg-icons";
+import queryString from "query-string";
 
 
 import { Link } from "react-router-dom";
@@ -15,6 +16,7 @@ const Search = (props) => {
 
 
   const searchContext = useContext(SearchContext);
+  
 
 
 
@@ -23,6 +25,8 @@ const Search = (props) => {
   const [searchQuery1, setSearchQuery1] = React.useState("");
   const [searchQuery2, setSearchQuery2] = React.useState("");
   const [searchQuery3, setSearchQuery3] = React.useState("");
+  const [searchQuery4, setSearchQuery4] = React.useState("");
+  const [searchQuery5, setSearchQuery5] = React.useState("");
   const [totalQuery, setTotalQuery] = React.useState("");
   const [searchArray, setSearchArray] = React.useState([]);
   const [searchCounter, setSearchCounter] = React.useState(0)
@@ -74,6 +78,17 @@ const Search = (props) => {
         setSearchCounter(searchCounter + 1);
         }
       }
+      if (searchCounter===3 && (searchQuery3 !== searchQuery4) && searchQuery4) {
+        searchContext.searchArrayHandler(searchQuery4)
+        //console.log("here[[3[", searchQuery3)
+        setSearchCounter(searchCounter + 1);
+        }
+      if (searchCounter===4 && (searchQuery4 !== searchQuery4) && searchQuery5) {
+          searchContext.searchArrayHandler(searchQuery5)
+          //console.log("here[[3[", searchQuery3)
+          setSearchCounter(searchCounter + 1);
+          }
+      
 
       setSearchQuery('');
 
@@ -87,6 +102,9 @@ const Search = (props) => {
   const setCurrentQuery = (e) => {
 
     e.preventDefault()
+
+    console.log(searchContext.searchArray)
+    //console.log(queryString.parse(window.location.search).q.split(" "))
 
     let query = e.target.value
    
@@ -105,6 +123,15 @@ const Search = (props) => {
     else if(searchCounter===2){
       setSearchQuery3(query)
     }
+    else if(searchCounter===3){
+      setSearchQuery4(query)
+    }
+    else if(searchCounter===4){
+      setSearchQuery5(query)
+    }
+  
+  
+
   
 
     handleTotalQuery(query)
@@ -120,7 +147,18 @@ const Search = (props) => {
 
  const handleTotalQuery = (query) => {
 
-  if (searchQuery1 && searchQuery2 && searchQuery3) {
+
+  if (searchQuery1 && searchQuery2 && searchQuery3 && searchQuery4 && searchQuery5) {
+    setTotalQuery(searchQuery1+'+'+searchQuery2+'+'+searchQuery3+'+'+searchQuery4+'+'+query)
+
+  }
+
+  else if (searchQuery1 && searchQuery2 && searchQuery3 && searchQuery4) {
+    setTotalQuery(searchQuery1+'+'+searchQuery2+'+'+searchQuery3+'+'+query)
+
+  }
+
+  else if (searchQuery1 && searchQuery2 && searchQuery3) {
     setTotalQuery(searchQuery1+'+'+searchQuery2+'+'+query)
 
   }
@@ -135,6 +173,8 @@ const Search = (props) => {
  }
 
   const removeQuery = (query, key) => {
+
+
   /* const newArray = searchArray.splice(key, 1)
   console.log(searchArray)
   setSearchArray(newArray) */
@@ -155,8 +195,10 @@ const Search = (props) => {
   
 
   searchContext.searchArray.splice(query.key, 1)
+  
 
    setOkArray(searchContext.searchArray)
+
 
   if (!searchContext.searchArray) {
 
@@ -214,77 +256,77 @@ const Search = (props) => {
   
 
   return (
-    <div className="container pb-3 pt-1 mt-1">
-      <form className="" onSubmit={(e) => searchQueryHandler(e)}>
-        <div className="row">
-        <div className="col-2"></div>
-        <div className="col-5 inter-bar">
-          
-                 {okArray.map((query, key) => {
-            return (
-              <div className="search-query border col-2 ps-3 rounded-pill">
-                {query}
-               {/*  <Link  to={`/results?q=${totalQuery.replace(('+'+query),"")}&filter=activity,entity`}>
-                <FontAwesomeIcon transform="right-15" onClick={() => removeQuery({query})} icon={faTimesCircle} />
-                </Link> */}
-                <div className="mx-auto" size="sm">
-                <FontAwesomeIcon className="remove-query" onClick={() => removeQuery({query, key})} icon={faTimesCircle} />
+      <div className="container pb-3 pt-1 mt-1">
+        <form className="" onSubmit={(e) => searchQueryHandler(e)}>
+          <div className="row">
+          <div className="col-2"></div>
+          <div className="col-5 inter-bar">
+            
+                   {searchContext.searchArray.map((query, key) => {
+              return (
+                <div className="search-query border col-2 ps-3 rounded-pill">
+                  {query}
+                 {/*  <Link  to={`/results?q=${totalQuery.replace(('+'+query),"")}&filter=activity,entity`}>
+                  <FontAwesomeIcon transform="right-15" onClick={() => removeQuery({query})} icon={faTimesCircle} />
+                  </Link> */}
+                  <div className="mx-auto" size="sm">
+                  <FontAwesomeIcon className="remove-query" onClick={() => removeQuery({query, key})} icon={faTimesCircle} />
+                  </div>
                 </div>
+              )
+  
+  
+            })}
+            </div>
+  
+          </div>
+          <div className="row">
+            
+            <div className="col-2 ">
+              
+              <h2 className="text-end">Search</h2>
+  
+            </div>
+            
+            
+  
+            
+            <div className="col-8 ">
+           
+  
+              
+              <div className="">
+            </div>
+              <div className="form-text">
+                <input
+                  contenteditable="true"
+                  className="form-control ps-4 pe-4 rounded-pill"
+                  type="text"
+                  name="search"
+                  placeholder="Enter search terms here"
+                  value={searchQuery}
+  
+                  onInput={(e) => setCurrentQuery(e)}
+                ></input>
+                    
+  
+            
               </div>
-            )
-
-
-          })}
-          </div>
-
-        </div>
-        <div className="row">
-          
-          <div className="col-2 ">
-            
-            <h2 className="text-end">Search</h2>
-
-          </div>
-          
-          
-
-          
-          <div className="col-8 ">
-         
-
-            
-            <div className="">
-          </div>
-            <div className="form-text">
-              <input
-                contenteditable="true"
-                className="form-control ps-4 pe-4 rounded-pill"
-                type="text"
-                name="search"
-                placeholder="Enter search terms here"
-                value={searchQuery}
-
-                onInput={(e) => setCurrentQuery(e)}
-              ></input>
-                  
-
-          
+            </div>
+            <div className="col-2">
+             
+              <Link
+                className="btn btn-primary ps-4 pe-4 rounded-pill mx-auto"
+                onClick={searchQueryHandler}
+                to={`/results?q=${searchContext.searchArray.join("+")}&filter=activity,entity`}
+              >
+                <FontAwesomeIcon icon={faSearch} />
+              </Link>
             </div>
           </div>
-          <div className="col-2">
-           
-            <Link
-              className="btn btn-primary ps-4 pe-4 rounded-pill mx-auto"
-              onClick={searchQueryHandler}
-              to={`/results?q=${searchContext.searchArray.join("+")}&filter=activity,entity`}
-            >
-              <FontAwesomeIcon icon={faSearch} />
-            </Link>
-          </div>
-        </div>
-      </form>
-    </div>
-  );
+        </form>
+      </div>
+    );
 }
 
 

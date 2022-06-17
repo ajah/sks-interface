@@ -4,12 +4,23 @@ import axios from "axios";
 import "./actPage.css";
 import BackButton from "./common/BackButton";
 import { SearchContext } from "../context/search-context";
-
-const NoOrgBox = () => (
+const NoOrgBox = (props) => (
   <div id="recipient_org">
     <h5>Recipient Organization</h5>
     <div className="border border-2 p-2">
-      No further information was found for this organization.
+                    
+                        <div className="search-warn">
+                        No further information was found for this organization because this activity is not linked to an organization via a Business Number. Click the recipient organization link below to search the database for this organization by its legal name
+                        </div>
+                        <Link
+                          to={`/results/?q=${encodeURI(
+                            props.recip_legal_name
+                          )}&filter=entity`}
+                        >
+                          {props.recip_legal_name}
+                        </Link>
+                       
+                      
     </div>
   </div>
 );
@@ -28,9 +39,10 @@ const RecipientOrgBox = (props) => (
                 to={`/entities/${props.org_redirect}`}
               >
                 {props.recip_legal_name ? (
-                  <td>{props.recip_legal_name}</td>
+                  <td>{props.recip_legal_name}{console.log(props)}</td>
                 ) : (
                   <td>Data not available</td>
+                  
                 )}
               </Link>
             </td>
@@ -245,7 +257,8 @@ export default class ActPage extends Component {
         />
       );
     } else {
-      recipientBox = <NoOrgBox />;
+      recipientBox = <NoOrgBox
+      recip_legal_name={this.state.recipient_organization} />;
     }
 
     let expectedResults;
@@ -264,7 +277,9 @@ export default class ActPage extends Component {
           <BackButton />
           <div className="pb-3">
             <h2 className="text-center">{this.state.grant_title}</h2>
-            <p className="text-center">{this.state.grant_description}</p>
+            { (this.state.grant_description)
+            ? (<p className="text-center">{this.state.grant_description}</p>)
+            : (<p className="text-center">Activity description not available</p>)}
           </div>
         </div>
         <div className="row">
@@ -392,15 +407,11 @@ export default class ActPage extends Component {
                       ) : ( 
                         <div>
                         <div className="search-warn">
-                        No further information was found for this organization because this activity is not linked to an organization via a Business Number. Click the recipient organization link below to search the database for this organization by its legal name
                         </div>
-                        <Link
-                          to={`/results/?q=${encodeURI(
-                            this.state.recipient_organization
-                          )}&filter=entity`}
+                        <div
                         >
                           {this.state.recipient_organization}
-                        </Link>
+                        </div>
                         </div>
                       )}
                     </td>
