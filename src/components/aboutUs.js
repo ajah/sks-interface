@@ -55,8 +55,7 @@ export default class AboutUs extends Component {
                         {" "}
                         Ontario Nonprofit Network
                       </a>{" "}
-                      , in partnership with Ajah and Powered by Data and with
-                      support from the{" "}
+                      , in partnership with Ajah, Powered by Data and the{" "}
                       <a href="https://www.otf.ca/">
                         Ontario Trillium Foundation
                       </a>

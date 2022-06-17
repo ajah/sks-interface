@@ -61,7 +61,7 @@ export default class ResultsPage extends Component {
       contextState: '',
       filter: ['activity', 'entity'],
       globalQuery: '',
-      
+      queryProp: [],
       // query: "",
     };
   }
@@ -77,6 +77,21 @@ export default class ResultsPage extends Component {
     let filter = this.state.filter;
     let isRidirect = false;
     //console.log(filter)
+
+    console.log("GOODBEY")
+
+    if (!this.context.searchArray[0]) {
+      console.log("HELLLLLLLLLOOOOOOOO")
+     let queryArray = queryString.parse(window.location.search).q.split(" ");
+     console.log(queryArray)
+    //this.context.searchArrayHandler(queryArray)
+    /*  this.setState({
+      queryProp: queryArray
+    }); */
+
+    console.log(this.context.searchArray)
+    
+    }
 
     if (queryString.parse(window.location.search).filter === "entity") {
 
@@ -318,7 +333,7 @@ e.target.type === "checkbox" ? e.target.checked : e.target.value;
       <main className="page projects-page mt-5">
         <div className="container ">
           <div className="row mt-5" id="SearchBar">
-            <SearchBar/>
+            <SearchBar queryProp={this.state.queryProp}/>
           </div>
           <div className="row">
             <div className="col-2 border border-3">
