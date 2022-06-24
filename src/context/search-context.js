@@ -11,6 +11,7 @@ export const SearchContext = React.createContext({
 const SearchContextProvider = (props) => {
   const [query, setQuery] = useState("");
   const [searchArray, setSearchArray] = useState([])
+  const [loading, setLoading] = useState('false')
 
   const searchHandler = (query) => {
     setQuery(query);
@@ -20,12 +21,17 @@ const SearchContextProvider = (props) => {
     searchArray.push(query)
     setSearchArray(searchArray);
   };
+
+  const loadingHandler = (item) => {
+    setLoading(item)
+  }
   
   return (
     <SearchContext.Provider
       value={{ 
           query: query, searchHandler: searchHandler,
           searchArray: searchArray, searchArrayHandler: searchArrayHandler,
+          loading: loading, loadingHandler: loadingHandler,
         }}
     >
       {props.children}

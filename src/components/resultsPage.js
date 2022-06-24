@@ -6,6 +6,10 @@ import SearchBar from "./searchBar";
 import { Link } from "react-router-dom";
 import { SearchContext } from "../context/search-context";
 
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faSearch } from "@fortawesome/free-solid-svg-icons";
+import "./resultsPage.css";
+
 // import { GoTriangleDown } from "react-icons/go";
 
 function Badge(props) {
@@ -62,6 +66,10 @@ export default class ResultsPage extends Component {
       filter: ['activity', 'entity'],
       globalQuery: '',
       queryProp: [],
+      provinces: ['Alberta', 'British Columbia', 'Manitoba', 'New Brunswick', 'Newfoundland and Labrador', 'Nova Scotia', 'Ontario', 'Prince Edward Island', 'Quebec', 'Saskatchewan'],
+      city: '',
+      location: [],
+
       // query: "",
     };
   }
@@ -76,6 +84,7 @@ export default class ResultsPage extends Component {
     let query = '';
     let filter = this.state.filter;
     let isRidirect = false;
+    let location = this.state.location.join("+")
     //console.log(filter)
 
     console.log("GOODBEY")
@@ -125,7 +134,7 @@ export default class ResultsPage extends Component {
         axios.get(
           `https://sks-server-ajah-ttwto.ondigitalocean.app/search?q=${encodeURI(
             query
-          )}&filter=${filter.toString()}`
+          )}&filter=${filter.toString()}&location=${location}`
         ),
         axios.get(
           `https://sks-server-ajah-ttwto.ondigitalocean.app/count?q=${encodeURI(
@@ -141,7 +150,10 @@ export default class ResultsPage extends Component {
             act_total: count["data"]["new-activities"],
             ent_total: count["data"]["entities"],
             contextState: this.context,
+            
           });
+
+          this.context.loadingHandler('false');
           window.history.pushState('page2', 'Title', `/results?q=${query}&filter=${filter.toString()}`)
           this.setState({
             globalQuery: queryString.parse(window.location.search).q
@@ -165,15 +177,17 @@ export default class ResultsPage extends Component {
 
   componentDidUpdate() {
     // Typical usage (don't forget to compare props):
-    if (this.state.contextState !== this.context) {
+ 
 
-      console.log("herezzzzz", this.contextState)
-      console.log("2222222",  this.context)
-      
+ 
+    if (this.context.loading === 'true') {
+
+    
       this.componentDidMount()
 
       //console.log(this.context)
-    }
+    
+  }
   }
 
   tableRows() {
@@ -204,6 +218,74 @@ export default class ResultsPage extends Component {
         />
       );
     });
+  }
+
+
+  setCity = (e) => {
+
+   
+     this.setState({
+      city: e.target.value
+    });
+  }
+
+  searchCity = (e, city) => {
+
+    e.preventDefault()
+   
+    city = this.state.city
+
+    console.log("here", city)
+
+    this.handleLocation(city)
+  }
+
+  handleLocation = (e, city) => {
+
+    //e.preventDefault();
+  
+
+    let loc;
+
+    if (this.state.city) {
+    loc = this.state.city
+    }
+    else {
+      loc = e.target.name
+    }
+
+    if (!this.state.location.includes(loc)) {
+
+      this.state.location.push(loc)
+
+     
+     
+
+      this.setState({
+        location: this.state.location
+      });
+
+      console.log("add", this.state.location)
+    }
+    else if (this.state.location.includes(loc)) {
+      
+      const index = this.state.location.indexOf(loc)
+
+      this.state.location.splice(index, 1)
+     
+      this.setState({
+        location: this.state.location
+      });
+
+      console.log("remove", this.state.location)
+    }
+
+    window.history.pushState('page2', 'Title', `/results?q=${this.state.globalQuery}&filter=${this.state.filter.join(",")}&location=${this.state.location.join("+")}`)
+
+    this.setState({
+      city: ''
+    });
+  
   }
 
   handleFilters = (e) => {
@@ -368,6 +450,52 @@ e.target.type === "checkbox" ? e.target.checked : e.target.value;
                         />
                         <label className="form-check-label">Activities</label>
                       </div>
+                    </form>
+                    <form>
+                      <hr />
+                      {this.state.provinces.map((province, key) => {
+                        return(
+                          <div className="form-check">
+                          <input
+                            className="form-check-input"
+                            type="checkbox"
+                            checked={this.state.location.includes(province)}
+                            id="defaultCheck1"
+                            name={province}
+                            onChange={this.handleLocation}
+                          />
+                          <label className="form-check-label">
+                            {province}
+                          </label>
+                        </div>
+                        )
+                      })}
+
+                <div className="mt-4" >
+                <label className="form-check-label">City:</label>
+
+                <div className="city-block">
+                        <input
+                           className="form-control rounded-pill"
+                          type="text"
+                          name={this.state.city}
+                          
+                          onChange={(e) => this.setCity(e)}
+                        />
+                          <div
+                
+              
+              >
+                <button
+                className="ml-2 btn btn-primary"
+                onClick={(e) => this.searchCity(e)}>
+                <FontAwesomeIcon className="d-inline" size="sm" icon={faSearch} />
+                </button>
+                </div>
+              </div>
+                       
+                      </div>
+                  
                     </form>
                     <hr />
                     <p className="text-secondary">More filters coming soon!</p>

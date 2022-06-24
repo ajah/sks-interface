@@ -39,7 +39,7 @@ const RecipientOrgBox = (props) => (
                 to={`/entities/${props.org_redirect}`}
               >
                 {props.recip_legal_name ? (
-                  <td>{props.recip_legal_name}{console.log(props)}</td>
+                  <td>{props.recip_legal_name}</td>
                 ) : (
                   <td>Data not available</td>
                   

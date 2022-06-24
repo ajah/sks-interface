@@ -2,6 +2,7 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSearch, faTimesCircle } from "@fortawesome/free-solid-svg-icons";
 import queryString from "query-string";
+import { useHistory} from "react-router-dom";
 
 
 import { Link } from "react-router-dom";
@@ -13,6 +14,8 @@ import "./searchBar.css";
 
 
 const Search = (props) => {
+
+  const history = useHistory();
 
 
   const searchContext = useContext(SearchContext);
@@ -29,14 +32,17 @@ const Search = (props) => {
   const [searchQuery5, setSearchQuery5] = React.useState("");
   const [totalQuery, setTotalQuery] = React.useState("");
   const [searchArray, setSearchArray] = React.useState([]);
-  const [searchCounter, setSearchCounter] = React.useState(0)
+ // const [counter, setcounter] = React.useState(0)
   const [okArray, setOkArray] = React.useState([])
+  let counter = 0;
 
   let searchString = '';
 
   const searchQueryHandler = (e) => {
 
+    searchContext.loadingHandler('true');
 
+/* 
     if (!props.isHome) {
 
     e.preventDefault();
@@ -45,12 +51,17 @@ const Search = (props) => {
   
     if (props.isHome) {
 
-      e.preventDefault();
-      window.history.pushState('page2', 'Title', `/results?q=${searchQuery}&filter=activity,entity`);
-      window.location.reload(true);
+      //e.preventDefault();
+
+      //searchContext.searchArrayHandler(searchQuery)
+     // history.push(`/results?q=${searchContext.searchArray.join("+")}&filter=activity,entity`);
+      //await window.location.reload(true);
+     
+
+      console.log(searchContext.searchArray)
       
     }
-
+ */
 
 
    
@@ -61,33 +72,38 @@ const Search = (props) => {
 
     searchContext.searchHandler(searchQuery);
 
-    if (searchCounter===0) {
+    if (counter===0) {
     searchContext.searchArrayHandler(searchQuery1)
-    //console.log("here[[1[")
-    setSearchCounter(searchCounter + 1);
+    
+    
+    counter++
+    console.log("counter set to 1", counter)
     
     }
-    if (searchCounter===1 && (searchQuery1 !== searchQuery2) && searchQuery2) {
+    if (counter===1 && (searchQuery1 !== searchQuery2) && searchQuery2) {
       searchContext.searchArrayHandler(searchQuery2)
      // console.log("here[[2[", searchQuery2)
-      setSearchCounter(searchCounter + 1);
+      counter++
+      console.log("counter set to 2", counter)
       }
-      if (searchCounter===2 && (searchQuery2 !== searchQuery3) && searchQuery3) {
+      if (counter===2 && (searchQuery2 !== searchQuery3) && searchQuery3) {
         searchContext.searchArrayHandler(searchQuery3)
         //console.log("here[[3[", searchQuery3)
-        setSearchCounter(searchCounter + 1);
+        counter++
+        console.log("counter set to 3", counter)
         }
       }
-      if (searchCounter===3 && (searchQuery3 !== searchQuery4) && searchQuery4) {
+      if (counter===3 && (searchQuery3 !== searchQuery4) && searchQuery4) {
         searchContext.searchArrayHandler(searchQuery4)
         //console.log("here[[3[", searchQuery3)
-        setSearchCounter(searchCounter + 1);
+        counter++
         }
-      if (searchCounter===4 && (searchQuery4 !== searchQuery4) && searchQuery5) {
+      if (counter===4 && (searchQuery4 !== searchQuery5) && searchQuery5) {
           searchContext.searchArrayHandler(searchQuery5)
           //console.log("here[[3[", searchQuery3)
-          setSearchCounter(searchCounter + 1);
+          counter++
           }
+  
       
 
       setSearchQuery('');
@@ -111,22 +127,23 @@ const Search = (props) => {
 
     setSearchQuery(query)
 
-    if (searchCounter===0) {
+    if (counter===0) {
       setSearchQuery1(query)
+      
       
     }
 
-    else if (searchCounter===1) {
+    else if (counter===1) {
       setSearchQuery2(query)
       //console.log("searchquery2", searchQuery2)
     }
-    else if(searchCounter===2){
+    else if(counter===2){
       setSearchQuery3(query)
     }
-    else if(searchCounter===3){
+    else if(counter===3){
       setSearchQuery4(query)
     }
-    else if(searchCounter===4){
+    else if(counter===4){
       setSearchQuery5(query)
     }
   
@@ -134,19 +151,18 @@ const Search = (props) => {
 
   
 
-    handleTotalQuery(query)
+    //handleTotalQuery(query)
 
     
 
     //console.log("totalquery", totalQuery)
-   // console.log(searchCounter)
+   // console.log(counter)
 
     
   }
 
 
- const handleTotalQuery = (query) => {
-
+/*  const handleTotalQuery = (query) => {
 
   if (searchQuery1 && searchQuery2 && searchQuery3 && searchQuery4 && searchQuery5) {
     setTotalQuery(searchQuery1+'+'+searchQuery2+'+'+searchQuery3+'+'+searchQuery4+'+'+query)
@@ -171,8 +187,12 @@ const Search = (props) => {
 
   
  }
-
+ */
   const removeQuery = (query, key) => {
+
+
+
+    searchContext.loadingHandler('true');
 
 
   /* const newArray = searchArray.splice(key, 1)
@@ -208,11 +228,18 @@ const Search = (props) => {
   //handleTotalQuery(query)
   
 
-  setSearchCounter(searchCounter-1)
+  counter--;
 
  // console.log("heres the array", searchContext)
 
   searchContext.searchHandler('');
+
+
+
+  console.log('removing', searchContext.searchArray, counter)
+
+
+  
 
   
 
@@ -305,6 +332,7 @@ const Search = (props) => {
                   name="search"
                   placeholder="Enter search terms here"
                   value={searchQuery}
+                  data-toggle="tooltip" title="To complete your search enter a keyword or phrase and hit the enter key or click the search button. Enter one keyword at a time. Your results will update automatically as more keywords are added. The maximum keywords you can search for is 5."
   
                   onInput={(e) => setCurrentQuery(e)}
                 ></input>
