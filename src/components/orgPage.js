@@ -206,7 +206,7 @@ export default class OrgPage extends Component {
                       <td>No data available</td>
                     }
                     {((this.state.focus_area) && (!this.state.focus_area.includes("Charity provided description"))) &&
-                      <td>No data available</td>
+                      <td>{this.state.focus_area}</td>
                   }
                   </tr>
                   <tr>
