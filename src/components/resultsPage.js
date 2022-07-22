@@ -127,12 +127,9 @@ export default class ResultsPage extends Component {
 
 
     if (this.context.searchArray.length > 1 && (isRedirect === false)) {
-      if (this.context.orFunctionality) {
-        query = this.context.searchArray.join('$')
-      }
-      else {
+    
         query = this.context.searchArray.join('+')
-      }
+      
 
     }
     else if (this.context.searchArray[0] && isRedirect === false) {
@@ -172,18 +169,18 @@ export default class ResultsPage extends Component {
 
           this.context.loadingHandler('false');
 
-          if (this.state.location && this.state.municipality) {
+       if (this.state.location.length > 0 && this.state.municipality) {
           window.history.pushState('page2', 'Title', `/results?q=${query}&doctype=${filter.toString()}&region=${this.state.location}&municipality=${this.state.municipality}&operator=${this.state.operator}`)
           }
-          else if (this.state.location && !this.state.municipality) {
+         else if (this.state.location.length > 0 && !this.state.municipality) {
             window.history.pushState('page2', 'Title', `/results?q=${query}&doctype=${filter.toString()}&region=${this.state.location}&operator=${this.state.operator}`)
-          }
-          else if (this.state.municipality && !this.state.location) {
+          } 
+          else if (this.state.municipality && this.state.location.length == 0) {
             window.history.pushState('page2', 'Title', `/results?q=${query}&doctype=${filter.toString()}&municipality=${this.state.municipality}&operator=${this.state.operator}`)
           }
           else {
             window.history.pushState('page2', 'Title', `/results?q=${query}&doctype=${filter.toString()}&operator=${this.state.operator}`)
-          }
+         }
           this.setState({
             globalQuery: queryString.parse(window.location.search).q
           });
