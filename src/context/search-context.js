@@ -12,6 +12,7 @@ const SearchContextProvider = (props) => {
   const [query, setQuery] = useState("");
   const [searchArray, setSearchArray] = useState([])
   const [loading, setLoading] = useState('false')
+  const [orFunctionality, setOrFunctionality] = useState(false)
 
   const searchHandler = (query) => {
     setQuery(query);
@@ -25,6 +26,10 @@ const SearchContextProvider = (props) => {
   const loadingHandler = (item) => {
     setLoading(item)
   }
+
+  const orHandler = (item) => {
+    setOrFunctionality(item)
+  }
   
   return (
     <SearchContext.Provider
@@ -32,6 +37,7 @@ const SearchContextProvider = (props) => {
           query: query, searchHandler: searchHandler,
           searchArray: searchArray, searchArrayHandler: searchArrayHandler,
           loading: loading, loadingHandler: loadingHandler,
+          orFunctionality: orFunctionality, orHandler: orHandler,
         }}
     >
       {props.children}
