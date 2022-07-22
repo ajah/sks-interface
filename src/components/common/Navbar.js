@@ -31,7 +31,7 @@ export default class Navbar extends Component {
               <li className="nav-item">
                 <a
                   className="nav-link active"
-                  href="/results/?q=&filter=activity,entity"
+                  href="/results/?q=&doctype=activity,entity"
                 >
                   Search
                 </a>
