@@ -111,7 +111,7 @@ export default class ResultsPage extends Component {
     if (this.context.orFunctionality) {
       operator = 'or'
     }
-  
+
 
     if (queryString.parse(window.location.search).filter === "entity") {
 
@@ -127,9 +127,9 @@ export default class ResultsPage extends Component {
 
 
     if (this.context.searchArray.length > 1 && (isRedirect === false)) {
-    
-        query = this.context.searchArray.join('+')
-      
+
+      query = this.context.searchArray.join('+')
+
 
     }
     else if (this.context.searchArray[0] && isRedirect === false) {
@@ -142,6 +142,8 @@ export default class ResultsPage extends Component {
     }
     //console.log("here", query)
 
+    console.log("OPERATOR", operator)
+
     axios
       .all([
         axios.get(
@@ -152,7 +154,7 @@ export default class ResultsPage extends Component {
         axios.get(
           `https://sks-server-ajah-ttwto.ondigitalocean.app/count?q=${encodeURI(
             query
-          )}`
+          )}&operator=${operator}`
         ),
       ])
       .then(
@@ -169,18 +171,18 @@ export default class ResultsPage extends Component {
 
           this.context.loadingHandler('false');
 
-       if (this.state.location.length > 0 && this.state.municipality) {
-          window.history.pushState('page2', 'Title', `/results?q=${query}&doctype=${filter.toString()}&region=${this.state.location}&municipality=${this.state.municipality}&operator=${this.state.operator}`)
+          if (this.state.location.length > 0 && this.state.municipality) {
+            window.history.pushState('page2', 'Title', `/results?q=${query}&doctype=${filter.toString()}&region=${this.state.location}&municipality=${this.state.municipality}&operator=${this.state.operator}`)
           }
-         else if (this.state.location.length > 0 && !this.state.municipality) {
+          else if (this.state.location.length > 0 && !this.state.municipality) {
             window.history.pushState('page2', 'Title', `/results?q=${query}&doctype=${filter.toString()}&region=${this.state.location}&operator=${this.state.operator}`)
-          } 
+          }
           else if (this.state.municipality && this.state.location.length == 0) {
             window.history.pushState('page2', 'Title', `/results?q=${query}&doctype=${filter.toString()}&municipality=${this.state.municipality}&operator=${this.state.operator}`)
           }
           else {
             window.history.pushState('page2', 'Title', `/results?q=${query}&doctype=${filter.toString()}&operator=${this.state.operator}`)
-         }
+          }
           this.setState({
             globalQuery: queryString.parse(window.location.search).q
           });
@@ -191,7 +193,7 @@ export default class ResultsPage extends Component {
               .then((res) => {
                 console.log(res)
                 this.setState({
-                  downloadLink:  `https://sks-server-ajah-ttwto.ondigitalocean.app//download?q=${this.state.globalQuery}&doctype=${filter.toString()}&region=${this.state.location}&municipality=${this.state.municipality}&operator=${this.state.operator}`
+                  downloadLink: `https://sks-server-ajah-ttwto.ondigitalocean.app//download?q=${this.state.globalQuery}&doctype=${filter.toString()}&region=${this.state.location}&municipality=${this.state.municipality}&operator=${this.state.operator}`
                 })
               })
               .then(
@@ -288,15 +290,15 @@ export default class ResultsPage extends Component {
 
     if (this.state.location) {
 
-    
-    window.history.pushState('page2', 'Title', `/results?q=${this.state.globalQuery}&doctype=${this.state.filter.join(",")}&region=${this.state.location}&municipality=${city}&operator=${this.state.operator}`)
+
+      window.history.pushState('page2', 'Title', `/results?q=${this.state.globalQuery}&doctype=${this.state.filter.join(",")}&region=${this.state.location}&municipality=${city}&operator=${this.state.operator}`)
     }
     else {
-    window.history.pushState('page2', 'Title', `/results?q=${this.state.globalQuery}&doctype=${this.state.filter.join(",")}&municipality=${city}&operator=${this.state.operator}`)
+      window.history.pushState('page2', 'Title', `/results?q=${this.state.globalQuery}&doctype=${this.state.filter.join(",")}&municipality=${city}&operator=${this.state.operator}`)
     }
-    
 
-  
+
+
   }
 
   handleLocation = (e, city) => {
@@ -306,9 +308,9 @@ export default class ResultsPage extends Component {
 
     let loc;
 
-  
+
     loc = e.target.name
-    
+
 
     if (!this.state.location.includes(loc)) {
 
@@ -338,8 +340,8 @@ export default class ResultsPage extends Component {
 
     if (this.state.municipality) {
 
-    
-    window.history.pushState('page2', 'Title', `/results?q=${this.state.globalQuery}&doctype=${this.state.filter.join(",")}&region=${this.state.location}&municipality=${this.state.municipality}&operator=${this.state.operator}`)
+
+      window.history.pushState('page2', 'Title', `/results?q=${this.state.globalQuery}&doctype=${this.state.filter.join(",")}&region=${this.state.location}&municipality=${this.state.municipality}&operator=${this.state.operator}`)
     }
     else {
       window.history.pushState('page2', 'Title', `/results?q=${this.state.globalQuery}&doctype=${this.state.filter.join(",")}&region=${this.state.location}&operator=${this.state.operator}`)
@@ -730,11 +732,11 @@ export default class ResultsPage extends Component {
                       <h4>Search Results</h4>
                     </div>
                     {this.state.globalQuery &&
-                    <a
-                    href={this.state.downloadLink}>
-                      Download Results
-                    </a>
-  }    
+                      <a
+                        href={this.state.downloadLink}>
+                        Download Results
+                      </a>
+                    }
                   </div>
                 </div>
                 <div className="row">
