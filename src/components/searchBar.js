@@ -42,54 +42,19 @@ const Search = (props) => {
   const searchQueryHandler = (e) => {
 
     //e.preventDefault();
-
+    
+    
 
     searchContext.loadingHandler('true');
 
-    if (!props.isHome) {
+  /*   if (props.isHome) {
 
       e.preventDefault();
+      console.log("here", e.key)
 
-    }
+    } */
 
-    /* 
-        if (!props.isHome) {
-    
-        e.preventDefault();
-    
-        }
-      
-        if (props.isHome) {
-    
-          //e.preventDefault();
-    
-          //searchContext.searchArrayHandler(searchQuery)
-         // history.push(`/results?q=${searchContext.searchArray.join("+")}&filter=activity,entity`);
-          //await window.location.reload(true);
-         
-    
-          console.log(searchContext.searchArray)
-          
-        }
-    
-        
-     */
-    /* 
-        if (props.isHome) {
-    
-          e.preventDefault();
-    
-          searchContext.searchArrayHandler(searchQuery)
-          history.push(`/results?q=${searchContext.searchArray.join("+")}&filter=activity,entity`);
-          window.location.reload(true);
-         
-    
-          console.log(searchContext.searchArray)
-          
-        }
-    
-     */
-
+  
 
     if (searchQuery && (searchQuery1 !== searchQuery2) /* && (searchQuery2 !== searchQuery3) */) {
 
@@ -146,9 +111,11 @@ const Search = (props) => {
     console.log(e.key)
 
 
-    if (e.keyCode === 13) {
+    if (e.key === "Enter") {
       e.preventDefault()
+      console.log("hello", e)
       setCurrentQuery(e)
+      history.push(`/results?q=${e.target.value}&doctype=activity,entity`);
     }
 
   }
@@ -342,19 +309,7 @@ const Search = (props) => {
         <div className="row">
           <div className="col-2">
 
-            <div className="form-check">
-              <input
-                className="form-check-input"
-                type="checkbox"
 
-                id="defaultCheck1"
-                name="entity"
-                onChange={(e) => orCheckHandler(e)}
-              />
-              <label className="form-check-label">
-                'Or' functionality
-              </label>
-            </div>
           </div>
           <div className="col-5 inter-bar">
 
@@ -387,7 +342,7 @@ const Search = (props) => {
 
 
 
-          <div className="col-8 ">
+          <div className="col-7 ">
 
 
 
@@ -403,36 +358,58 @@ const Search = (props) => {
                 value={searchQuery}
                 data-toggle="tooltip" title="To complete your search enter a keyword or phrase and hit the enter key or click the search button. Enter one keyword at a time. Your results will update automatically as more keywords are added. The maximum keywords you can search for is 5."
                 onInput={(e) => setCurrentQuery(e)}
+                onKeyPress={(e) => enterHandler(e)}
               ></input>
 
 
 
             </div>
           </div>
-          <div className="col-2">
+          <div className="col-3">
+            <div className="inter-bar">
+              <div className="mt-2 or-box">
+                <input
+                  className="form-check-input"
+                  type="checkbox"
+
+                  id="defaultCheck1"
+                  name="entity"
+                  onChange={(e) => orCheckHandler(e)}
+                />
+                <label className="form-check-label">
+                  'Or'
+                </label>
+              </div>
 
 
-            {searchContext.orFunctionality ?
-
-              (<Link
-                className="btn btn-primary ps-4 pe-4 rounded-pill mx-auto"
-                onClick={searchQueryHandler}
-                to={`/results?q=${searchContext.searchArray.join("$")}&doctype=activity,entity&operator=Or`}
-              >
-               Or Search <FontAwesomeIcon icon={faSearch} />
-              </Link>)
+              <div className="">
 
 
+                {searchContext.orFunctionality ?
 
-              : <Link
-                className="btn btn-primary ps-4 pe-4 rounded-pill mx-auto"
-                onClick={searchQueryHandler}
-                to={`/results?q=${searchContext.searchArray.join("+")}&doctype=activity,entity&operator=And`}
-              >
-              And Search<FontAwesomeIcon icon={faSearch} />
-              </Link>
-            }
+                  (<Link
+                    className="btn btn-primary ps-4 pe-4 rounded-pill mx-auto"
+                    onClick={searchQueryHandler}
+                    to={`/results?q=${searchContext.searchArray.join("$")}&doctype=activity,entity&operator=Or`}
+                  >
+                    Or Search <FontAwesomeIcon icon={faSearch} />
+                  </Link>)
+
+
+
+                  : <Link
+                    className="btn btn-primary ps-4 pe-4 rounded-pill mx-auto"
+                    onClick={searchQueryHandler}
+                    to={`/results?q=${searchContext.searchArray.join("+")}&doctype=activity,entity&operator=And`}
+                  >
+                    And Search<FontAwesomeIcon icon={faSearch} />
+                  </Link>
+                }
+              </div>
+
+            </div>
           </div>
+
         </div>
       </form>
     </div>

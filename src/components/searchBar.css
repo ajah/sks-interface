@@ -53,3 +53,11 @@
 .border {
   border: 1px solid black;
 }
+
+.float-right {
+  float: right;
+}
+
+.or-box {
+  margin-right: 1em;
+}
