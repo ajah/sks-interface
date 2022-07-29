@@ -91,14 +91,24 @@ export default class ResultsPage extends Component {
     let isRedirect = false;
     let location = this.state.location.join("+")
     let operator = 'and'
-    //console.log(filter)
+   
 
-    console.log("GOODBEY")
+
+    if (filter.length === 0) {
+      filter.push('activity')
+      filter.push('entity')
+    }
+
+    console.log("GOODBEY", this.context.searchArray)
 
     if (!this.context.searchArray[0]) {
       console.log("HELLLLLLLLLOOOOOOOO")
       let queryArray = queryString.parse(window.location.search).q.split(" ");
       console.log(queryArray)
+
+      if (queryArray[0]) {
+        queryArray.forEach(item => this.context.searchArrayHandler(item))
+      }
       //this.context.searchArrayHandler(queryArray)
       /*  this.setState({
         queryProp: queryArray
