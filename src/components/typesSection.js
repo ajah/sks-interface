@@ -1,6 +1,6 @@
-import React, { Component } from "react";
-import "./../assets/css/styles.css";
-import { MdVolunteerActivism, MdDescription, MdBusiness } from "react-icons/md";
+import React, { Component } from 'react';
+import './../assets/css/styles.css';
+import { MdVolunteerActivism, MdDescription, MdBusiness } from 'react-icons/md';
 
 class TypesSection extends Component {
   state = {};

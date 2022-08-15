@@ -1,39 +1,39 @@
 // import React, { Component } from "react";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faSearch, faTimesCircle } from "@fortawesome/free-solid-svg-icons";
-import queryString from "query-string";
-import { useHistory } from "react-router-dom";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faSearch, faTimesCircle } from '@fortawesome/free-solid-svg-icons';
+import queryString from 'query-string';
+import { useHistory } from 'react-router-dom';
 
-import { Link } from "react-router-dom";
+import { Link } from 'react-router-dom';
 
-import React, { Component, useState, useContext } from "react";
-import { SearchContext } from "../context/search-context";
-import "./searchBar.css";
-import context from "react-bootstrap/esm/AccordionContext";
+import React, { Component, useState, useContext } from 'react';
+import { SearchContext } from '../context/search-context';
+import './searchBar.css';
+import context from 'react-bootstrap/esm/AccordionContext';
 
 const Search = (props) => {
   const history = useHistory();
 
   const searchContext = useContext(SearchContext);
 
-  const [searchQuery, setSearchQuery] = React.useState("");
-  const [searchQuery1, setSearchQuery1] = React.useState("");
-  const [searchQuery2, setSearchQuery2] = React.useState("");
-  const [searchQuery3, setSearchQuery3] = React.useState("");
-  const [searchQuery4, setSearchQuery4] = React.useState("");
-  const [searchQuery5, setSearchQuery5] = React.useState("");
-  const [totalQuery, setTotalQuery] = React.useState("");
+  const [searchQuery, setSearchQuery] = React.useState('');
+  const [searchQuery1, setSearchQuery1] = React.useState('');
+  const [searchQuery2, setSearchQuery2] = React.useState('');
+  const [searchQuery3, setSearchQuery3] = React.useState('');
+  const [searchQuery4, setSearchQuery4] = React.useState('');
+  const [searchQuery5, setSearchQuery5] = React.useState('');
+  const [totalQuery, setTotalQuery] = React.useState('');
   const [searchArray, setSearchArray] = React.useState([]);
   // const [counter, setcounter] = React.useState(0)
   const [okArray, setOkArray] = React.useState([]);
   let counter = 0;
 
-  let searchString = "";
+  let searchString = '';
 
   const searchQueryHandler = (e) => {
     //e.preventDefault();
 
-    searchContext.loadingHandler("true");
+    searchContext.loadingHandler('true');
 
     /*   if (props.isHome) {
 
@@ -54,19 +54,19 @@ const Search = (props) => {
         searchContext.searchArrayHandler(searchQuery1);
 
         counter++;
-        console.log("counter set to 1", counter);
+        console.log('counter set to 1', counter);
       }
       if (counter === 1 && searchQuery1 !== searchQuery2 && searchQuery2) {
         searchContext.searchArrayHandler(searchQuery2);
         // console.log("here[[2[", searchQuery2)
         counter++;
-        console.log("counter set to 2", counter);
+        console.log('counter set to 2', counter);
       }
       if (counter === 2 && searchQuery2 !== searchQuery3 && searchQuery3) {
         searchContext.searchArrayHandler(searchQuery3);
         //console.log("here[[3[", searchQuery3)
         counter++;
-        console.log("counter set to 3", counter);
+        console.log('counter set to 3', counter);
       }
     }
     if (counter === 3 && searchQuery3 !== searchQuery4 && searchQuery4) {
@@ -80,7 +80,7 @@ const Search = (props) => {
       counter++;
     }
 
-    setSearchQuery("");
+    setSearchQuery('');
 
     setOkArray(searchContext.searchArray);
 
@@ -90,9 +90,9 @@ const Search = (props) => {
   const enterHandler = (e) => {
     console.log(e.key);
 
-    if (e.key === "Enter") {
+    if (e.key === 'Enter') {
       e.preventDefault();
-      console.log("hello", e);
+      console.log('hello', e);
       setCurrentQuery(e);
       history.push(`/results?q=${e.target.value}&doctype=activity,entity`);
     }
@@ -154,7 +154,7 @@ const Search = (props) => {
    }
    */
   const removeQuery = (query, key) => {
-    searchContext.loadingHandler("true");
+    searchContext.loadingHandler('true');
 
     /* const newArray = searchArray.splice(key, 1)
     console.log(searchArray)
@@ -163,11 +163,11 @@ const Search = (props) => {
     //console.log('okarray', okArray, query)
 
     if (searchQuery1 === query.query) {
-      setSearchQuery1("");
+      setSearchQuery1('');
     } else if (searchQuery2 === query.query) {
-      setSearchQuery2("");
+      setSearchQuery2('');
     } else if (searchQuery3 === query.query) {
-      setSearchQuery3("");
+      setSearchQuery3('');
     }
 
     searchContext.searchArray.splice(query.key, 1);
@@ -175,7 +175,7 @@ const Search = (props) => {
     setOkArray(searchContext.searchArray);
 
     if (!searchContext.searchArray) {
-      setSearchQuery("");
+      setSearchQuery('');
     }
 
     //handleTotalQuery(query)
@@ -184,9 +184,9 @@ const Search = (props) => {
 
     // console.log("heres the array", searchContext)
 
-    searchContext.searchHandler("");
+    searchContext.searchHandler('');
 
-    console.log("removing", searchContext.searchArray, counter);
+    console.log('removing', searchContext.searchArray, counter);
   };
 
   /* 
@@ -225,7 +225,7 @@ const Search = (props) => {
     }; */
 
   const orCheckHandler = async (e) => {
-    console.log("here at least", e.target.checked);
+    console.log('here at least', e.target.checked);
 
     console.log(searchContext.orFunctionality);
 
@@ -300,7 +300,7 @@ const Search = (props) => {
                     className="btn btn-primary ps-4 pe-4 rounded-pill mx-auto"
                     onClick={searchQueryHandler}
                     to={`/results?q=${searchContext.searchArray.join(
-                      "$"
+                      '$'
                     )}&doctype=activity,entity&operator=Or`}
                   >
                     Or Search <FontAwesomeIcon icon={faSearch} />
@@ -310,7 +310,7 @@ const Search = (props) => {
                     className="btn btn-primary ps-4 pe-4 rounded-pill mx-auto"
                     onClick={searchQueryHandler}
                     to={`/results?q=${searchContext.searchArray.join(
-                      "+"
+                      '+'
                     )}&doctype=activity,entity&operator=And`}
                   >
                     And Search

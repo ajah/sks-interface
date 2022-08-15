@@ -1,5 +1,5 @@
-import React, { Component } from "react";
-import "./../assets/css/styles.css";
+import React, { Component } from 'react';
+import './../assets/css/styles.css';
 
 export default class AboutUs extends Component {
   render() {
@@ -19,25 +19,25 @@ export default class AboutUs extends Component {
                     <p className="">
                       <span className="fw-bold">Who is involved?</span>
                       <br />
-                      The{" "}
+                      The{' '}
                       <a
                         href="https://sectorknowledge.ca/"
                         target="_blank"
                         rel="noopener noreferrer"
                       >
-                        {" "}
+                        {' '}
                         Sector Knowledge Sharing (SKS) Hub
                       </a>
-                      , led by{" "}
+                      , led by{' '}
                       <a
                         href="https://www.ajah.ca/"
                         target="_blank"
                         rel="noopener noreferrer"
                       >
-                        {" "}
+                        {' '}
                         Ajah
-                      </a>{" "}
-                      and{" "}
+                      </a>{' '}
+                      and{' '}
                       <a
                         href="https://poweredbydata.org/"
                         target="_blank"
@@ -46,23 +46,23 @@ export default class AboutUs extends Component {
                         Powered by Data
                       </a>
                       , was developed as part of the DEAL Strategy, a larger
-                      initiative headed by the{" "}
+                      initiative headed by the{' '}
                       <a
                         href="https://theonn.ca/"
                         target="_blank"
                         rel="noopener noreferrer"
                       >
-                        {" "}
+                        {' '}
                         Ontario Nonprofit Network
-                      </a>{" "}
-                      , in partnership with Ajah, Powered by Data and the{" "}
+                      </a>{' '}
+                      , in partnership with Ajah, Powered by Data and the{' '}
                       <a href="https://www.otf.ca/">
                         Ontario Trillium Foundation
                       </a>
-                      . The{" "}
+                      . The{' '}
                       <a href="https://theonn.ca/our-work/data-priorities/deal-strategy/">
                         DEAL (Data, Evidence-use and Learning) Strategy
-                      </a>{" "}
+                      </a>{' '}
                       is exploring different shared approaches to connecting the
                       Ontario nonprofit sector’s data and knowledge to support
                       learning and evidence-informed decision-making. The
@@ -107,7 +107,7 @@ export default class AboutUs extends Component {
                           about individual organizations in the nonprofit
                           sector. The data includes all organizations that are
                           registered with the CRA as a Public Foundation,
-                          Private Foundation or Charitable Organization.{" "}
+                          Private Foundation or Charitable Organization.{' '}
                           <a href="https://open.canada.ca/data/en/dataset/d4287672-3253-4bb8-84c7-4e515ea3fddf">
                             Source
                           </a>
@@ -118,7 +118,7 @@ export default class AboutUs extends Component {
                           data from the federal Grants & Contributions database.
                           This data allows us to understand more about the
                           activities and programs carried out by organizations
-                          in the nonprofit sector.{" "}
+                          in the nonprofit sector.{' '}
                           <a href="https://open.canada.ca/data/en/dataset/432527ab-7aac-45b5-81d6-7597107a7013/resource/1d15a62f-5656-49ad-8c88-f40ce689d831">
                             Source
                           </a>
@@ -139,14 +139,14 @@ export default class AboutUs extends Component {
                       <span className="fw-bold">Can I access the data?</span>
                       <br />
                       The Hub’s data data has been normalized, aggregated, and
-                      made available in a public{" "}
+                      made available in a public{' '}
                       <a href="https://github.com/ajah/skshub-data">
                         Github repository
-                      </a>{" "}
+                      </a>{' '}
                       stored in 3 separate CSVs. You can also download the data
                       related to a search query directly from the interface by
                       clicking the download button found at the bottom of the
-                      page.{" "}
+                      page.{' '}
                     </p>
                     <p>
                       <span className="fw-bold">
@@ -157,12 +157,12 @@ export default class AboutUs extends Component {
                       encourage anyone to give us feedback or suggestions on how
                       to make it better. If you would like to talk to us more
                       about this project, have any questions or would like to
-                      discuss how to use the SKS Hub to help your work please{" "}
+                      discuss how to use the SKS Hub to help your work please{' '}
                       <a href="/contact">get in touch with us here.</a> We have
-                      created a{" "}
+                      created a{' '}
                       <a href="https://github.com/ajah/skshub-data">
                         project on Github
-                      </a>{" "}
+                      </a>{' '}
                       where you can see the upcoming updates features and the
                       known bugs/issues.
                     </p>

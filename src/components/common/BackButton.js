@@ -1,7 +1,7 @@
-import React, { useContext } from "react";
-import { useHistory } from "react-router-dom";
-import { SearchContext } from "../../context/search-context";
-import { Link } from "react-router-dom";
+import React, { useContext } from 'react';
+import { useHistory } from 'react-router-dom';
+import { SearchContext } from '../../context/search-context';
+import { Link } from 'react-router-dom';
 export default function BackButton() {
   const history = useHistory();
 
@@ -15,7 +15,7 @@ export default function BackButton() {
       <Link
         className="btn btn-outline-primary"
         to={`/results?q=${searchContext.searchArray.join(
-          "+"
+          '+'
         )}&filter=activity,entity`}
       >
         Go Back to Results

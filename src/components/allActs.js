@@ -1,14 +1,14 @@
-import React, { Component } from "react";
-import axios from "axios";
-import "./orgPage.css";
-import BackToEntButton from "./common/BackToEntButton";
+import React, { Component } from 'react';
+import axios from 'axios';
+import './orgPage.css';
+import BackToEntButton from './common/BackToEntButton';
 
 function currencyFormat(amount) {
   return (
-    "$" +
+    '$' +
     Number.parseFloat(amount)
       .toFixed(2)
-      .replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1,")
+      .replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,')
   );
 }
 
@@ -47,7 +47,7 @@ export default class AllActs extends Component {
 
   async componentDidMount() {
     const url = new URL(window.location.href);
-    const ent_sks_id = url.pathname.split("/")[2];
+    const ent_sks_id = url.pathname.split('/')[2];
 
     await axios
       .get(
@@ -55,7 +55,7 @@ export default class AllActs extends Component {
       )
       .then((response) => {
         this.setState({
-          activities: response["data"],
+          activities: response['data'],
         });
       })
       .then(console.log(this.state))

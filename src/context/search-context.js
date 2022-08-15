@@ -1,17 +1,17 @@
-import React, { useState } from "react";
+import React, { useState } from 'react';
 
 // query is the state
 // SearchHandler is a function for changing the state.
 export const SearchContext = React.createContext({
-  query: "",
+  query: '',
   searchHandler: () => {},
 });
 
 // Defining a simple HOC component
 const SearchContextProvider = (props) => {
-  const [query, setQuery] = useState("");
+  const [query, setQuery] = useState('');
   const [searchArray, setSearchArray] = useState([]);
-  const [loading, setLoading] = useState("false");
+  const [loading, setLoading] = useState('false');
   const [orFunctionality, setOrFunctionality] = useState(false);
 
   const searchHandler = (query) => {

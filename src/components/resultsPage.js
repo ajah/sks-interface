@@ -1,25 +1,25 @@
-import React, { Component, useContext } from "react";
-import "./../assets/css/styles.css";
-import axios from "axios";
-import queryString from "query-string";
-import SearchBar from "./searchBar";
-import { Link } from "react-router-dom";
-import { SearchContext } from "../context/search-context";
+import React, { Component, useContext } from 'react';
+import './../assets/css/styles.css';
+import axios from 'axios';
+import queryString from 'query-string';
+import SearchBar from './searchBar';
+import { Link } from 'react-router-dom';
+import { SearchContext } from '../context/search-context';
 
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faSearch } from "@fortawesome/free-solid-svg-icons";
-import "./resultsPage.css";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faSearch } from '@fortawesome/free-solid-svg-icons';
+import './resultsPage.css';
 
 // import { GoTriangleDown } from "react-icons/go";
 
 function Badge(props) {
   const type = props.type;
-  if (type === "activity") {
+  if (type === 'activity') {
     return <span className="badge badge-primary">Activity</span>;
-  } else if (type === "entity") {
+  } else if (type === 'entity') {
     return <span className="badge bg-primary">Organization</span>;
   } else {
-    return "";
+    return '';
   }
 }
 
@@ -35,7 +35,7 @@ const Row = (props) => (
     <td>
       <div>
         {props.municipality}
-        {props.region ? `, ${props.region}` : ""}
+        {props.region ? `, ${props.region}` : ''}
       </div>
     </td>
     <td>
@@ -52,36 +52,36 @@ export default class ResultsPage extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      total: "",
+      total: '',
       results: [],
       // filterParams: ["activity", "entity"],
-      act_total: "",
-      ent_total: "",
+      act_total: '',
+      ent_total: '',
       inc_activities: true,
       inc_entities: true,
-      contextState: "",
-      filter: ["activity", "entity"],
-      globalQuery: "",
+      contextState: '',
+      filter: ['activity', 'entity'],
+      globalQuery: '',
       queryProp: [],
       provinces: [
-        "Alberta",
-        "British Columbia",
-        "Manitoba",
-        "New Brunswick",
-        "Newfoundland and Labrador",
-        "Nova Scotia",
-        "Ontario",
-        "Prince Edward Island",
-        "Quebec",
-        "Saskatchewan",
+        'Alberta',
+        'British Columbia',
+        'Manitoba',
+        'New Brunswick',
+        'Newfoundland and Labrador',
+        'Nova Scotia',
+        'Ontario',
+        'Prince Edward Island',
+        'Quebec',
+        'Saskatchewan',
       ],
-      city: "",
+      city: '',
       location: [],
-      region: "",
-      municipality: "",
-      downloadData: "",
-      operator: "",
-      downloadLink: "",
+      region: '',
+      municipality: '',
+      downloadData: '',
+      operator: '',
+      downloadLink: '',
 
       // query: "",
     };
@@ -89,22 +89,22 @@ export default class ResultsPage extends Component {
 
   componentDidMount() {
     const parsed = queryString.parse(this.props.location.search);
-    let query = "";
+    let query = '';
     let filter = this.state.filter;
     let isRedirect = false;
-    let location = this.state.location.join("+");
-    let operator = "and";
+    let location = this.state.location.join('+');
+    let operator = 'and';
 
     if (filter.length === 0) {
-      filter.push("activity");
-      filter.push("entity");
+      filter.push('activity');
+      filter.push('entity');
     }
 
-    console.log("GOODBEY", this.context.searchArray);
+    console.log('GOODBEY', this.context.searchArray);
 
     if (!this.context.searchArray[0]) {
-      console.log("HELLLLLLLLLOOOOOOOO");
-      let queryArray = queryString.parse(window.location.search).q.split(" ");
+      console.log('HELLLLLLLLLOOOOOOOO');
+      let queryArray = queryString.parse(window.location.search).q.split(' ');
       console.log(queryArray);
 
       if (queryArray[0]) {
@@ -119,19 +119,19 @@ export default class ResultsPage extends Component {
     }
 
     if (this.context.orFunctionality) {
-      operator = "or";
+      operator = 'or';
     }
 
-    if (queryString.parse(window.location.search).filter === "entity") {
+    if (queryString.parse(window.location.search).filter === 'entity') {
       isRedirect = true;
-      filter = "entity";
+      filter = 'entity';
       this.state.inc_activities = false;
       this.state.inc_entities = true;
       this.state.filter.splice(0, 1);
     }
 
     if (this.context.searchArray.length > 1 && isRedirect === false) {
-      query = this.context.searchArray.join("+");
+      query = this.context.searchArray.join('+');
     } else if (this.context.searchArray[0] && isRedirect === false) {
       query = this.context.searchArray[0];
     } else {
@@ -140,7 +140,7 @@ export default class ResultsPage extends Component {
     }
     //console.log("here", query)
 
-    console.log("OPERATOR", operator);
+    console.log('OPERATOR', operator);
 
     axios
       .all([
@@ -160,20 +160,20 @@ export default class ResultsPage extends Component {
       .then(
         axios.spread((search, count) => {
           this.setState({
-            results: search["data"]["hits"],
-            total: count["data"]["new-activities,entities"],
-            act_total: count["data"]["new-activities"],
-            ent_total: count["data"]["entities"],
+            results: search['data']['hits'],
+            total: count['data']['new-activities,entities'],
+            act_total: count['data']['new-activities'],
+            ent_total: count['data']['entities'],
             contextState: this.context,
             operator: operator,
           });
 
-          this.context.loadingHandler("false");
+          this.context.loadingHandler('false');
 
           if (this.state.location.length > 0 && this.state.municipality) {
             window.history.pushState(
-              "page2",
-              "Title",
+              'page2',
+              'Title',
               `/results?q=${query}&doctype=${filter.toString()}&region=${
                 this.state.location
               }&municipality=${this.state.municipality}&operator=${
@@ -185,8 +185,8 @@ export default class ResultsPage extends Component {
             !this.state.municipality
           ) {
             window.history.pushState(
-              "page2",
-              "Title",
+              'page2',
+              'Title',
               `/results?q=${query}&doctype=${filter.toString()}&region=${
                 this.state.location
               }&operator=${this.state.operator}`
@@ -196,16 +196,16 @@ export default class ResultsPage extends Component {
             this.state.location.length == 0
           ) {
             window.history.pushState(
-              "page2",
-              "Title",
+              'page2',
+              'Title',
               `/results?q=${query}&doctype=${filter.toString()}&municipality=${
                 this.state.municipality
               }&operator=${this.state.operator}`
             );
           } else {
             window.history.pushState(
-              "page2",
-              "Title",
+              'page2',
+              'Title',
               `/results?q=${query}&doctype=${filter.toString()}&operator=${
                 this.state.operator
               }`
@@ -236,10 +236,10 @@ export default class ResultsPage extends Component {
                   }`,
                 });
               })
-              .then(console.log("test"))
+              .then(console.log('test'))
               .catch((error) => console.log(error));
           } else {
-            console.log("No entity was found");
+            console.log('No entity was found');
           }
         })
       );
@@ -258,7 +258,7 @@ export default class ResultsPage extends Component {
   componentDidUpdate() {
     // Typical usage (don't forget to compare props):
 
-    if (this.context.loading === "true") {
+    if (this.context.loading === 'true') {
       this.componentDidMount();
 
       //console.log(this.context)
@@ -269,17 +269,17 @@ export default class ResultsPage extends Component {
     return this.state.results.map((hit) => {
       let name, municipality, region, type, url;
       // if (hit._index === "activities") {
-      if (hit._index === "new-activities") {
+      if (hit._index === 'new-activities') {
         name = hit._source.grant_title;
         municipality = hit._source.grant_municipality;
         region = hit._source.grant_region;
-        type = "activity";
+        type = 'activity';
         url = `/activities/${hit._source.act_sks_id}`;
-      } else if (hit._index === "entities") {
+      } else if (hit._index === 'entities') {
         name = hit._source.name;
         municipality = hit._source.location_municipality;
         region = hit._source.location_region;
-        type = "entity";
+        type = 'entity';
         url = `/entities/${hit._source.ent_sks_id}`;
       }
       return (
@@ -306,7 +306,7 @@ export default class ResultsPage extends Component {
 
     city = this.state.city;
 
-    console.log("here", city);
+    console.log('here', city);
 
     this.setState({
       municipality: city,
@@ -314,20 +314,20 @@ export default class ResultsPage extends Component {
 
     if (this.state.location) {
       window.history.pushState(
-        "page2",
-        "Title",
+        'page2',
+        'Title',
         `/results?q=${this.state.globalQuery}&doctype=${this.state.filter.join(
-          ","
+          ','
         )}&region=${this.state.location}&municipality=${city}&operator=${
           this.state.operator
         }`
       );
     } else {
       window.history.pushState(
-        "page2",
-        "Title",
+        'page2',
+        'Title',
         `/results?q=${this.state.globalQuery}&doctype=${this.state.filter.join(
-          ","
+          ','
         )}&municipality=${city}&operator=${this.state.operator}`
       );
     }
@@ -347,7 +347,7 @@ export default class ResultsPage extends Component {
         location: this.state.location,
       });
 
-      console.log("add", this.state.location);
+      console.log('add', this.state.location);
     } else if (this.state.location.includes(loc)) {
       const index = this.state.location.indexOf(loc);
 
@@ -357,25 +357,25 @@ export default class ResultsPage extends Component {
         location: this.state.location,
       });
 
-      console.log("remove", this.state.location);
+      console.log('remove', this.state.location);
     }
 
     if (this.state.municipality) {
       window.history.pushState(
-        "page2",
-        "Title",
+        'page2',
+        'Title',
         `/results?q=${this.state.globalQuery}&doctype=${this.state.filter.join(
-          ","
+          ','
         )}&region=${this.state.location}&municipality=${
           this.state.municipality
         }&operator=${this.state.operator}`
       );
     } else {
       window.history.pushState(
-        "page2",
-        "Title",
+        'page2',
+        'Title',
         `/results?q=${this.state.globalQuery}&doctype=${this.state.filter.join(
-          ","
+          ','
         )}&region=${this.state.location}&operator=${this.state.operator}`
       );
     }
@@ -385,10 +385,10 @@ export default class ResultsPage extends Component {
     if (!this.state.filter.includes(e.target.name)) {
       this.state.filter.push(e.target.name);
       window.history.pushState(
-        "page2",
-        "Title",
+        'page2',
+        'Title',
         `/results?q=${this.state.globalQuery}&doctype=${this.state.filter.join(
-          ","
+          ','
         )}&municipality=${this.state.municipality}&operator=${
           this.state.operator
         }`
@@ -427,7 +427,7 @@ export default class ResultsPage extends Component {
         })
       ); */
     const value =
-      e.target.type === "checkbox" ? e.target.checked : e.target.value;
+      e.target.type === 'checkbox' ? e.target.checked : e.target.value;
     const name = e.target.name;
 
     console.log(value);
@@ -478,27 +478,27 @@ export default class ResultsPage extends Component {
             downloadData: res.data.hits,
           });
         })
-        .then(console.log("test"))
+        .then(console.log('test'))
         .catch((error) => console.log(error));
     } else {
-      console.log("No entity was found");
+      console.log('No entity was found');
     }
   };
 
   handleButton = (e) => {
     e.preventDefault();
-    console.log("Activities:", this.state.inc_activities);
-    console.log("Entities:", this.state.inc_entities);
+    console.log('Activities:', this.state.inc_activities);
+    console.log('Entities:', this.state.inc_entities);
 
     let filter = [];
     if (this.state.inc_activities) {
-      filter.push("activity");
+      filter.push('activity');
     } else if (this.state.inc_entities) {
-      filter.push("entity");
+      filter.push('entity');
     } else if (!this.state.inc_activities & !this.state.inc_entities) {
-      filter.push("activity,entity"); //.push("entity"); //
+      filter.push('activity,entity'); //.push("entity"); //
     } else if (this.state.inc_activities & this.state.inc_entities) {
-      filter.push("activity,entity"); //.push("entity"); //
+      filter.push('activity,entity'); //.push("entity"); //
     }
 
     /*   const queryParams = queryString.parse(window.location.search);
@@ -539,7 +539,7 @@ export default class ResultsPage extends Component {
                         <input
                           className="form-check-input"
                           type="checkbox"
-                          checked={this.state.filter.includes("entity")}
+                          checked={this.state.filter.includes('entity')}
                           id="defaultCheck1"
                           name="entity"
                           onChange={this.handleFilters}
@@ -552,7 +552,7 @@ export default class ResultsPage extends Component {
                         <input
                           className="form-check-input"
                           type="checkbox"
-                          checked={this.state.filter.includes("activity")}
+                          checked={this.state.filter.includes('activity')}
                           id="defaultCheck2"
                           name="activity"
                           onChange={this.handleFilters}
@@ -762,7 +762,7 @@ export default class ResultsPage extends Component {
                     <table className="table table-striped">
                       <thead className="thead-light">
                         <tr>
-                          <th style={{ width: "55%" }} scope="col">
+                          <th style={{ width: '55%' }} scope="col">
                             Name
                           </th>
                           <th scope="col">Location</th>

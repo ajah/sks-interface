@@ -1,9 +1,9 @@
-import React, { Component } from "react";
-import "./Navbar.css";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faHandsHelping } from "@fortawesome/free-solid-svg-icons";
+import React, { Component } from 'react';
+import './Navbar.css';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faHandsHelping } from '@fortawesome/free-solid-svg-icons';
 
-import { Link } from "react-router-dom";
+import { Link } from 'react-router-dom';
 
 export default class Navbar extends Component {
   render() {

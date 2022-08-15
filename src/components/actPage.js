@@ -1,9 +1,9 @@
-import React, { Component } from "react";
-import { Link } from "react-router-dom";
-import axios from "axios";
-import "./actPage.css";
-import BackButton from "./common/BackButton";
-import { SearchContext } from "../context/search-context";
+import React, { Component } from 'react';
+import { Link } from 'react-router-dom';
+import axios from 'axios';
+import './actPage.css';
+import BackButton from './common/BackButton';
+import { SearchContext } from '../context/search-context';
 const NoOrgBox = (props) => (
   <div id="recipient_org">
     <h5>Recipient Organization</h5>
@@ -80,7 +80,7 @@ const RecipientOrgBox = (props) => (
             </td>
             <td>
               {props.recip_website ? (
-                <a href={"http://".concat(props.recip_website)}>
+                <a href={'http://'.concat(props.recip_website)}>
                   {props.recip_website}
                 </a>
               ) : (
@@ -106,43 +106,43 @@ export default class ActPage extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      actual_results: "",
-      date: "",
-      date_type: "",
-      end_date: "",
-      end_date_type: "",
-      expected_results: "",
-      funder: "",
-      funder_id: "",
-      funding_amount: "",
-      funding_type: "",
-      grant_description: "",
-      grant_municipality: "",
-      grant_region: "",
-      grant_title: "",
-      npk_id: "",
-      program_name: "",
+      actual_results: '',
+      date: '',
+      date_type: '',
+      end_date: '',
+      end_date_type: '',
+      expected_results: '',
+      funder: '',
+      funder_id: '',
+      funding_amount: '',
+      funding_type: '',
+      grant_description: '',
+      grant_municipality: '',
+      grant_region: '',
+      grant_title: '',
+      npk_id: '',
+      program_name: '',
       recipient_id: 0,
-      recipient_organization: "",
-      source_authority: "",
-      source_id: "",
-      source_url: "",
+      recipient_organization: '',
+      source_authority: '',
+      source_id: '',
+      source_url: '',
       loading: true,
-      org_redirect: "",
-      recip_legal_name: "",
-      recip_business_number: "",
-      recip_designation_type: "",
-      recip_focus_area: "",
-      recip_website: "",
+      org_redirect: '',
+      recip_legal_name: '',
+      recip_business_number: '',
+      recip_designation_type: '',
+      recip_focus_area: '',
+      recip_website: '',
     };
   }
 
   currencyFormat(amount) {
     return (
-      "$" +
+      '$' +
       Number.parseFloat(amount)
         .toFixed(2)
-        .replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1,")
+        .replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,')
     );
   }
 
@@ -151,9 +151,9 @@ export default class ActPage extends Component {
   }
 
   formatDatapoints(datapoint) {
-    let result = "";
+    let result = '';
     if (datapoint == null) {
-      result = "Unavailable";
+      result = 'Unavailable';
     } else result = datapoint;
 
     return result;
@@ -161,35 +161,35 @@ export default class ActPage extends Component {
 
   async componentDidMount() {
     const url = new URL(window.location.href);
-    const npk_id = url.pathname.split("/")[2];
+    const npk_id = url.pathname.split('/')[2];
     await axios
       .get(
         `https://sks-server-ajah-ttwto.ondigitalocean.app/activities/${npk_id}`
       )
       .then((res) => {
         this.setState({
-          date: res["data"][0]["date"],
-          date_type: res["data"][0]["date_type"],
-          end_date: res["data"][0]["end_date"],
-          end_date_type: res["data"][0]["end_date_type"],
-          expected_results: res["data"][0]["expected_results"],
-          funder: res["data"][0]["funder"],
-          funder_id: res["data"][0]["funder_id"],
-          funding_amount: res["data"][0]["funding_amount"],
-          funding_type: res["data"][0]["funding_type"],
-          grant_description: res["data"][0]["grant_description"],
-          grant_municipality: res["data"][0]["grant_municipality"],
-          grant_region: res["data"][0]["grant_region"],
-          grant_title: res["data"][0]["grant_title"],
-          npk_id: res["data"][0]["npk_id"],
-          program_name: res["data"][0]["program_name"],
-          recipient_id: res["data"][0]["recipient_id"],
-          recipient_organization: res["data"][0]["recipient_organization"],
-          source_authority: res["data"][0]["source_authority"],
-          source_id: res["data"][0]["source_id"],
-          source_url: res["data"][0]["source_url"],
+          date: res['data'][0]['date'],
+          date_type: res['data'][0]['date_type'],
+          end_date: res['data'][0]['end_date'],
+          end_date_type: res['data'][0]['end_date_type'],
+          expected_results: res['data'][0]['expected_results'],
+          funder: res['data'][0]['funder'],
+          funder_id: res['data'][0]['funder_id'],
+          funding_amount: res['data'][0]['funding_amount'],
+          funding_type: res['data'][0]['funding_type'],
+          grant_description: res['data'][0]['grant_description'],
+          grant_municipality: res['data'][0]['grant_municipality'],
+          grant_region: res['data'][0]['grant_region'],
+          grant_title: res['data'][0]['grant_title'],
+          npk_id: res['data'][0]['npk_id'],
+          program_name: res['data'][0]['program_name'],
+          recipient_id: res['data'][0]['recipient_id'],
+          recipient_organization: res['data'][0]['recipient_organization'],
+          source_authority: res['data'][0]['source_authority'],
+          source_id: res['data'][0]['source_id'],
+          source_url: res['data'][0]['source_url'],
           loading: false,
-          org_redirect: res["data"][0]["ent_sks_id"],
+          org_redirect: res['data'][0]['ent_sks_id'],
         });
       })
       .catch((error) => console.log(error));
@@ -204,17 +204,17 @@ export default class ActPage extends Component {
         .get(url)
         .then((res) => {
           this.setState({
-            recip_legal_name: res["data"][0]["name"],
-            recip_business_number: res["data"][0]["external_id"],
-            recip_designation_type: res["data"][0]["legal_designation_type"],
-            recip_focus_area: res["data"][0]["focus_area"],
-            recip_website: res["data"][0]["website"],
+            recip_legal_name: res['data'][0]['name'],
+            recip_business_number: res['data'][0]['external_id'],
+            recip_designation_type: res['data'][0]['legal_designation_type'],
+            recip_focus_area: res['data'][0]['focus_area'],
+            recip_website: res['data'][0]['website'],
           });
         })
-        .then(console.log("entity info retrieved"))
+        .then(console.log('entity info retrieved'))
         .catch((error) => console.log(error));
     } else {
-      console.log("No entity was found");
+      console.log('No entity was found');
     }
   }
 
@@ -289,7 +289,7 @@ export default class ActPage extends Component {
               <table>
                 <tbody>
                   <tr>
-                    <td style={{ width: "35%" }} className="pr-4">
+                    <td style={{ width: '35%' }} className="pr-4">
                       <strong>{this.state.funding_type}</strong>
                     </td>
                     <td>{this.currencyFormat(this.state.funding_amount)}</td>
@@ -393,7 +393,7 @@ export default class ActPage extends Component {
                       <strong>Recipient Organization</strong>
                     </td>
                     <td>
-                      {" "}
+                      {' '}
                       {this.state.recip_legal_name ? (
                         <Link to={`/entities/${this.state.org_redirect}`}>
                           {this.state.recip_legal_name ? (

@@ -1,18 +1,18 @@
-import React, { Component } from "react";
-import axios from "axios";
-import "./orgPage.css";
-import BackButton from "./common/BackButton";
-import { Link } from "react-router-dom";
+import React, { Component } from 'react';
+import axios from 'axios';
+import './orgPage.css';
+import BackButton from './common/BackButton';
+import { Link } from 'react-router-dom';
 
 // const url = new URL(window.location.href);
 // const ent_npk_id = url.pathname.split("/")[2];
 
 function currencyFormat(amount) {
   return (
-    "$" +
+    '$' +
     Number.parseFloat(amount)
       .toFixed(2)
-      .replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1,")
+      .replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,')
   );
 }
 
@@ -33,25 +33,25 @@ export default class OrgPage extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      FPE: "",
-      focus_area: "",
-      legal_status: "",
-      name: "",
-      location_municipality: "",
-      location_postal_code: "",
-      legal_designation_type: "",
-      location_region: "",
-      location_country: "",
-      revenue: "",
-      employees: "",
-      website: "",
-      ent_sks_id: "",
-      regulating_authority: "",
-      revenue_currency: "",
-      revenue_year: "",
-      data_source: "",
-      legal_status_date: "",
-      record_type: "",
+      FPE: '',
+      focus_area: '',
+      legal_status: '',
+      name: '',
+      location_municipality: '',
+      location_postal_code: '',
+      legal_designation_type: '',
+      location_region: '',
+      location_country: '',
+      revenue: '',
+      employees: '',
+      website: '',
+      ent_sks_id: '',
+      regulating_authority: '',
+      revenue_currency: '',
+      revenue_year: '',
+      data_source: '',
+      legal_status_date: '',
+      record_type: '',
       loading: true,
       activities: [],
     };
@@ -59,10 +59,10 @@ export default class OrgPage extends Component {
 
   currencyFormat(amount) {
     return (
-      "$" +
+      '$' +
       Number.parseFloat(amount)
         .toFixed(2)
-        .replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1,")
+        .replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,')
     );
   }
 
@@ -83,7 +83,7 @@ export default class OrgPage extends Component {
 
   async componentDidMount() {
     const url = new URL(window.location.href);
-    const ent_sks_id = url.pathname.split("/")[2];
+    const ent_sks_id = url.pathname.split('/')[2];
 
     await axios
       .get(
@@ -91,26 +91,26 @@ export default class OrgPage extends Component {
       )
       .then((response) => {
         this.setState({
-          FPE: response["data"][0]["FPE"],
-          focus_area: response["data"][0]["focus_area"],
-          legal_status: response["data"][0]["legal_status"],
-          name: response["data"][0]["name"],
-          location_municipality: response["data"][0]["location_municipality"],
-          location_postal_code: response["data"][0]["location_postal_code"],
-          legal_designation_type: response["data"][0]["legal_designation_type"],
-          location_region: response["data"][0]["location_region"],
-          location_country: response["data"][0]["location_country"],
-          revenue: response["data"][0]["revenue"],
-          employees: response["data"][0]["employees"],
-          website: response["data"][0]["website"],
-          ent_sks_id: response["data"][0]["ent_sks_id"],
-          regulating_authority: response["data"][0]["regulating_authority"],
-          revenue_currency: response["data"][0]["revenue_currency"],
-          revenue_year: response["data"][0]["revenue_year"],
-          data_source: response["data"][0]["data_source"],
-          legal_status_date: response["data"][0]["legal_status_date"],
-          record_type: response["data"][0]["record_type"],
-          external_id: response["data"][0]["external_id"],
+          FPE: response['data'][0]['FPE'],
+          focus_area: response['data'][0]['focus_area'],
+          legal_status: response['data'][0]['legal_status'],
+          name: response['data'][0]['name'],
+          location_municipality: response['data'][0]['location_municipality'],
+          location_postal_code: response['data'][0]['location_postal_code'],
+          legal_designation_type: response['data'][0]['legal_designation_type'],
+          location_region: response['data'][0]['location_region'],
+          location_country: response['data'][0]['location_country'],
+          revenue: response['data'][0]['revenue'],
+          employees: response['data'][0]['employees'],
+          website: response['data'][0]['website'],
+          ent_sks_id: response['data'][0]['ent_sks_id'],
+          regulating_authority: response['data'][0]['regulating_authority'],
+          revenue_currency: response['data'][0]['revenue_currency'],
+          revenue_year: response['data'][0]['revenue_year'],
+          data_source: response['data'][0]['data_source'],
+          legal_status_date: response['data'][0]['legal_status_date'],
+          record_type: response['data'][0]['record_type'],
+          external_id: response['data'][0]['external_id'],
           loading: false,
         });
       })
@@ -127,12 +127,12 @@ export default class OrgPage extends Component {
         .get(url)
         .then((res) => {
           this.setState({
-            activities: res["data"],
+            activities: res['data'],
           });
         })
         .catch((error) => console.log(error));
     } else {
-      console.log("No entity was found");
+      console.log('No entity was found');
     }
   }
 
@@ -198,12 +198,12 @@ export default class OrgPage extends Component {
                       <strong>Focus Area</strong>
                     </td>
                     {(this.state.focus_area.includes(
-                      "Charity provided description"
+                      'Charity provided description'
                     ) ||
                       !this.state.focus_area) && <td>No data available</td>}
                     {this.state.focus_area &&
                       !this.state.focus_area.includes(
-                        "Charity provided description"
+                        'Charity provided description'
                       ) && <td>{this.state.focus_area}</td>}
                   </tr>
                   <tr>
@@ -213,9 +213,9 @@ export default class OrgPage extends Component {
                     {this.state.website ? (
                       <td>
                         <a
-                          href={"http://".concat(this.state.website)}
+                          href={'http://'.concat(this.state.website)}
                           target="_blank"
-                          rel={"noopener noreferrer"}
+                          rel={'noopener noreferrer'}
                         >
                           {this.state.website}
                         </a>
@@ -299,7 +299,7 @@ export default class OrgPage extends Component {
                     <thead className="">
                       <tr>
                         <th scope="col">Grant Title</th>
-                        <th style={{ width: "35%" }} scope="col">
+                        <th style={{ width: '35%' }} scope="col">
                           Funding Amount
                         </th>
                       </tr>
@@ -307,14 +307,14 @@ export default class OrgPage extends Component {
                     <tbody>{this.tableRows()}</tbody>
                   </table>
                 ) : (
-                  "No activities associated with this organization"
+                  'No activities associated with this organization'
                 )}
                 {this.state.activities.length >= 5 ? (
                   <Link to={`/activitiesbyent/${this.state.ent_sks_id}`}>
                     <span> See a complete list of grants here</span>
                   </Link>
                 ) : (
-                  ""
+                  ''
                 )}
               </div>
             </div>
