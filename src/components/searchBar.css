@@ -8,16 +8,15 @@
   vertical-align: middle;
 }
 
-[contenteditable=true]:empty:not(:focus):before{
-  content:attr(data-ph);
-  color:grey;
-  font-style:italic;
-  content: 'Enter search here';
- 
+[contenteditable="true"]:empty:not(:focus):before {
+  content: attr(data-ph);
+  color: grey;
+  font-style: italic;
+  content: "Enter search here";
 }
 
 .inter-bar {
-  display:flex;
+  display: flex;
   justify-content: flex-start;
   flex-direction: row;
   height: 25px;
@@ -37,7 +36,7 @@
   display: flex;
   max-width: 10em;
   min-width: max-content;
-  margin-right: 0.3em
+  margin-right: 0.3em;
 }
 
 .remove-query {
@@ -47,7 +46,7 @@
 }
 
 .remove-query:hover {
-  color: rgb(245, 53, 53)
+  color: rgb(245, 53, 53);
 }
 
 .border {

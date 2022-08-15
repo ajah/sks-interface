@@ -10,35 +10,39 @@ export const SearchContext = React.createContext({
 // Defining a simple HOC component
 const SearchContextProvider = (props) => {
   const [query, setQuery] = useState("");
-  const [searchArray, setSearchArray] = useState([])
-  const [loading, setLoading] = useState('false')
-  const [orFunctionality, setOrFunctionality] = useState(false)
+  const [searchArray, setSearchArray] = useState([]);
+  const [loading, setLoading] = useState("false");
+  const [orFunctionality, setOrFunctionality] = useState(false);
 
   const searchHandler = (query) => {
     setQuery(query);
   };
 
   const searchArrayHandler = (query) => {
-    searchArray.push(query)
+    searchArray.push(query);
     setSearchArray(searchArray);
   };
 
   const loadingHandler = (item) => {
-    setLoading(item)
-  }
+    setLoading(item);
+  };
 
   const orHandler = (item) => {
-    setOrFunctionality(item)
-  }
-  
+    setOrFunctionality(item);
+  };
+
   return (
     <SearchContext.Provider
-      value={{ 
-          query: query, searchHandler: searchHandler,
-          searchArray: searchArray, searchArrayHandler: searchArrayHandler,
-          loading: loading, loadingHandler: loadingHandler,
-          orFunctionality: orFunctionality, orHandler: orHandler,
-        }}
+      value={{
+        query: query,
+        searchHandler: searchHandler,
+        searchArray: searchArray,
+        searchArrayHandler: searchArrayHandler,
+        loading: loading,
+        loadingHandler: loadingHandler,
+        orFunctionality: orFunctionality,
+        orHandler: orHandler,
+      }}
     >
       {props.children}
     </SearchContext.Provider>

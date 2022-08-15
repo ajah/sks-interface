@@ -8,19 +8,17 @@ const NoOrgBox = (props) => (
   <div id="recipient_org">
     <h5>Recipient Organization</h5>
     <div className="border border-2 p-2">
-                    
-                        <div className="search-warn">
-                        No further information was found for this organization because this activity is not linked to an organization via a Business Number. Click the recipient organization link below to search the database for this organization by its legal name
-                        </div>
-                        <Link
-                          to={`/results/?q=${encodeURI(
-                            props.recip_legal_name
-                          )}&filter=entity`}
-                        >
-                          {props.recip_legal_name}
-                        </Link>
-                       
-                      
+      <div className="search-warn">
+        No further information was found for this organization because this
+        activity is not linked to an organization via a Business Number. Click
+        the recipient organization link below to search the database for this
+        organization by its legal name
+      </div>
+      <Link
+        to={`/results/?q=${encodeURI(props.recip_legal_name)}&filter=entity`}
+      >
+        {props.recip_legal_name}
+      </Link>
     </div>
   </div>
 );
@@ -35,14 +33,11 @@ const RecipientOrgBox = (props) => (
               <strong>Legal Name</strong>
             </td>
             <td>
-              <Link
-                to={`/entities/${props.org_redirect}`}
-              >
+              <Link to={`/entities/${props.org_redirect}`}>
                 {props.recip_legal_name ? (
                   <td>{props.recip_legal_name}</td>
                 ) : (
                   <td>Data not available</td>
-                  
                 )}
               </Link>
             </td>
@@ -168,7 +163,9 @@ export default class ActPage extends Component {
     const url = new URL(window.location.href);
     const npk_id = url.pathname.split("/")[2];
     await axios
-      .get(`https://sks-server-ajah-ttwto.ondigitalocean.app/activities/${npk_id}`)
+      .get(
+        `https://sks-server-ajah-ttwto.ondigitalocean.app/activities/${npk_id}`
+      )
       .then((res) => {
         this.setState({
           date: res["data"][0]["date"],
@@ -257,8 +254,9 @@ export default class ActPage extends Component {
         />
       );
     } else {
-      recipientBox = <NoOrgBox
-      recip_legal_name={this.state.recipient_organization} />;
+      recipientBox = (
+        <NoOrgBox recip_legal_name={this.state.recipient_organization} />
+      );
     }
 
     let expectedResults;
@@ -277,9 +275,11 @@ export default class ActPage extends Component {
           <BackButton />
           <div className="pb-3">
             <h2 className="text-center">{this.state.grant_title}</h2>
-            { (this.state.grant_description)
-            ? (<p className="text-center">{this.state.grant_description}</p>)
-            : (<p className="text-center">Activity description not available</p>)}
+            {this.state.grant_description ? (
+              <p className="text-center">{this.state.grant_description}</p>
+            ) : (
+              <p className="text-center">Activity description not available</p>
+            )}
           </div>
         </div>
         <div className="row">
@@ -395,23 +395,17 @@ export default class ActPage extends Component {
                     <td>
                       {" "}
                       {this.state.recip_legal_name ? (
-                        <Link
-                          to={`/entities/${this.state.org_redirect}`}
-                        >
+                        <Link to={`/entities/${this.state.org_redirect}`}>
                           {this.state.recip_legal_name ? (
                             <td>{this.state.recip_legal_name}</td>
                           ) : (
                             <td>Data not available</td>
                           )}
                         </Link>
-                      ) : ( 
+                      ) : (
                         <div>
-                        <div className="search-warn">
-                        </div>
-                        <div
-                        >
-                          {this.state.recipient_organization}
-                        </div>
+                          <div className="search-warn"></div>
+                          <div>{this.state.recipient_organization}</div>
                         </div>
                       )}
                     </td>

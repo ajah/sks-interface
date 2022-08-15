@@ -25,7 +25,9 @@ export default class Navbar extends Component {
           <div className="collapse navbar-collapse" id="navbarNav">
             <ul className="navbar-nav ms-auto">
               <li className="nav-item">
-                <Link className="nav-link active" to="/" >Home</Link>
+                <Link className="nav-link active" to="/">
+                  Home
+                </Link>
               </li>
 
               <li className="nav-item">
@@ -37,10 +39,14 @@ export default class Navbar extends Component {
                 </a>
               </li>
               <li className="nav-item">
-                <Link className="nav-link active" to="/about-us" >About</Link>
+                <Link className="nav-link active" to="/about-us">
+                  About
+                </Link>
               </li>
               <li className="nav-item">
-                <Link className="nav-link active" to="/contact" >Contact</Link>
+                <Link className="nav-link active" to="/contact">
+                  Contact
+                </Link>
               </li>
             </ul>
           </div>

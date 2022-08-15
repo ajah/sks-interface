@@ -13,7 +13,6 @@ import OrgPage from "./components/orgPage";
 import ActPage from "./components/actPage";
 import AllActs from "./components/allActs";
 
-
 export default function App() {
   return (
     <Router>
@@ -26,7 +25,7 @@ export default function App() {
       <Route exact path="/activities/:id" component={ActPage} />
       <Route exact path="/entities/:id" component={OrgPage} />
       <Route exact path="/activitiesbyent/:ent_id" component={AllActs} />
-      
+
       <Footer />
     </Router>
   );

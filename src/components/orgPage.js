@@ -20,12 +20,7 @@ const Row = (props) => (
   <tr>
     <td>
       <div className="">
-        <Link
-          to={`/activities/${props.act_npk_id}`}
-    
-        >
-          {props.grant_title}
-        </Link>
+        <Link to={`/activities/${props.act_npk_id}`}>{props.grant_title}</Link>
       </div>
     </td>
     <td>
@@ -202,12 +197,14 @@ export default class OrgPage extends Component {
                     <td>
                       <strong>Focus Area</strong>
                     </td>
-                    {((this.state.focus_area.includes("Charity provided description")) || (!this.state.focus_area)) &&
-                      <td>No data available</td>
-                    }
-                    {((this.state.focus_area) && (!this.state.focus_area.includes("Charity provided description"))) &&
-                      <td>{this.state.focus_area}</td>
-                  }
+                    {(this.state.focus_area.includes(
+                      "Charity provided description"
+                    ) ||
+                      !this.state.focus_area) && <td>No data available</td>}
+                    {this.state.focus_area &&
+                      !this.state.focus_area.includes(
+                        "Charity provided description"
+                      ) && <td>{this.state.focus_area}</td>}
                   </tr>
                   <tr>
                     <td>
@@ -313,9 +310,7 @@ export default class OrgPage extends Component {
                   "No activities associated with this organization"
                 )}
                 {this.state.activities.length >= 5 ? (
-                  <Link
-                    to={`/activitiesbyent/${this.state.ent_sks_id}`}
-                  >
+                  <Link to={`/activitiesbyent/${this.state.ent_sks_id}`}>
                     <span> See a complete list of grants here</span>
                   </Link>
                 ) : (
