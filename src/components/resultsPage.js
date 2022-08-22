@@ -534,9 +534,10 @@ export default class ResultsPage extends Component {
                     </form>
                     <form>
                       <hr />
-                      {this.state.provinces.map((province, key) => {
+                      {this.state.provinces.map((province, i) => {
                         return (
-                          <div className="form-check">
+                          // TODO: Replace i with data relevant id
+                          <div className="form-check" key={i}>
                             <input
                               className="form-check-input"
                               type="checkbox"

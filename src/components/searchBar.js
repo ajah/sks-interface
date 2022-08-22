@@ -201,9 +201,13 @@ const Search = (props) => {
         <div className="row">
           <div className="col-2"></div>
           <div className="col-5 inter-bar">
-            {searchContext.searchArray.map((query, key) => {
+            {searchContext.searchArray.map((query, i) => {
               return (
-                <div className="search-query border col-2 ps-3 rounded-pill">
+                // TODO: Replace i with data relevant id
+                <div
+                  className="search-query border col-2 ps-3 rounded-pill"
+                  key={i}
+                >
                   {query}
                   {/*  <Link  to={`/results?q=${totalQuery.replace(('+'+query),"")}&filter=activity,entity`}>
                   <FontAwesomeIcon transform="right-15" onClick={() => removeQuery({query})} icon={faTimesCircle} />
@@ -211,7 +215,7 @@ const Search = (props) => {
                   <div className="mx-auto" size="sm">
                     <FontAwesomeIcon
                       className="remove-query"
-                      onClick={() => removeQuery({ query, key })}
+                      onClick={() => removeQuery({ query, key: i })}
                       icon={faTimesCircle}
                     />
                   </div>
