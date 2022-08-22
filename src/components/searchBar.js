@@ -38,7 +38,6 @@ const Search = (props) => {
     /*   if (props.isHome) {
 
       e.preventDefault();
-      console.log("here", e.key)
 
     } */
 
@@ -46,53 +45,38 @@ const Search = (props) => {
       searchQuery &&
       searchQuery1 !== searchQuery2 /* && (searchQuery2 !== searchQuery3) */
     ) {
-      //console.log(searchQuery1, searchQuery2, searchQuery3)
-
       searchContext.searchHandler(searchQuery);
 
       if (counter === 0) {
         searchContext.searchArrayHandler(searchQuery1);
-
         counter++;
-        console.log('counter set to 1', counter);
       }
       if (counter === 1 && searchQuery1 !== searchQuery2 && searchQuery2) {
         searchContext.searchArrayHandler(searchQuery2);
-        // console.log("here[[2[", searchQuery2)
         counter++;
-        console.log('counter set to 2', counter);
       }
       if (counter === 2 && searchQuery2 !== searchQuery3 && searchQuery3) {
         searchContext.searchArrayHandler(searchQuery3);
-        //console.log("here[[3[", searchQuery3)
         counter++;
-        console.log('counter set to 3', counter);
       }
     }
     if (counter === 3 && searchQuery3 !== searchQuery4 && searchQuery4) {
       searchContext.searchArrayHandler(searchQuery4);
-      //console.log("here[[3[", searchQuery3)
       counter++;
     }
     if (counter === 4 && searchQuery4 !== searchQuery5 && searchQuery5) {
       searchContext.searchArrayHandler(searchQuery5);
-      //console.log("here[[3[", searchQuery3)
       counter++;
     }
 
     setSearchQuery('');
 
     setOkArray(searchContext.searchArray);
-
-    // console.log(okArray)
   };
 
   const enterHandler = (e) => {
-    console.log(e.key);
-
     if (e.key === 'Enter') {
       e.preventDefault();
-      console.log('hello', e);
       setCurrentQuery(e);
       history.push(`/results?q=${e.target.value}&doctype=activity,entity`);
     }
@@ -100,9 +84,6 @@ const Search = (props) => {
 
   const setCurrentQuery = (e) => {
     e.preventDefault();
-
-    console.log(searchContext.searchArray);
-    //console.log(queryString.parse(window.location.search).q.split(" "))
 
     let query = e.target.value;
 
@@ -112,7 +93,6 @@ const Search = (props) => {
       setSearchQuery1(query);
     } else if (counter === 1) {
       setSearchQuery2(query);
-      //console.log("searchquery2", searchQuery2)
     } else if (counter === 2) {
       setSearchQuery3(query);
     } else if (counter === 3) {
@@ -122,9 +102,6 @@ const Search = (props) => {
     }
 
     //handleTotalQuery(query)
-
-    //console.log("totalquery", totalQuery)
-    // console.log(counter)
   };
 
   /*  const handleTotalQuery = (query) => {
@@ -157,10 +134,7 @@ const Search = (props) => {
     searchContext.loadingHandler('true');
 
     /* const newArray = searchArray.splice(key, 1)
-    console.log(searchArray)
     setSearchArray(newArray) */
-
-    //console.log('okarray', okArray, query)
 
     if (searchQuery1 === query.query) {
       setSearchQuery1('');
@@ -182,11 +156,7 @@ const Search = (props) => {
 
     counter--;
 
-    // console.log("heres the array", searchContext)
-
     searchContext.searchHandler('');
-
-    console.log('removing', searchContext.searchArray, counter);
   };
 
   /* 
@@ -198,7 +168,6 @@ const Search = (props) => {
     handleSubmit = (e) => {
       e.preventDefault();
       const { history } = this.props;
-      console.log(history);
   
       if (this.state.query && this.state.query.length > 1) {
         this.getInfo();
@@ -216,8 +185,6 @@ const Search = (props) => {
       if (this.state.query) {
         localStorage.setItem('query', this.state.query);
         this.setState({ currentQuery: this.state.query });
-        console.log(localStorage)
-        console.log(this.state.query)
   
       }
   
@@ -225,13 +192,7 @@ const Search = (props) => {
     }; */
 
   const orCheckHandler = async (e) => {
-    console.log('here at least', e.target.checked);
-
-    console.log(searchContext.orFunctionality);
-
     await searchContext.orHandler(e.target.checked);
-
-    console.log(searchContext.orFunctionality);
   };
 
   return (

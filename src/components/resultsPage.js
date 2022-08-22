@@ -100,12 +100,8 @@ export default class ResultsPage extends Component {
       filter.push('entity');
     }
 
-    console.log('GOODBEY', this.context.searchArray);
-
     if (!this.context.searchArray[0]) {
-      console.log('HELLLLLLLLLOOOOOOOO');
       let queryArray = queryString.parse(window.location.search).q.split(' ');
-      console.log(queryArray);
 
       if (queryArray[0]) {
         queryArray.forEach((item) => this.context.searchArrayHandler(item));
@@ -114,8 +110,6 @@ export default class ResultsPage extends Component {
       /*  this.setState({
         queryProp: queryArray
       }); */
-
-      console.log(this.context.searchArray);
     }
 
     if (this.context.orFunctionality) {
@@ -136,11 +130,7 @@ export default class ResultsPage extends Component {
       query = this.context.searchArray[0];
     } else {
       query = queryString.parse(window.location.search).q;
-      //console.log("hereasdfa", query)
     }
-    //console.log("here", query)
-
-    console.log('OPERATOR', operator);
 
     axios
       .all([
@@ -225,7 +215,6 @@ export default class ResultsPage extends Component {
             axios
               .get(url)
               .then((res) => {
-                console.log(res);
                 this.setState({
                   downloadLink: `https://sks-server-ajah-ttwto.ondigitalocean.app//download?q=${
                     this.state.globalQuery
@@ -236,7 +225,6 @@ export default class ResultsPage extends Component {
                   }`,
                 });
               })
-              .then(console.log('test'))
               .catch((error) => console.log(error));
           } else {
             console.log('No entity was found');
@@ -260,8 +248,6 @@ export default class ResultsPage extends Component {
 
     if (this.context.loading === 'true') {
       this.componentDidMount();
-
-      //console.log(this.context)
     }
   }
 
@@ -306,8 +292,6 @@ export default class ResultsPage extends Component {
 
     city = this.state.city;
 
-    console.log('here', city);
-
     this.setState({
       municipality: city,
     });
@@ -346,8 +330,6 @@ export default class ResultsPage extends Component {
       this.setState({
         location: this.state.location,
       });
-
-      console.log('add', this.state.location);
     } else if (this.state.location.includes(loc)) {
       const index = this.state.location.indexOf(loc);
 
@@ -356,8 +338,6 @@ export default class ResultsPage extends Component {
       this.setState({
         location: this.state.location,
       });
-
-      console.log('remove', this.state.location);
     }
 
     if (this.state.municipality) {
@@ -395,7 +375,7 @@ export default class ResultsPage extends Component {
       );
     }
 
-    /* console.log("hello", this.context.query)
+    /* 
 
     const parsed = queryString.parse(this.props.location.search);
     const query =  this.context.query;
@@ -425,12 +405,11 @@ export default class ResultsPage extends Component {
             ent_total: count["data"]["entities"],
           });
         })
-      ); */
+      ); 
     const value =
       e.target.type === 'checkbox' ? e.target.checked : e.target.value;
     const name = e.target.name;
 
-    console.log(value);
 
     const queryParams = queryString.parse(window.location.search);
     const filters = this.state.filter;
@@ -441,7 +420,6 @@ export default class ResultsPage extends Component {
         filter: filters,
       });
       //this.componentDidMount()
-      console.log(filters, value);
     }
 
     const index = filters.indexOf(name);
@@ -473,12 +451,10 @@ export default class ResultsPage extends Component {
       axios
         .get(url)
         .then((res) => {
-          console.log(res);
           this.setState({
             downloadData: res.data.hits,
           });
         })
-        .then(console.log('test'))
         .catch((error) => console.log(error));
     } else {
       console.log('No entity was found');
@@ -487,8 +463,6 @@ export default class ResultsPage extends Component {
 
   handleButton = (e) => {
     e.preventDefault();
-    console.log('Activities:', this.state.inc_activities);
-    console.log('Entities:', this.state.inc_entities);
 
     let filter = [];
     if (this.state.inc_activities) {
@@ -504,7 +478,6 @@ export default class ResultsPage extends Component {
     /*   const queryParams = queryString.parse(window.location.search);
       // const newQueries = { ...queryParams, filter: filter.toString() };
       const orig_q = queryParams["q"];
-      console.log(queryParams["q"]);
   
       const { history } = this.props;
   
@@ -515,8 +488,7 @@ export default class ResultsPage extends Component {
       }
   
       history.push(`/results?q=${encodeURI(orig_q)}&filter=${filter.toString()}`);
-      window.location.reload(false);
-      // console.log(queryString.stringify(newQueries)); */
+      window.location.reload(false);*/
   };
 
   render() {

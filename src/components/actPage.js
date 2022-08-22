@@ -211,7 +211,6 @@ export default class ActPage extends Component {
             recip_website: res['data'][0]['website'],
           });
         })
-        .then(console.log('entity info retrieved'))
         .catch((error) => console.log(error));
     } else {
       console.log('No entity was found');
