@@ -1,25 +1,25 @@
-import React, { Component, useContext } from "react";
-import "./../assets/css/styles.css";
-import axios from "axios";
-import queryString from "query-string";
-import SearchBar from "./searchBar";
-import { Link } from "react-router-dom";
-import { SearchContext } from "../context/search-context";
+import React, { Component, useContext } from 'react';
+import './../assets/css/styles.css';
+import axios from 'axios';
+import queryString from 'query-string';
+import SearchBar from './searchBar';
+import { Link } from 'react-router-dom';
+import { SearchContext } from '../context/search-context';
 
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faSearch } from "@fortawesome/free-solid-svg-icons";
-import "./resultsPage.css";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faSearch } from '@fortawesome/free-solid-svg-icons';
+import './resultsPage.css';
 
 // import { GoTriangleDown } from "react-icons/go";
 
 function Badge(props) {
   const type = props.type;
-  if (type === "activity") {
+  if (type === 'activity') {
     return <span className="badge badge-primary">Activity</span>;
-  } else if (type === "entity") {
+  } else if (type === 'entity') {
     return <span className="badge bg-primary">Organization</span>;
   } else {
-    return "";
+    return '';
   }
 }
 
@@ -29,15 +29,13 @@ const Row = (props) => (
       <div>
         {/* <a href={props.url}>{props.name}</a> */}
 
-
-        <Link to={props.url} >{props.name}</Link>
-
+        <Link to={props.url}>{props.name}</Link>
       </div>
     </td>
     <td>
       <div>
         {props.municipality}
-        {props.region ? `, ${props.region}` : ""}
+        {props.region ? `, ${props.region}` : ''}
       </div>
     </td>
     <td>
@@ -49,24 +47,34 @@ const Row = (props) => (
 );
 
 export default class ResultsPage extends Component {
-
   static contextType = SearchContext;
 
   constructor(props) {
     super(props);
     this.state = {
-      total: "",
+      total: '',
       results: [],
       // filterParams: ["activity", "entity"],
-      act_total: "",
-      ent_total: "",
+      act_total: '',
+      ent_total: '',
       inc_activities: true,
       inc_entities: true,
       contextState: '',
       filter: ['activity', 'entity'],
       globalQuery: '',
       queryProp: [],
-      provinces: ['Alberta', 'British Columbia', 'Manitoba', 'New Brunswick', 'Newfoundland and Labrador', 'Nova Scotia', 'Ontario', 'Prince Edward Island', 'Quebec', 'Saskatchewan'],
+      provinces: [
+        'Alberta',
+        'British Columbia',
+        'Manitoba',
+        'New Brunswick',
+        'Newfoundland and Labrador',
+        'Nova Scotia',
+        'Ontario',
+        'Prince Edward Island',
+        'Quebec',
+        'Saskatchewan',
+      ],
       city: '',
       location: [],
       region: '',
@@ -79,87 +87,69 @@ export default class ResultsPage extends Component {
     };
   }
 
-
-
-
-
-
   componentDidMount() {
     const parsed = queryString.parse(this.props.location.search);
     let query = '';
     let filter = this.state.filter;
     let isRedirect = false;
-    let location = this.state.location.join("+")
-    let operator = 'and'
-   
-
+    let location = this.state.location.join('+');
+    let operator = 'and';
 
     if (filter.length === 0) {
-      filter.push('activity')
-      filter.push('entity')
+      filter.push('activity');
+      filter.push('entity');
     }
 
-    console.log("GOODBEY", this.context.searchArray)
+    console.log('GOODBEY', this.context.searchArray);
 
     if (!this.context.searchArray[0]) {
-      console.log("HELLLLLLLLLOOOOOOOO")
-      let queryArray = queryString.parse(window.location.search).q.split(" ");
-      console.log(queryArray)
+      console.log('HELLLLLLLLLOOOOOOOO');
+      let queryArray = queryString.parse(window.location.search).q.split(' ');
+      console.log(queryArray);
 
       if (queryArray[0]) {
-        queryArray.forEach(item => this.context.searchArrayHandler(item))
+        queryArray.forEach((item) => this.context.searchArrayHandler(item));
       }
       //this.context.searchArrayHandler(queryArray)
       /*  this.setState({
         queryProp: queryArray
       }); */
 
-      console.log(this.context.searchArray)
-
+      console.log(this.context.searchArray);
     }
 
     if (this.context.orFunctionality) {
-      operator = 'or'
+      operator = 'or';
     }
 
-
-    if (queryString.parse(window.location.search).filter === "entity") {
-
-
-
+    if (queryString.parse(window.location.search).filter === 'entity') {
       isRedirect = true;
-      filter = "entity";
+      filter = 'entity';
       this.state.inc_activities = false;
       this.state.inc_entities = true;
-      this.state.filter.splice(0, 1)
-
+      this.state.filter.splice(0, 1);
     }
 
-
-    if (this.context.searchArray.length > 1 && (isRedirect === false)) {
-
-      query = this.context.searchArray.join('+')
-
-
-    }
-    else if (this.context.searchArray[0] && isRedirect === false) {
-      query = this.context.searchArray[0]
-    }
-
-    else {
+    if (this.context.searchArray.length > 1 && isRedirect === false) {
+      query = this.context.searchArray.join('+');
+    } else if (this.context.searchArray[0] && isRedirect === false) {
+      query = this.context.searchArray[0];
+    } else {
       query = queryString.parse(window.location.search).q;
       //console.log("hereasdfa", query)
     }
     //console.log("here", query)
 
-    console.log("OPERATOR", operator)
+    console.log('OPERATOR', operator);
 
     axios
       .all([
         axios.get(
           `https://sks-server-ajah-ttwto.ondigitalocean.app/search?q=${encodeURI(
             query
-          )}&doctype=${filter.toString()}&region=${this.state.location}&municipality=${this.state.municipality}&operator=${operator}`
+          )}&doctype=${filter.toString()}&region=${
+            this.state.location
+          }&municipality=${this.state.municipality}&operator=${operator}`
         ),
         axios.get(
           `https://sks-server-ajah-ttwto.ondigitalocean.app/count?q=${encodeURI(
@@ -170,54 +160,89 @@ export default class ResultsPage extends Component {
       .then(
         axios.spread((search, count) => {
           this.setState({
-            results: search["data"]["hits"],
-            total: count["data"]["new-activities,entities"],
-            act_total: count["data"]["new-activities"],
-            ent_total: count["data"]["entities"],
+            results: search['data']['hits'],
+            total: count['data']['new-activities,entities'],
+            act_total: count['data']['new-activities'],
+            ent_total: count['data']['entities'],
             contextState: this.context,
             operator: operator,
-
           });
 
           this.context.loadingHandler('false');
 
           if (this.state.location.length > 0 && this.state.municipality) {
-            window.history.pushState('page2', 'Title', `/results?q=${query}&doctype=${filter.toString()}&region=${this.state.location}&municipality=${this.state.municipality}&operator=${this.state.operator}`)
-          }
-          else if (this.state.location.length > 0 && !this.state.municipality) {
-            window.history.pushState('page2', 'Title', `/results?q=${query}&doctype=${filter.toString()}&region=${this.state.location}&operator=${this.state.operator}`)
-          }
-          else if (this.state.municipality && this.state.location.length == 0) {
-            window.history.pushState('page2', 'Title', `/results?q=${query}&doctype=${filter.toString()}&municipality=${this.state.municipality}&operator=${this.state.operator}`)
-          }
-          else {
-            window.history.pushState('page2', 'Title', `/results?q=${query}&doctype=${filter.toString()}&operator=${this.state.operator}`)
+            window.history.pushState(
+              'page2',
+              'Title',
+              `/results?q=${query}&doctype=${filter.toString()}&region=${
+                this.state.location
+              }&municipality=${this.state.municipality}&operator=${
+                this.state.operator
+              }`
+            );
+          } else if (
+            this.state.location.length > 0 &&
+            !this.state.municipality
+          ) {
+            window.history.pushState(
+              'page2',
+              'Title',
+              `/results?q=${query}&doctype=${filter.toString()}&region=${
+                this.state.location
+              }&operator=${this.state.operator}`
+            );
+          } else if (
+            this.state.municipality &&
+            this.state.location.length == 0
+          ) {
+            window.history.pushState(
+              'page2',
+              'Title',
+              `/results?q=${query}&doctype=${filter.toString()}&municipality=${
+                this.state.municipality
+              }&operator=${this.state.operator}`
+            );
+          } else {
+            window.history.pushState(
+              'page2',
+              'Title',
+              `/results?q=${query}&doctype=${filter.toString()}&operator=${
+                this.state.operator
+              }`
+            );
           }
           this.setState({
-            globalQuery: queryString.parse(window.location.search).q
+            globalQuery: queryString.parse(window.location.search).q,
           });
           if (this.state.globalQuery !== undefined) {
-            const url = `https://sks-server-ajah-ttwto.ondigitalocean.app/search?q=${this.state.globalQuery}&doctype=${filter.toString()}&region=${this.state.location}&municipality=${this.state.municipality}&operator=${this.state.operator}`;
+            const url = `https://sks-server-ajah-ttwto.ondigitalocean.app/search?q=${
+              this.state.globalQuery
+            }&doctype=${filter.toString()}&region=${
+              this.state.location
+            }&municipality=${this.state.municipality}&operator=${
+              this.state.operator
+            }`;
             axios
               .get(url)
               .then((res) => {
-                console.log(res)
+                console.log(res);
                 this.setState({
-                  downloadLink: `https://sks-server-ajah-ttwto.ondigitalocean.app//download?q=${this.state.globalQuery}&doctype=${filter.toString()}&region=${this.state.location}&municipality=${this.state.municipality}&operator=${this.state.operator}`
-                })
+                  downloadLink: `https://sks-server-ajah-ttwto.ondigitalocean.app//download?q=${
+                    this.state.globalQuery
+                  }&doctype=${filter.toString()}&region=${
+                    this.state.location
+                  }&municipality=${this.state.municipality}&operator=${
+                    this.state.operator
+                  }`,
+                });
               })
-              .then(
-                console.log("test")
-              )
+              .then(console.log('test'))
               .catch((error) => console.log(error));
           } else {
-            console.log("No entity was found");
+            console.log('No entity was found');
           }
         })
-
       );
-
-
 
     /*  if (!filter.includes("activity")) {
        this.setState({
@@ -233,15 +258,10 @@ export default class ResultsPage extends Component {
   componentDidUpdate() {
     // Typical usage (don't forget to compare props):
 
-
-
     if (this.context.loading === 'true') {
-
-
-      this.componentDidMount()
+      this.componentDidMount();
 
       //console.log(this.context)
-
     }
   }
 
@@ -249,17 +269,17 @@ export default class ResultsPage extends Component {
     return this.state.results.map((hit) => {
       let name, municipality, region, type, url;
       // if (hit._index === "activities") {
-      if (hit._index === "new-activities") {
+      if (hit._index === 'new-activities') {
         name = hit._source.grant_title;
         municipality = hit._source.grant_municipality;
         region = hit._source.grant_region;
-        type = "activity";
+        type = 'activity';
         url = `/activities/${hit._source.act_sks_id}`;
-      } else if (hit._index === "entities") {
+      } else if (hit._index === 'entities') {
         name = hit._source.name;
         municipality = hit._source.location_municipality;
         region = hit._source.location_region;
-        type = "entity";
+        type = 'entity';
         url = `/entities/${hit._source.ent_sks_id}`;
       }
       return (
@@ -275,96 +295,105 @@ export default class ResultsPage extends Component {
     });
   }
 
-
   setCity = (e) => {
-
-
     this.setState({
-      city: e.target.value
+      city: e.target.value,
     });
-  }
+  };
 
   searchCity = (e, city) => {
+    e.preventDefault();
 
-    e.preventDefault()
+    city = this.state.city;
 
-    city = this.state.city
-
-    console.log("here", city)
-
+    console.log('here', city);
 
     this.setState({
-      municipality: city
-    })
-
+      municipality: city,
+    });
 
     if (this.state.location) {
-
-
-      window.history.pushState('page2', 'Title', `/results?q=${this.state.globalQuery}&doctype=${this.state.filter.join(",")}&region=${this.state.location}&municipality=${city}&operator=${this.state.operator}`)
+      window.history.pushState(
+        'page2',
+        'Title',
+        `/results?q=${this.state.globalQuery}&doctype=${this.state.filter.join(
+          ','
+        )}&region=${this.state.location}&municipality=${city}&operator=${
+          this.state.operator
+        }`
+      );
+    } else {
+      window.history.pushState(
+        'page2',
+        'Title',
+        `/results?q=${this.state.globalQuery}&doctype=${this.state.filter.join(
+          ','
+        )}&municipality=${city}&operator=${this.state.operator}`
+      );
     }
-    else {
-      window.history.pushState('page2', 'Title', `/results?q=${this.state.globalQuery}&doctype=${this.state.filter.join(",")}&municipality=${city}&operator=${this.state.operator}`)
-    }
-
-
-
-  }
+  };
 
   handleLocation = (e, city) => {
-
     //e.preventDefault();
-
 
     let loc;
 
-
-    loc = e.target.name
-
+    loc = e.target.name;
 
     if (!this.state.location.includes(loc)) {
-
-      this.state.location.push(loc)
-
-
-
+      this.state.location.push(loc);
 
       this.setState({
-        location: this.state.location
+        location: this.state.location,
       });
 
-      console.log("add", this.state.location)
-    }
-    else if (this.state.location.includes(loc)) {
+      console.log('add', this.state.location);
+    } else if (this.state.location.includes(loc)) {
+      const index = this.state.location.indexOf(loc);
 
-      const index = this.state.location.indexOf(loc)
-
-      this.state.location.splice(index, 1)
+      this.state.location.splice(index, 1);
 
       this.setState({
-        location: this.state.location
+        location: this.state.location,
       });
 
-      console.log("remove", this.state.location)
+      console.log('remove', this.state.location);
     }
 
     if (this.state.municipality) {
-
-
-      window.history.pushState('page2', 'Title', `/results?q=${this.state.globalQuery}&doctype=${this.state.filter.join(",")}&region=${this.state.location}&municipality=${this.state.municipality}&operator=${this.state.operator}`)
+      window.history.pushState(
+        'page2',
+        'Title',
+        `/results?q=${this.state.globalQuery}&doctype=${this.state.filter.join(
+          ','
+        )}&region=${this.state.location}&municipality=${
+          this.state.municipality
+        }&operator=${this.state.operator}`
+      );
+    } else {
+      window.history.pushState(
+        'page2',
+        'Title',
+        `/results?q=${this.state.globalQuery}&doctype=${this.state.filter.join(
+          ','
+        )}&region=${this.state.location}&operator=${this.state.operator}`
+      );
     }
-    else {
-      window.history.pushState('page2', 'Title', `/results?q=${this.state.globalQuery}&doctype=${this.state.filter.join(",")}&region=${this.state.location}&operator=${this.state.operator}`)
-    }
-  }
+  };
 
   handleFilters = (e) => {
     if (!this.state.filter.includes(e.target.name)) {
-      this.state.filter.push(e.target.name)
-      window.history.pushState('page2', 'Title', `/results?q=${this.state.globalQuery}&doctype=${this.state.filter.join(",")}&municipality=${this.state.municipality}&operator=${this.state.operator}`)
+      this.state.filter.push(e.target.name);
+      window.history.pushState(
+        'page2',
+        'Title',
+        `/results?q=${this.state.globalQuery}&doctype=${this.state.filter.join(
+          ','
+        )}&municipality=${this.state.municipality}&operator=${
+          this.state.operator
+        }`
+      );
     }
-
-
 
     /* console.log("hello", this.context.query)
 
@@ -398,43 +427,35 @@ export default class ResultsPage extends Component {
         })
       ); */
     const value =
-      e.target.type === "checkbox" ? e.target.checked : e.target.value;
+      e.target.type === 'checkbox' ? e.target.checked : e.target.value;
     const name = e.target.name;
 
-    console.log(value)
+    console.log(value);
 
     const queryParams = queryString.parse(window.location.search);
-    const filters = this.state.filter
+    const filters = this.state.filter;
 
     if (value === true) {
-      filters.push(name)
+      filters.push(name);
       this.setState({
-        filter: filters
-      })
+        filter: filters,
+      });
       //this.componentDidMount()
-      console.log(filters, value)
-
+      console.log(filters, value);
     }
 
     const index = filters.indexOf(name);
 
-
-
-
-
     this.setState({
-      filter: filters
-    })
-
+      filter: filters,
+    });
 
     if (index > -1) {
-
       filters.splice(index, 1); // 2nd parameter means remove one item only
       this.setState({
-        filter: filters
-      })
+        filter: filters,
+      });
     }
-
 
     this.componentDidMount();
     /*   this.setState({
@@ -446,46 +467,38 @@ export default class ResultsPage extends Component {
       }); */
   };
 
-
   handleDownload = (e) => {
-
     if (this.state.globalQuery !== undefined) {
       const url = `https://sks-server-ajah-ttwto.ondigitalocean.app/search?q=${this.global.query}&doctype=activity,entity`;
       axios
         .get(url)
         .then((res) => {
-          console.log(res)
+          console.log(res);
           this.setState({
-            downloadData: res.data.hits
-          })
+            downloadData: res.data.hits,
+          });
         })
-        .then(
-          console.log("test")
-        )
+        .then(console.log('test'))
         .catch((error) => console.log(error));
     } else {
-      console.log("No entity was found");
+      console.log('No entity was found');
     }
-
-
-  }
-
-
+  };
 
   handleButton = (e) => {
     e.preventDefault();
-    console.log("Activities:", this.state.inc_activities);
-    console.log("Entities:", this.state.inc_entities);
+    console.log('Activities:', this.state.inc_activities);
+    console.log('Entities:', this.state.inc_entities);
 
     let filter = [];
     if (this.state.inc_activities) {
-      filter.push("activity");
+      filter.push('activity');
     } else if (this.state.inc_entities) {
-      filter.push("entity");
+      filter.push('entity');
     } else if (!this.state.inc_activities & !this.state.inc_entities) {
-      filter.push("activity,entity"); //.push("entity"); //
+      filter.push('activity,entity'); //.push("entity"); //
     } else if (this.state.inc_activities & this.state.inc_entities) {
-      filter.push("activity,entity"); //.push("entity"); //
+      filter.push('activity,entity'); //.push("entity"); //
     }
 
     /*   const queryParams = queryString.parse(window.location.search);
@@ -514,7 +527,6 @@ export default class ResultsPage extends Component {
             <SearchBar queryProp={this.state.queryProp} />
           </div>
           <div className="row">
-
             <div className="col-2 border border-3">
               {/* <div className="col-2"> */}
               <div className="row">
@@ -565,10 +577,10 @@ export default class ResultsPage extends Component {
                               {province}
                             </label>
                           </div>
-                        )
+                        );
                       })}
 
-                      <div className="mt-4" >
+                      <div className="mt-4">
                         <label className="form-check-label">City:</label>
 
                         <div className="city-block">
@@ -576,23 +588,22 @@ export default class ResultsPage extends Component {
                             className="form-control rounded-pill"
                             type="text"
                             name={this.state.city}
-
                             onChange={(e) => this.setCity(e)}
                           />
-                          <div
-
-
-                          >
+                          <div>
                             <button
                               className="ml-2 btn btn-primary"
-                              onClick={(e) => this.searchCity(e)}>
-                              <FontAwesomeIcon className="d-inline" size="sm" icon={faSearch} />
+                              onClick={(e) => this.searchCity(e)}
+                            >
+                              <FontAwesomeIcon
+                                className="d-inline"
+                                size="sm"
+                                icon={faSearch}
+                              />
                             </button>
                           </div>
                         </div>
-
                       </div>
-
                     </form>
                     <hr />
                     <p className="text-secondary">More filters coming soon!</p>
@@ -614,25 +625,25 @@ export default class ResultsPage extends Component {
                         <GoTriangleDown />
                         {"   "}FFBC
                       </strong>
-                      <div class="form-check mt-1">
+                      <div className="form-check mt-1">
                         <input
-                          class="form-check-input"
+                          className="form-check-input"
                           type="checkbox"
                           value=""
                           id="defaultCheck1"
                         />
-                        <label class="form-check-label" for="defaultCheck1">
+                        <label className="form-check-label" for="defaultCheck1">
                           Black-Led
                         </label>
                       </div>
-                      <div class="form-check">
+                      <div className="form-check">
                         <input
-                          class="form-check-input"
+                          className="form-check-input"
                           type="checkbox"
                           value=""
                           id="defaultCheck2"
                         />
-                        <label class="form-check-label" for="defaultCheck2">
+                        <label className="form-check-label" for="defaultCheck2">
                           Black-Serving
                         </label>
                       </div>
@@ -642,58 +653,58 @@ export default class ResultsPage extends Component {
                         <GoTriangleDown />
                         {"   "}EFC
                       </strong>
-                      <div class="form-check mt-1">
+                      <div className="form-check mt-1">
                         <input
-                          class="form-check-input"
+                          className="form-check-input"
                           type="checkbox"
                           value=""
                           id="defaultCheck1"
                         />
-                        <label class="form-check-label" for="defaultCheck1">
+                        <label className="form-check-label" for="defaultCheck1">
                           Sustainability
                         </label>
                       </div>
-                      <div class="form-check">
+                      <div className="form-check">
                         <input
-                          class="form-check-input"
+                          className="form-check-input"
                           type="checkbox"
                           value=""
                           id="defaultCheck2"
                         />
-                        <label class="form-check-label" for="defaultCheck2">
+                        <label className="form-check-label" for="defaultCheck2">
                           Climate Change
                         </label>
                       </div>
-                      <div class="form-check">
+                      <div className="form-check">
                         <input
-                          class="form-check-input"
+                          className="form-check-input"
                           type="checkbox"
                           value=""
                           id="defaultCheck2"
                         />
-                        <label class="form-check-label" for="defaultCheck2">
+                        <label className="form-check-label" for="defaultCheck2">
                           Climate Education
                         </label>
                       </div>
-                      <div class="form-check">
+                      <div className="form-check">
                         <input
-                          class="form-check-input"
+                          className="form-check-input"
                           type="checkbox"
                           value=""
                           id="defaultCheck2"
                         />
-                        <label class="form-check-label" for="defaultCheck2">
+                        <label className="form-check-label" for="defaultCheck2">
                           Water & Oceans
                         </label>
                       </div>
-                      <div class="form-check">
+                      <div className="form-check">
                         <input
-                          class="form-check-input"
+                          className="form-check-input"
                           type="checkbox"
                           value=""
                           id="defaultCheck2"
                         />
-                        <label class="form-check-label" for="defaultCheck2">
+                        <label className="form-check-label" for="defaultCheck2">
                           Renewable Energy
                         </label>
                       </div>
@@ -706,13 +717,12 @@ export default class ResultsPage extends Component {
               </div>
             </div>
             <div className="col-10">
-
               <div className="p-3">
                 <div className="row ">
                   <div className="col">
                     <div className="bg-light p-3">
                       <span>Total Results: </span>
-                      <span class="badge rounded-pill bg-primary ms-2">
+                      <span className="badge rounded-pill bg-primary ms-2">
                         {this.state.total}
                       </span>
                     </div>
@@ -720,7 +730,7 @@ export default class ResultsPage extends Component {
                   <div className="col">
                     <div className="bg-light p-3">
                       <span>Organizations: </span>
-                      <span class="badge rounded-pill bg-secondary ms-2">
+                      <span className="badge rounded-pill bg-secondary ms-2">
                         {this.state.ent_total}
                       </span>
                     </div>
@@ -728,7 +738,7 @@ export default class ResultsPage extends Component {
                   <div className="col">
                     <div className="bg-light p-3">
                       <span>Activities: </span>
-                      <span class="badge rounded-pill bg-secondary ms-2">
+                      <span className="badge rounded-pill bg-secondary ms-2">
                         {this.state.act_total}
                       </span>
                     </div>
@@ -741,12 +751,9 @@ export default class ResultsPage extends Component {
                     <div className="mt-2">
                       <h4>Search Results</h4>
                     </div>
-                    {this.state.globalQuery &&
-                      <a
-                        href={this.state.downloadLink}>
-                        Download Results
-                      </a>
-                    }
+                    {this.state.globalQuery && (
+                      <a href={this.state.downloadLink}>Download Results</a>
+                    )}
                   </div>
                 </div>
                 <div className="row">
@@ -755,7 +762,7 @@ export default class ResultsPage extends Component {
                     <table className="table table-striped">
                       <thead className="thead-light">
                         <tr>
-                          <th style={{ width: "55%" }} scope="col">
+                          <th style={{ width: '55%' }} scope="col">
                             Name
                           </th>
                           <th scope="col">Location</th>
