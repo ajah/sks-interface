@@ -31,29 +31,36 @@ export default class HomePage extends Component {
                       interests or focus, and use the filters and controls on the search
                       page to further refine your results.
                     </p>
-                    <p className="text-start">
+                    <p className="text-start mb-0">
                       We explored various ways this prototype could support different
                       organization in their work, including:
-                      <ul>
-                        <li className="fs-5">
+                    </p>
+                    <ul className="text-start">
+                      <li>
+                        <p className="fs-5 mb-0">
                           Helping nonprofit organizations to find other organizations
                           working in the same focus area within the same geographical
                           location, in order to connect with them and share resources.
-                        </li>
-                        <li className="fs-5">
+                        </p>
+                      </li>
+                      <li>
+                        <p className="fs-5 mb-0">
                           Enabling advocacy organizations to find and segment
                           organizations that represent the communities they advocate for,
                           in order to understand the level of funding being received by
                           these organizations.
-                        </li>
-                        <li className="fs-5">
+                        </p>
+                      </li>
+                      <li>
+                        <p className="fs-5 mb-0">
                           Assisting foundations to find the activities being carried out
                           in their focus area or region, in order to explore funding gaps
                           or opportunities that are currently not being met in these
                           areas.
-                        </li>
-                      </ul>
-                    </p>
+                        </p>
+                      </li>
+                    </ul>
+
                     <a href="/about-us">
                       <p>To learn more, read our about us page.</p>
                     </a>
