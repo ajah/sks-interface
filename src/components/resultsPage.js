@@ -134,6 +134,8 @@ export default class ResultsPage extends Component {
       query = queryString.parse(window.location.search).q
     }
 
+    if (!query.trim()) return
+
     axios
       .all([
         axios.get(
