@@ -33,13 +33,13 @@ const RecipientOrgBox = (props) => (
               <strong>Legal Name</strong>
             </td>
             <td>
-              <Link to={`/entities/${props.org_redirect}`}>
-                {props.recip_legal_name ? (
-                  <td>{props.recip_legal_name}</td>
-                ) : (
-                  <td>Data not available</td>
-                )}
-              </Link>
+              {props.recip_legal_name ? (
+                <Link to={`/entities/${props.org_redirect}`}>
+                  props.recip_legal_name{' '}
+                </Link>
+              ) : (
+                <span>Data not available</span>
+              )}
             </td>
           </tr>
           <tr>
@@ -47,32 +47,19 @@ const RecipientOrgBox = (props) => (
               <strong>Business Number</strong>
             </td>
 
-            {props.recip_business_number ? (
-              <td>{props.recip_business_number}</td>
-            ) : (
-              <td>Data not available</td>
-            )}
+            <td>{props.recip_business_number || <span>Data not available</span>}</td>
           </tr>
           <tr>
             <td>
               <strong>Designation Type</strong>
             </td>
-
-            {props.recip_designation_type ? (
-              <td>{props.recip_designation_type}</td>
-            ) : (
-              <td>Data not available</td>
-            )}
+            <td>{props.recip_designation_type || <span>Data not available</span>}</td>
           </tr>
           <tr>
             <td>
               <strong>Focus Area</strong>
             </td>
-            {props.recip_focus_area ? (
-              <td>{props.recip_focus_area}</td>
-            ) : (
-              <td>Data not available</td>
-            )}
+            <td>{props.recip_focus_area || <span>Data not available</span>}</td>
           </tr>
           <tr>
             <td>
@@ -82,7 +69,7 @@ const RecipientOrgBox = (props) => (
               {props.recip_website ? (
                 <a href={'http://'.concat(props.recip_website)}>{props.recip_website}</a>
               ) : (
-                <td>Data not available</td>
+                <span>Data not available</span>
               )}
             </td>
           </tr>
@@ -268,11 +255,11 @@ export default class ActPage extends Component {
           <BackButton />
           <div className="pb-3">
             <h2 className="text-center">{this.state.grant_title}</h2>
-            {this.state.grant_description ? (
-              <p className="text-center">{this.state.grant_description}</p>
-            ) : (
-              <p className="text-center">Activity description not available</p>
-            )}
+            <p className="text-center">
+              {this.state.grant_description || (
+                <span>Activity description not available</span>
+              )}
+            </p>
           </div>
         </div>
         <div className="row">
@@ -291,71 +278,45 @@ export default class ActPage extends Component {
                     <td>
                       <strong>Program Name</strong>
                     </td>
-                    {this.state.program_name?.length ? (
-                      <td>{this.state.program_name}</td>
-                    ) : (
-                      <td>No data available</td>
-                    )}
+                    <td>{this.state.program_name || <span>No data available</span>}</td>
                   </tr>
                   <tr>
                     <td>
                       <strong>{this.state.date_type}</strong>
                     </td>
-                    {this.state.date.length > 0 ? (
-                      <td>{this.state.date}</td>
-                    ) : (
-                      <td>No data available</td>
-                    )}
+                    <td>{this.state.date || <span>No data available</span>}</td>
                   </tr>
                   <tr>
                     <td>
                       <strong>{this.state.end_date_type}</strong>
                     </td>
-                    {this.state.date.end_date ? (
-                      <td>{this.state.end_date}</td>
-                    ) : (
-                      <td>No data available</td>
-                    )}
+                    <td>{this.state.end_date || <span>No data available</span>}</td>
                   </tr>
                   <tr>
                     <td>
                       <strong>City</strong>
                     </td>
-                    {this.state.grant_municipality.length > 0 ? (
-                      <td>{this.state.grant_municipality}</td>
-                    ) : (
-                      <td>No data available</td>
-                    )}
+                    <td>{this.state.grant_municipality || <td>No data available</td>}</td>
                   </tr>
                   <tr>
                     <td>
                       <strong>Province</strong>
                     </td>
-                    {this.state.grant_region ? (
-                      <td>{this.state.grant_region}</td>
-                    ) : (
-                      <td>No data available</td>
-                    )}
+                    <td>{this.state.grant_region || <span>No data available</span>}</td>
                   </tr>
                   <tr>
                     <td>
                       <strong>Source ID</strong>
                     </td>
-                    {this.state.source_id ? (
-                      <td>{this.state.source_id}</td>
-                    ) : (
-                      <td>No data available</td>
-                    )}
+                    <td>{this.state.source_id || <span>No data available</span>}</td>
                   </tr>
                   <tr>
                     <td>
                       <strong>Source Authority</strong>
                     </td>
-                    {this.state.source_authority ? (
-                      <td>{this.state.source_authority}</td>
-                    ) : (
-                      <td>No data available</td>
-                    )}
+                    <td>
+                      {this.state.source_authority || <span>No data available</span>}
+                    </td>
                   </tr>
                   <tr>
                     <td>
@@ -389,11 +350,7 @@ export default class ActPage extends Component {
                       {' '}
                       {this.state.recip_legal_name ? (
                         <Link to={`/entities/${this.state.org_redirect}`}>
-                          {this.state.recip_legal_name ? (
-                            <td>{this.state.recip_legal_name}</td>
-                          ) : (
-                            <td>Data not available</td>
-                          )}
+                          {this.state.recip_legal_name}
                         </Link>
                       ) : (
                         <div>
@@ -407,23 +364,19 @@ export default class ActPage extends Component {
                     <td>
                       <strong>Recipient ID</strong>
                     </td>
-                    <td>No data available</td>
+                    <td>{this.state.recipient_id || <span>No data available</span>}</td>
                   </tr>
                   <tr>
                     <td>
                       <strong>Funder</strong>
                     </td>
-                    {this.state.funder ? (
-                      <td>{this.state.funder}</td>
-                    ) : (
-                      <td>No data available</td>
-                    )}
+                    <td>{this.state.funder || <span>No data available</span>}</td>
                   </tr>
                   <tr>
                     <td>
                       <strong>Funder ID</strong>
                     </td>
-                    <td>No data available</td>
+                    <td>{this.state.funder_id || <span>No data available</span>}</td>
                   </tr>
                 </tbody>
               </table>
@@ -435,16 +388,16 @@ export default class ActPage extends Component {
             <h5>Activity Results</h5>
             <div className="border border-2 p-2">
               <div>
-                <strong>Expected Results:</strong>
+                <strong>Expected Results: </strong>
                 {this.state.expected_results ? (
-                  <td>{expectedResults}</td>
+                  expectedResults
                 ) : (
-                  <td>No data available yet.</td>
+                  <span>No data available yet</span>
                 )}
               </div>
               <div>
-                <strong>Actual Results:</strong>
-                <p>No data available yet.</p>
+                <strong>Actual Results: </strong>
+                <span>No data available yet</span>
               </div>
             </div>
             <br />
@@ -477,7 +430,6 @@ export default class ActPage extends Component {
             <br />
           </div>
         </div>
-        <div></div>
       </div>
     )
   }
