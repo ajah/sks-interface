@@ -16,24 +16,24 @@ export default class HomePage extends Component {
             <div className="p-2 bg-light round-3">
               <div className="container-fluid pt-5">
                 <div className="row">
-                  <div className="col">
+                  <div className="col px-md-5 px-1">
                     <h1 className=" fw-bold m-4 welcome-h1 text-center">
                       Sector Knowledge Sharing Hub (Beta)
                     </h1>
                     <p className="welcome-p m-4 text-center">
                       The SKS Hub is a prototype project intended to demonstrate the value
-                      of shared, open knowledge infrastructure for the nonprofit sector.
-                      The Hub collects information from existing data sources about
-                      nonprofit organizations and their activities, and makes it possible
-                      to search, filter, and navigate this information for sector leaders,
-                      advocates, researchers, and practitioners. To use the tool, simply
-                      search the data by choosing keywords related to your particular
-                      interests or focus, and use the filters and controls on the search
-                      page to further refine your results.
+                      of shared and open knowledge infrastructure for the nonprofit
+                      sector. The Hub collects information from existing data sources
+                      about nonprofit organizations and their activities, and makes it
+                      possible to search, filter, and navigate this information for sector
+                      leaders, advocates, researchers, and practitioners. To use the tool,
+                      simply search the data by choosing keywords related to your
+                      particular interests or focus, and use the filters and controls on
+                      the search page to further refine your results.
                     </p>
                     <p className="text-start mb-0">
                       We explored various ways this prototype could support different
-                      organization in their work, including:
+                      organizations in their work, including:
                     </p>
                     <ul className="text-start">
                       <li>
@@ -53,16 +53,15 @@ export default class HomePage extends Component {
                       </li>
                       <li>
                         <p className="fs-5 mb-0">
-                          Assisting foundations to find the activities being carried out
-                          in their focus area or region, in order to explore funding gaps
-                          or opportunities that are currently not being met in these
-                          areas.
+                          Assisting foundations in finding activities being carried out in
+                          their focus area or region, in order to explore funding gaps or
+                          opportunities that are currently not being met in these areas.
                         </p>
                       </li>
                     </ul>
 
                     <a href="/about-us">
-                      <p>To learn more, read our about us page.</p>
+                      <p>To learn more, read our About Us page.</p>
                     </a>
                   </div>
                 </div>
