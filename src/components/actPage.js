@@ -9,11 +9,11 @@ const NoOrgBox = (props) => (
   <div id="recipient_org">
     <h5>Recipient Organization</h5>
     <div className="border border-2 p-2">
-      <div className="search-warn">
+      <div className="mb-1">
         No further information was found for this organization because this activity is
         not linked to an organization via a Business Number. Click the recipient
         organization link below to search the database for this organization by its legal
-        name
+        name:
       </div>
       <Link to={`/results/?q=${encodeURI(props.recip_legal_name)}&filter=entity`}>
         {props.recip_legal_name}
