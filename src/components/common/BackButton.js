@@ -1,11 +1,9 @@
-import React, { useContext } from 'react';
-import { useHistory } from 'react-router-dom';
-import { SearchContext } from '../../context/search-context';
-import { Link } from 'react-router-dom';
-export default function BackButton() {
-  const history = useHistory();
+import React, { useContext } from 'react'
+import { SearchContext } from '../../context/search-context'
+import { Link } from 'react-router-dom'
 
-  const searchContext = useContext(SearchContext);
+export default function BackButton() {
+  const searchContext = useContext(SearchContext)
   return (
     <div>
       {/*   <button className="btn btn-outline-primary" onClick={history.goBack}>
@@ -13,12 +11,10 @@ export default function BackButton() {
       </button> */}
       <Link
         className="btn btn-outline-primary"
-        to={`/results?q=${searchContext.searchArray.join(
-          '+'
-        )}&filter=activity,entity`}
+        to={`/results?q=${searchContext.searchArray.join('+')}&filter=activity,entity`}
       >
         Go Back to Results
       </Link>
     </div>
-  );
+  )
 }

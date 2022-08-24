@@ -1,39 +1,30 @@
-// import React, { Component } from "react";
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faSearch, faTimesCircle } from '@fortawesome/free-solid-svg-icons';
-import queryString from 'query-string';
-import { useHistory } from 'react-router-dom';
+import React, { useContext } from 'react'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faSearch, faTimesCircle } from '@fortawesome/free-solid-svg-icons'
+import { Link, useHistory } from 'react-router-dom'
 
-import { Link } from 'react-router-dom';
+import { SearchContext } from '../context/search-context'
 
-import React, { Component, useState, useContext } from 'react';
-import { SearchContext } from '../context/search-context';
-import './searchBar.css';
-import context from 'react-bootstrap/esm/AccordionContext';
+import './searchBar.css'
 
-const Search = (props) => {
-  const history = useHistory();
+const Search = () => {
+  const history = useHistory()
 
-  const searchContext = useContext(SearchContext);
+  const searchContext = useContext(SearchContext)
 
-  const [searchQuery, setSearchQuery] = React.useState('');
-  const [searchQuery1, setSearchQuery1] = React.useState('');
-  const [searchQuery2, setSearchQuery2] = React.useState('');
-  const [searchQuery3, setSearchQuery3] = React.useState('');
-  const [searchQuery4, setSearchQuery4] = React.useState('');
-  const [searchQuery5, setSearchQuery5] = React.useState('');
-  const [totalQuery, setTotalQuery] = React.useState('');
-  const [searchArray, setSearchArray] = React.useState([]);
-  // const [counter, setcounter] = React.useState(0)
-  const [okArray, setOkArray] = React.useState([]);
-  let counter = 0;
+  const [searchQuery, setSearchQuery] = React.useState('')
+  const [searchQuery1, setSearchQuery1] = React.useState('')
+  const [searchQuery2, setSearchQuery2] = React.useState('')
+  const [searchQuery3, setSearchQuery3] = React.useState('')
+  const [searchQuery4, setSearchQuery4] = React.useState('')
+  const [searchQuery5, setSearchQuery5] = React.useState('')
 
-  let searchString = '';
+  let counter = 0
 
   const searchQueryHandler = (e) => {
     //e.preventDefault();
 
-    searchContext.loadingHandler('true');
+    searchContext.loadingHandler('true')
 
     /*   if (props.isHome) {
 
@@ -45,64 +36,62 @@ const Search = (props) => {
       searchQuery &&
       searchQuery1 !== searchQuery2 /* && (searchQuery2 !== searchQuery3) */
     ) {
-      searchContext.searchHandler(searchQuery);
+      searchContext.searchHandler(searchQuery)
 
       if (counter === 0) {
-        searchContext.searchArrayHandler(searchQuery1);
-        counter++;
+        searchContext.searchArrayHandler(searchQuery1)
+        counter++
       }
       if (counter === 1 && searchQuery1 !== searchQuery2 && searchQuery2) {
-        searchContext.searchArrayHandler(searchQuery2);
-        counter++;
+        searchContext.searchArrayHandler(searchQuery2)
+        counter++
       }
       if (counter === 2 && searchQuery2 !== searchQuery3 && searchQuery3) {
-        searchContext.searchArrayHandler(searchQuery3);
-        counter++;
+        searchContext.searchArrayHandler(searchQuery3)
+        counter++
       }
     }
     if (counter === 3 && searchQuery3 !== searchQuery4 && searchQuery4) {
-      searchContext.searchArrayHandler(searchQuery4);
-      counter++;
+      searchContext.searchArrayHandler(searchQuery4)
+      counter++
     }
     if (counter === 4 && searchQuery4 !== searchQuery5 && searchQuery5) {
-      searchContext.searchArrayHandler(searchQuery5);
-      counter++;
+      searchContext.searchArrayHandler(searchQuery5)
+      counter++
     }
 
-    setSearchQuery('');
-
-    setOkArray(searchContext.searchArray);
-  };
+    setSearchQuery('')
+  }
 
   const enterHandler = (e) => {
     if (e.key === 'Enter') {
-      e.preventDefault();
-      setCurrentQuery(e);
-      history.push(`/results?q=${e.target.value}&doctype=activity,entity`);
+      e.preventDefault()
+      setCurrentQuery(e)
+      history.push(`/results?q=${e.target.value}&doctype=activity,entity`)
     }
-  };
+  }
 
   const setCurrentQuery = (e) => {
-    e.preventDefault();
+    e.preventDefault()
 
-    let query = e.target.value;
+    let query = e.target.value
 
-    setSearchQuery(query);
+    setSearchQuery(query)
 
     if (counter === 0) {
-      setSearchQuery1(query);
+      setSearchQuery1(query)
     } else if (counter === 1) {
-      setSearchQuery2(query);
+      setSearchQuery2(query)
     } else if (counter === 2) {
-      setSearchQuery3(query);
+      setSearchQuery3(query)
     } else if (counter === 3) {
-      setSearchQuery4(query);
+      setSearchQuery4(query)
     } else if (counter === 4) {
-      setSearchQuery5(query);
+      setSearchQuery5(query)
     }
 
     //handleTotalQuery(query)
-  };
+  }
 
   /*  const handleTotalQuery = (query) => {
   
@@ -130,34 +119,32 @@ const Search = (props) => {
     
    }
    */
-  const removeQuery = (query, key) => {
-    searchContext.loadingHandler('true');
+  const removeQuery = (query) => {
+    searchContext.loadingHandler('true')
 
     /* const newArray = searchArray.splice(key, 1)
     setSearchArray(newArray) */
 
     if (searchQuery1 === query.query) {
-      setSearchQuery1('');
+      setSearchQuery1('')
     } else if (searchQuery2 === query.query) {
-      setSearchQuery2('');
+      setSearchQuery2('')
     } else if (searchQuery3 === query.query) {
-      setSearchQuery3('');
+      setSearchQuery3('')
     }
 
-    searchContext.searchArray.splice(query.key, 1);
-
-    setOkArray(searchContext.searchArray);
+    searchContext.searchArray.splice(query.key, 1)
 
     if (!searchContext.searchArray) {
-      setSearchQuery('');
+      setSearchQuery('')
     }
 
     //handleTotalQuery(query)
 
-    counter--;
+    counter--
 
-    searchContext.searchHandler('');
-  };
+    searchContext.searchHandler('')
+  }
 
   /* 
     setCurrentQuery = (query) => {
@@ -192,8 +179,8 @@ const Search = (props) => {
     }; */
 
   const orCheckHandler = async (e) => {
-    await searchContext.orHandler(e.target.checked);
-  };
+    await searchContext.orHandler(e.target.checked)
+  }
 
   return (
     <div className="container pb-3 pt-1 mt-1">
@@ -204,10 +191,7 @@ const Search = (props) => {
             {searchContext.searchArray.map((query, i) => {
               return (
                 // TODO: Replace i with data relevant id
-                <div
-                  className="search-query border col-2 ps-3 rounded-pill"
-                  key={i}
-                >
+                <div className="search-query border col-2 ps-3 rounded-pill" key={i}>
                   {query}
                   {/*  <Link  to={`/results?q=${totalQuery.replace(('+'+query),"")}&filter=activity,entity`}>
                   <FontAwesomeIcon transform="right-15" onClick={() => removeQuery({query})} icon={faTimesCircle} />
@@ -220,7 +204,7 @@ const Search = (props) => {
                     />
                   </div>
                 </div>
-              );
+              )
             })}
           </div>
         </div>
@@ -288,7 +272,7 @@ const Search = (props) => {
         </div>
       </form>
     </div>
-  );
-};
+  )
+}
 
-export default Search;
+export default Search

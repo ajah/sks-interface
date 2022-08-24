@@ -1,27 +1,27 @@
-import React, { Component } from 'react';
-import { Link } from 'react-router-dom';
-import axios from 'axios';
-import './actPage.css';
-import BackButton from './common/BackButton';
-import { SearchContext } from '../context/search-context';
+import React, { Component } from 'react'
+import { Link } from 'react-router-dom'
+import axios from 'axios'
+import './actPage.css'
+import BackButton from './common/BackButton'
+import { SearchContext } from '../context/search-context'
+
 const NoOrgBox = (props) => (
   <div id="recipient_org">
     <h5>Recipient Organization</h5>
     <div className="border border-2 p-2">
       <div className="search-warn">
-        No further information was found for this organization because this
-        activity is not linked to an organization via a Business Number. Click
-        the recipient organization link below to search the database for this
-        organization by its legal name
+        No further information was found for this organization because this activity is
+        not linked to an organization via a Business Number. Click the recipient
+        organization link below to search the database for this organization by its legal
+        name
       </div>
-      <Link
-        to={`/results/?q=${encodeURI(props.recip_legal_name)}&filter=entity`}
-      >
+      <Link to={`/results/?q=${encodeURI(props.recip_legal_name)}&filter=entity`}>
         {props.recip_legal_name}
       </Link>
     </div>
   </div>
-);
+)
+
 const RecipientOrgBox = (props) => (
   <div id="recipient_org">
     <h5>Recipient Organization</h5>
@@ -80,9 +80,7 @@ const RecipientOrgBox = (props) => (
             </td>
             <td>
               {props.recip_website ? (
-                <a href={'http://'.concat(props.recip_website)}>
-                  {props.recip_website}
-                </a>
+                <a href={'http://'.concat(props.recip_website)}>{props.recip_website}</a>
               ) : (
                 <td>Data not available</td>
               )}
@@ -92,19 +90,17 @@ const RecipientOrgBox = (props) => (
       </table>
     </div>
   </div>
-);
+)
 
-const ExpectedResults = (props) => <p>{props.expected_results}</p>;
+const ExpectedResults = (props) => <p>{props.expected_results}</p>
 
-const NoResults = () => (
-  <p>No expected results were found for this activity.</p>
-);
+const NoResults = () => <p>No expected results were found for this activity.</p>
 
 export default class ActPage extends Component {
-  static contextType = SearchContext;
+  static contextType = SearchContext
 
   constructor(props) {
-    super(props);
+    super(props)
     this.state = {
       actual_results: '',
       date: '',
@@ -134,7 +130,7 @@ export default class ActPage extends Component {
       recip_designation_type: '',
       recip_focus_area: '',
       recip_website: '',
-    };
+    }
   }
 
   currencyFormat(amount) {
@@ -143,29 +139,27 @@ export default class ActPage extends Component {
       Number.parseFloat(amount)
         .toFixed(2)
         .replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,')
-    );
+    )
   }
 
   fpeFormat(fpe) {
-    return fpe.substring(5);
+    return fpe.substring(5)
   }
 
   formatDatapoints(datapoint) {
-    let result = '';
+    let result = ''
     if (datapoint == null) {
-      result = 'Unavailable';
-    } else result = datapoint;
+      result = 'Unavailable'
+    } else result = datapoint
 
-    return result;
+    return result
   }
 
   async componentDidMount() {
-    const url = new URL(window.location.href);
-    const npk_id = url.pathname.split('/')[2];
+    const url = new URL(window.location.href)
+    const npk_id = url.pathname.split('/')[2]
     await axios
-      .get(
-        `https://sks-server-ajah-ttwto.ondigitalocean.app/activities/${npk_id}`
-      )
+      .get(`https://sks-server-ajah-ttwto.ondigitalocean.app/activities/${npk_id}`)
       .then((res) => {
         this.setState({
           date: res['data'][0]['date'],
@@ -190,16 +184,16 @@ export default class ActPage extends Component {
           source_url: res['data'][0]['source_url'],
           loading: false,
           org_redirect: res['data'][0]['ent_sks_id'],
-        });
+        })
       })
-      .catch((error) => console.log(error));
+      .catch((error) => console.log(error))
 
-    this.getEntitiesData();
+    this.getEntitiesData()
   }
 
   async getEntitiesData() {
     if (this.state.org_redirect !== undefined) {
-      const url = `https://sks-server-ajah-ttwto.ondigitalocean.app/entities/${this.state.org_redirect}`;
+      const url = `https://sks-server-ajah-ttwto.ondigitalocean.app/entities/${this.state.org_redirect}`
       await axios
         .get(url)
         .then((res) => {
@@ -209,16 +203,16 @@ export default class ActPage extends Component {
             recip_designation_type: res['data'][0]['legal_designation_type'],
             recip_focus_area: res['data'][0]['focus_area'],
             recip_website: res['data'][0]['website'],
-          });
+          })
         })
-        .catch((error) => console.log(error));
+        .catch((error) => console.log(error))
     } else {
-      console.log('No entity was found');
+      console.log('No entity was found')
     }
   }
 
   render() {
-    const { loading } = this.state;
+    const { loading } = this.state
     if (loading) {
       return (
         <div className="container bg-light border border-2 mt-5 p-5 gap-2">
@@ -235,12 +229,12 @@ export default class ActPage extends Component {
             </div>
           </div>
         </div>
-      );
+      )
     }
 
-    let recipientBox;
-    const hasOrg = this.state.org_redirect;
-    let resultArray = Object.entries(this.state);
+    let recipientBox
+    const hasOrg = this.state.org_redirect
+
     if (hasOrg) {
       recipientBox = (
         <RecipientOrgBox
@@ -251,21 +245,17 @@ export default class ActPage extends Component {
           recip_website={this.state.recip_website}
           org_redirect={this.state.org_redirect}
         />
-      );
+      )
     } else {
-      recipientBox = (
-        <NoOrgBox recip_legal_name={this.state.recipient_organization} />
-      );
+      recipientBox = <NoOrgBox recip_legal_name={this.state.recipient_organization} />
     }
 
-    let expectedResults;
-    const hasResults = this.state.expected_results;
+    let expectedResults
+    const hasResults = this.state.expected_results
     if (hasResults | (hasResults !== undefined)) {
-      expectedResults = (
-        <ExpectedResults expected_results={this.state.expected_results} />
-      );
+      expectedResults = <ExpectedResults expected_results={this.state.expected_results} />
     } else {
-      expectedResults = <NoResults />;
+      expectedResults = <NoResults />
     }
 
     return (
@@ -485,6 +475,6 @@ export default class ActPage extends Component {
         </div>
         <div></div>
       </div>
-    );
+    )
   }
 }

@@ -1,25 +1,25 @@
-import React, { Component, useContext } from 'react';
-import './../assets/css/styles.css';
-import axios from 'axios';
-import queryString from 'query-string';
-import SearchBar from './searchBar';
-import { Link } from 'react-router-dom';
-import { SearchContext } from '../context/search-context';
+import React, { Component } from 'react'
+import './../assets/css/styles.css'
+import axios from 'axios'
+import queryString from 'query-string'
+import SearchBar from './searchBar'
+import { Link } from 'react-router-dom'
+import { SearchContext } from '../context/search-context'
 
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faSearch } from '@fortawesome/free-solid-svg-icons';
-import './resultsPage.css';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faSearch } from '@fortawesome/free-solid-svg-icons'
+import './resultsPage.css'
 
 // import { GoTriangleDown } from "react-icons/go";
 
 function Badge(props) {
-  const type = props.type;
+  const type = props.type
   if (type === 'activity') {
-    return <span className="badge badge-primary">Activity</span>;
+    return <span className="badge badge-primary">Activity</span>
   } else if (type === 'entity') {
-    return <span className="badge bg-primary">Organization</span>;
+    return <span className="badge bg-primary">Organization</span>
   } else {
-    return '';
+    return ''
   }
 }
 
@@ -44,13 +44,13 @@ const Row = (props) => (
       </div>
     </td>
   </tr>
-);
+)
 
 export default class ResultsPage extends Component {
-  static contextType = SearchContext;
+  static contextType = SearchContext
 
   constructor(props) {
-    super(props);
+    super(props)
     this.state = {
       total: '',
       results: [],
@@ -84,27 +84,26 @@ export default class ResultsPage extends Component {
       downloadLink: '',
 
       // query: "",
-    };
+    }
   }
 
   componentDidMount() {
-    const parsed = queryString.parse(this.props.location.search);
-    let query = '';
-    let filter = this.state.filter;
-    let isRedirect = false;
-    let location = this.state.location.join('+');
-    let operator = 'and';
+    // const parsed = queryString.parse(this.props.location.search)
+    let query = ''
+    let filter = this.state.filter
+    let isRedirect = false
+    let operator = 'and'
 
     if (filter.length === 0) {
-      filter.push('activity');
-      filter.push('entity');
+      filter.push('activity')
+      filter.push('entity')
     }
 
     if (!this.context.searchArray[0]) {
-      let queryArray = queryString.parse(window.location.search).q.split(' ');
+      let queryArray = queryString.parse(window.location.search).q.split(' ')
 
       if (queryArray[0]) {
-        queryArray.forEach((item) => this.context.searchArrayHandler(item));
+        queryArray.forEach((item) => this.context.searchArrayHandler(item))
       }
       //this.context.searchArrayHandler(queryArray)
       /*  this.setState({
@@ -113,23 +112,26 @@ export default class ResultsPage extends Component {
     }
 
     if (this.context.orFunctionality) {
-      operator = 'or';
+      operator = 'or'
     }
 
     if (queryString.parse(window.location.search).filter === 'entity') {
-      isRedirect = true;
-      filter = 'entity';
-      this.state.inc_activities = false;
-      this.state.inc_entities = true;
-      this.state.filter.splice(0, 1);
+      isRedirect = true
+      filter = 'entity'
+
+      this.setState({
+        inc_activities: false,
+        inc_entities: true,
+        filter: this.state.filter.slice(1),
+      })
     }
 
     if (this.context.searchArray.length > 1 && isRedirect === false) {
-      query = this.context.searchArray.join('+');
+      query = this.context.searchArray.join('+')
     } else if (this.context.searchArray[0] && isRedirect === false) {
-      query = this.context.searchArray[0];
+      query = this.context.searchArray[0]
     } else {
-      query = queryString.parse(window.location.search).q;
+      query = queryString.parse(window.location.search).q
     }
 
     axios
@@ -137,9 +139,9 @@ export default class ResultsPage extends Component {
         axios.get(
           `https://sks-server-ajah-ttwto.ondigitalocean.app/search?q=${encodeURI(
             query
-          )}&doctype=${filter.toString()}&region=${
-            this.state.location
-          }&municipality=${this.state.municipality}&operator=${operator}`
+          )}&doctype=${filter.toString()}&region=${this.state.location}&municipality=${
+            this.state.municipality
+          }&operator=${operator}`
         ),
         axios.get(
           `https://sks-server-ajah-ttwto.ondigitalocean.app/count?q=${encodeURI(
@@ -156,42 +158,34 @@ export default class ResultsPage extends Component {
             ent_total: count['data']['entities'],
             contextState: this.context,
             operator: operator,
-          });
+          })
 
-          this.context.loadingHandler('false');
+          this.context.loadingHandler('false')
 
-          if (this.state.location.length > 0 && this.state.municipality) {
+          if (this.state.location.length && this.state.municipality) {
             window.history.pushState(
               'page2',
               'Title',
               `/results?q=${query}&doctype=${filter.toString()}&region=${
                 this.state.location
-              }&municipality=${this.state.municipality}&operator=${
-                this.state.operator
-              }`
-            );
-          } else if (
-            this.state.location.length > 0 &&
-            !this.state.municipality
-          ) {
+              }&municipality=${this.state.municipality}&operator=${this.state.operator}`
+            )
+          } else if (this.state.location.length && !this.state.municipality) {
             window.history.pushState(
               'page2',
               'Title',
               `/results?q=${query}&doctype=${filter.toString()}&region=${
                 this.state.location
               }&operator=${this.state.operator}`
-            );
-          } else if (
-            this.state.municipality &&
-            this.state.location.length == 0
-          ) {
+            )
+          } else if (this.state.municipality && !this.state.location.length) {
             window.history.pushState(
               'page2',
               'Title',
               `/results?q=${query}&doctype=${filter.toString()}&municipality=${
                 this.state.municipality
               }&operator=${this.state.operator}`
-            );
+            )
           } else {
             window.history.pushState(
               'page2',
@@ -199,22 +193,20 @@ export default class ResultsPage extends Component {
               `/results?q=${query}&doctype=${filter.toString()}&operator=${
                 this.state.operator
               }`
-            );
+            )
           }
           this.setState({
             globalQuery: queryString.parse(window.location.search).q,
-          });
+          })
           if (this.state.globalQuery !== undefined) {
             const url = `https://sks-server-ajah-ttwto.ondigitalocean.app/search?q=${
               this.state.globalQuery
-            }&doctype=${filter.toString()}&region=${
-              this.state.location
-            }&municipality=${this.state.municipality}&operator=${
-              this.state.operator
-            }`;
+            }&doctype=${filter.toString()}&region=${this.state.location}&municipality=${
+              this.state.municipality
+            }&operator=${this.state.operator}`
             axios
               .get(url)
-              .then((res) => {
+              .then(() => {
                 this.setState({
                   downloadLink: `https://sks-server-ajah-ttwto.ondigitalocean.app//download?q=${
                     this.state.globalQuery
@@ -223,14 +215,14 @@ export default class ResultsPage extends Component {
                   }&municipality=${this.state.municipality}&operator=${
                     this.state.operator
                   }`,
-                });
+                })
               })
-              .catch((error) => console.log(error));
+              .catch((error) => console.log(error))
           } else {
-            console.log('No entity was found');
+            console.log('No entity was found')
           }
         })
-      );
+      )
 
     /*  if (!filter.includes("activity")) {
        this.setState({
@@ -247,26 +239,26 @@ export default class ResultsPage extends Component {
     // Typical usage (don't forget to compare props):
 
     if (this.context.loading === 'true') {
-      this.componentDidMount();
+      this.componentDidMount()
     }
   }
 
   tableRows() {
     return this.state.results.map((hit) => {
-      let name, municipality, region, type, url;
+      let name, municipality, region, type, url
       // if (hit._index === "activities") {
       if (hit._index === 'new-activities') {
-        name = hit._source.grant_title;
-        municipality = hit._source.grant_municipality;
-        region = hit._source.grant_region;
-        type = 'activity';
-        url = `/activities/${hit._source.act_sks_id}`;
+        name = hit._source.grant_title
+        municipality = hit._source.grant_municipality
+        region = hit._source.grant_region
+        type = 'activity'
+        url = `/activities/${hit._source.act_sks_id}`
       } else if (hit._index === 'entities') {
-        name = hit._source.name;
-        municipality = hit._source.location_municipality;
-        region = hit._source.location_region;
-        type = 'entity';
-        url = `/entities/${hit._source.ent_sks_id}`;
+        name = hit._source.name
+        municipality = hit._source.location_municipality
+        region = hit._source.location_region
+        type = 'entity'
+        url = `/entities/${hit._source.ent_sks_id}`
       }
       return (
         <Row
@@ -277,24 +269,24 @@ export default class ResultsPage extends Component {
           url={url}
           key={hit._id}
         />
-      );
-    });
+      )
+    })
   }
 
   setCity = (e) => {
     this.setState({
       city: e.target.value,
-    });
-  };
+    })
+  }
 
   searchCity = (e, city) => {
-    e.preventDefault();
+    e.preventDefault()
 
-    city = this.state.city;
+    city = this.state.city
 
     this.setState({
       municipality: city,
-    });
+    })
 
     if (this.state.location) {
       window.history.pushState(
@@ -305,7 +297,7 @@ export default class ResultsPage extends Component {
         )}&region=${this.state.location}&municipality=${city}&operator=${
           this.state.operator
         }`
-      );
+      )
     } else {
       window.history.pushState(
         'page2',
@@ -313,31 +305,31 @@ export default class ResultsPage extends Component {
         `/results?q=${this.state.globalQuery}&doctype=${this.state.filter.join(
           ','
         )}&municipality=${city}&operator=${this.state.operator}`
-      );
+      )
     }
-  };
+  }
 
   handleLocation = (e, city) => {
     //e.preventDefault();
 
-    let loc;
+    let loc
 
-    loc = e.target.name;
+    loc = e.target.name
 
     if (!this.state.location.includes(loc)) {
-      this.state.location.push(loc);
+      this.state.location.push(loc)
 
       this.setState({
         location: this.state.location,
-      });
+      })
     } else if (this.state.location.includes(loc)) {
-      const index = this.state.location.indexOf(loc);
+      const index = this.state.location.indexOf(loc)
 
-      this.state.location.splice(index, 1);
+      this.state.location.splice(index, 1)
 
       this.setState({
         location: this.state.location,
-      });
+      })
     }
 
     if (this.state.municipality) {
@@ -349,7 +341,7 @@ export default class ResultsPage extends Component {
         )}&region=${this.state.location}&municipality=${
           this.state.municipality
         }&operator=${this.state.operator}`
-      );
+      )
     } else {
       window.history.pushState(
         'page2',
@@ -357,22 +349,20 @@ export default class ResultsPage extends Component {
         `/results?q=${this.state.globalQuery}&doctype=${this.state.filter.join(
           ','
         )}&region=${this.state.location}&operator=${this.state.operator}`
-      );
+      )
     }
-  };
+  }
 
   handleFilters = (e) => {
     if (!this.state.filter.includes(e.target.name)) {
-      this.state.filter.push(e.target.name);
+      this.state.filter.push(e.target.name)
       window.history.pushState(
         'page2',
         'Title',
         `/results?q=${this.state.globalQuery}&doctype=${this.state.filter.join(
           ','
-        )}&municipality=${this.state.municipality}&operator=${
-          this.state.operator
-        }`
-      );
+        )}&municipality=${this.state.municipality}&operator=${this.state.operator}`
+      )
     }
 
     /* 
@@ -443,36 +433,36 @@ export default class ResultsPage extends Component {
       this.setState({
         queryParams: name,
       }); */
-  };
+  }
 
   handleDownload = (e) => {
     if (this.state.globalQuery !== undefined) {
-      const url = `https://sks-server-ajah-ttwto.ondigitalocean.app/search?q=${this.global.query}&doctype=activity,entity`;
+      const url = `https://sks-server-ajah-ttwto.ondigitalocean.app/search?q=${this.global.query}&doctype=activity,entity`
       axios
         .get(url)
         .then((res) => {
           this.setState({
             downloadData: res.data.hits,
-          });
+          })
         })
-        .catch((error) => console.log(error));
+        .catch((error) => console.log(error))
     } else {
-      console.log('No entity was found');
+      console.log('No entity was found')
     }
-  };
+  }
 
   handleButton = (e) => {
-    e.preventDefault();
+    e.preventDefault()
 
-    let filter = [];
+    let filter = []
     if (this.state.inc_activities) {
-      filter.push('activity');
+      filter.push('activity')
     } else if (this.state.inc_entities) {
-      filter.push('entity');
+      filter.push('entity')
     } else if (!this.state.inc_activities & !this.state.inc_entities) {
-      filter.push('activity,entity'); //.push("entity"); //
+      filter.push('activity,entity') //.push("entity"); //
     } else if (this.state.inc_activities & this.state.inc_entities) {
-      filter.push('activity,entity'); //.push("entity"); //
+      filter.push('activity,entity') //.push("entity"); //
     }
 
     /*   const queryParams = queryString.parse(window.location.search);
@@ -489,7 +479,7 @@ export default class ResultsPage extends Component {
   
       history.push(`/results?q=${encodeURI(orig_q)}&filter=${filter.toString()}`);
       window.location.reload(false);*/
-  };
+  }
 
   render() {
     return (
@@ -516,9 +506,7 @@ export default class ResultsPage extends Component {
                           name="entity"
                           onChange={this.handleFilters}
                         />
-                        <label className="form-check-label">
-                          Organizations
-                        </label>
+                        <label className="form-check-label">Organizations</label>
                       </div>
                       <div className="form-check">
                         <input
@@ -546,11 +534,9 @@ export default class ResultsPage extends Component {
                               name={province}
                               onChange={this.handleLocation}
                             />
-                            <label className="form-check-label">
-                              {province}
-                            </label>
+                            <label className="form-check-label">{province}</label>
                           </div>
-                        );
+                        )
                       })}
 
                       <div className="mt-4">
@@ -582,10 +568,7 @@ export default class ResultsPage extends Component {
                     <p className="text-secondary">More filters coming soon!</p>
                   </div>
                   <div className="">
-                    <button
-                      className="btn btn-primary"
-                      onClick={this.handleButton}
-                    >
+                    <button className="btn btn-primary" onClick={this.handleButton}>
                       Update
                     </button>
                   </div>
@@ -751,6 +734,6 @@ export default class ResultsPage extends Component {
           </div>
         </div>
       </main>
-    );
+    )
   }
 }
