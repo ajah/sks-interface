@@ -161,29 +161,31 @@ export default class ActPage extends Component {
     await axios
       .get(`https://sks-server-ajah-ttwto.ondigitalocean.app/activities/${npk_id}`)
       .then((res) => {
+        if (!res.data[0]) return
+
         this.setState({
-          date: res['data'][0]['date'],
-          date_type: res['data'][0]['date_type'],
-          end_date: res['data'][0]['end_date'],
-          end_date_type: res['data'][0]['end_date_type'],
-          expected_results: res['data'][0]['expected_results'],
-          funder: res['data'][0]['funder'],
-          funder_id: res['data'][0]['funder_id'],
-          funding_amount: res['data'][0]['funding_amount'],
-          funding_type: res['data'][0]['funding_type'],
-          grant_description: res['data'][0]['grant_description'],
-          grant_municipality: res['data'][0]['grant_municipality'],
-          grant_region: res['data'][0]['grant_region'],
-          grant_title: res['data'][0]['grant_title'],
-          npk_id: res['data'][0]['npk_id'],
-          program_name: res['data'][0]['program_name'],
-          recipient_id: res['data'][0]['recipient_id'],
-          recipient_organization: res['data'][0]['recipient_organization'],
-          source_authority: res['data'][0]['source_authority'],
-          source_id: res['data'][0]['source_id'],
-          source_url: res['data'][0]['source_url'],
+          date: res.data[0].date,
+          date_type: res.data[0].date_type,
+          end_date: res.data[0].end_date,
+          end_date_type: res.data[0].end_date_type,
+          expected_results: res.data[0].expected_results,
+          funder: res.data[0].funder,
+          funder_id: res.data[0].funder_id,
+          funding_amount: res.data[0].funding_amount,
+          funding_type: res.data[0].funding_type,
+          grant_description: res.data[0].grant_description,
+          grant_municipality: res.data[0].grant_municipality,
+          grant_region: res.data[0].grant_region,
+          grant_title: res.data[0].grant_title,
+          npk_id: res.data[0].npk_id,
+          program_name: res.data[0].program_name,
+          recipient_id: res.data[0].recipient_id,
+          recipient_organization: res.data[0].recipient_organization,
+          source_authority: res.data[0].source_authority,
+          source_id: res.data[0].source_id,
+          source_url: res.data[0].source_url,
           loading: false,
-          org_redirect: res['data'][0]['ent_sks_id'],
+          org_redirect: res.data[0].ent_sks_id,
         })
       })
       .catch((error) => console.log(error))
@@ -197,12 +199,14 @@ export default class ActPage extends Component {
       await axios
         .get(url)
         .then((res) => {
+          if (!res.data[0]) return
+
           this.setState({
-            recip_legal_name: res['data'][0]['name'],
-            recip_business_number: res['data'][0]['external_id'],
-            recip_designation_type: res['data'][0]['legal_designation_type'],
-            recip_focus_area: res['data'][0]['focus_area'],
-            recip_website: res['data'][0]['website'],
+            recip_legal_name: res.data[0].name,
+            recip_business_number: res.data[0].external_id,
+            recip_designation_type: res.data[0].legal_designation_type,
+            recip_focus_area: res.data[0].focus_area,
+            recip_website: res.data[0].website,
           })
         })
         .catch((error) => console.log(error))
@@ -287,7 +291,7 @@ export default class ActPage extends Component {
                     <td>
                       <strong>Program Name</strong>
                     </td>
-                    {this.state.program_name.length > 0 ? (
+                    {this.state.program_name?.length ? (
                       <td>{this.state.program_name}</td>
                     ) : (
                       <td>No data available</td>
