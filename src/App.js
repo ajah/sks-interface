@@ -16,13 +16,13 @@ export default function App() {
     <Router>
       <Navbar />
       <br />
-      <Route exact path="/" component={HomePage} />
       <Route exact path="/about-us" component={AboutUs} />
       <Route exact path="/results" component={ResultsPage} />
       <Route exact path="/contact" component={Contact} />
       <Route exact path="/activities/:id" component={ActPage} />
       <Route exact path="/entities/:id" component={OrgPage} />
       <Route exact path="/activitiesbyent/:ent_id" component={AllActs} />
+      <Route path="/" component={HomePage} />
 
       <Footer />
     </Router>
