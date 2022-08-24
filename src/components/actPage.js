@@ -250,10 +250,10 @@ export default class ActPage extends Component {
     }
 
     return (
-      <div className="container bg-light mt-5 p-5 gap-2">
+      <div className="container bg-light mt-5 mb-4 p-5 gap-2">
         <div className="row">
           <BackButton />
-          <div className="mt-3 pb-3">
+          <div className="mt-4 pb-3">
             <h2 className="text-center">{this.state.grant_title}</h2>
             <p className="text-center">
               {this.state.grant_description || (
