@@ -85,14 +85,16 @@ export default class AboutUs extends Component {
                       activities and programs they run.
                     </p>
                     {/* <p className="fw-bold">Where does the data come from?</p> */}
-                    <p>
+                    <p className="my-0">
                       <span className="fw-bold">Where does the data come from?</span>
                       <br />
                       The data currently being used is publicly accessible and comes from
                       federal government sources. This is the data we collected and its
                       sources:
-                      <ul>
-                        <li className="fs-5">
+                    </p>
+                    <ul>
+                      <li>
+                        <p className="fs-5 my-0">
                           <span className="fw-bold">Entities:</span> Information about
                           individual organizations in the nonprofit sector. The data
                           includes all organizations that are registered with the CRA as a
@@ -102,8 +104,10 @@ export default class AboutUs extends Component {
                             Source
                           </a>
                           .
-                        </li>
-                        <li className="fs-5">
+                        </p>
+                      </li>
+                      <li>
+                        <p className="fs-5 my-0">
                           <span className="fw-bold">Activities:</span> Grant data from the
                           federal Grants &amp; Contributions database. This data allows us
                           to understand more about the activities and programs carried out
@@ -112,13 +116,17 @@ export default class AboutUs extends Component {
                             Source
                           </a>
                           .
-                        </li>
-                        <li className="fs-5">
+                        </p>
+                      </li>
+                      <li>
+                        <p className="fs-5 my-0">
                           <span className="fw-bold">Website Text:</span> The corpus text
                           of the organizations that had a listed website URL with the CRA.
                           The text was scrapeed directly from the organizations’ websites.
-                        </li>
-                      </ul>
+                        </p>
+                      </li>
+                    </ul>
+                    <p>
                       We hope that a future version of the prototype will contain private
                       foundation grantmaking data to create a better picture of the
                       philanthropic landscape in Canada.
