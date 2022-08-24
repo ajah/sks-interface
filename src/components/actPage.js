@@ -9,11 +9,11 @@ const NoOrgBox = (props) => (
   <div id="recipient_org">
     <h5>Recipient Organization</h5>
     <div className="border border-2 p-2">
-      <div className="search-warn">
+      <div className="mb-1">
         No further information was found for this organization because this activity is
         not linked to an organization via a Business Number. Click the recipient
         organization link below to search the database for this organization by its legal
-        name
+        name:
       </div>
       <Link to={`/results/?q=${encodeURI(props.recip_legal_name)}&filter=entity`}>
         {props.recip_legal_name}
@@ -250,10 +250,10 @@ export default class ActPage extends Component {
     }
 
     return (
-      <div className="container bg-light mt-5 p-5 gap-2">
+      <div className="container bg-light mt-5 mb-4 p-5 gap-2">
         <div className="row">
           <BackButton />
-          <div className="pb-3">
+          <div className="mt-4 pb-3">
             <h2 className="text-center">{this.state.grant_title}</h2>
             <p className="text-center">
               {this.state.grant_description || (
