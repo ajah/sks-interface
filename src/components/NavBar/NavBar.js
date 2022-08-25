@@ -31,12 +31,12 @@ export class NavBar extends Component {
               </li>
 
               <li className="nav-item">
-                <a
+                <Link
                   className="nav-link active"
-                  href="/results/?q=&doctype=activity,entity"
+                  to="/results/?q=&doctype=activity,entity"
                 >
                   Search
-                </a>
+                </Link>
               </li>
               <li className="nav-item">
                 <Link className="nav-link active" to="/about-us">
