@@ -1,14 +1,14 @@
 import React, { useContext } from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faSearch, faTimesCircle } from '@fortawesome/free-solid-svg-icons'
-import { Link, useHistory } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 
 import { SearchContext } from 'context/search-context'
 
 import './SearchBar.css'
 
 const SearchBar = () => {
-  const history = useHistory()
+  const navigate = useNavigate()
 
   const searchContext = useContext(SearchContext)
 
@@ -67,7 +67,7 @@ const SearchBar = () => {
     if (e.key === 'Enter') {
       e.preventDefault()
       setCurrentQuery(e)
-      history.push(`/results?q=${e.target.value}&doctype=activity,entity`)
+      navigate(`/results?q=${e.target.value}&doctype=activity,entity`)
     }
   }
 
