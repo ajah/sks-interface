@@ -7,7 +7,7 @@ class TypesSection extends Component {
   state = {}
   render() {
     return (
-      <div className="container my-5">
+      <div className="container my-5 bof">
         <div className="row">
           <div className="col">
             <div className="intro mb-3">

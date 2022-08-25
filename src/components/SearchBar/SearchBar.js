@@ -5,6 +5,7 @@ import { Link, useNavigate } from 'react-router-dom'
 
 import { SearchContext } from 'context/search-context'
 
+import 'assets/css/forms.css'
 import './SearchBar.css'
 
 const SearchBar = () => {
@@ -209,11 +210,11 @@ const SearchBar = () => {
           </div>
         </div>
         <div className="row">
-          <div className="col-2 ">
+          <div className="col-2">
             <h2 className="text-end">Search</h2>
           </div>
 
-          <div className="col-7 ">
+          <div className="col-6 col-xl-7">
             <div className=""></div>
             <div className="form-text">
               <input
@@ -230,42 +231,43 @@ const SearchBar = () => {
               ></input>
             </div>
           </div>
-          <div className="col-3">
+          <div className="col-4 col-xl-3">
             <div className="inter-bar">
-              <div className="mt-2 or-box">
+              <div className="mt-2 form__radio">
                 <input
-                  className="form-check-input"
-                  type="checkbox"
-                  id="defaultCheck1"
+                  className="form-check-input form__input"
+                  type="radio"
+                  id="and-search-select"
                   name="entity"
                   onChange={(e) => orCheckHandler(e)}
                 />
-                <label className="form-check-label">'Or'</label>
+                <label htmlFor="and-search-select" className="form__radio-label">
+                  And
+                </label>
+              </div>
+              <div className="form__radio mt-2 ms-3 me-3">
+                <input
+                  className="form-check-input form__input"
+                  type="radio"
+                  id="or-search-select"
+                  name="entity"
+                  onChange={(e) => orCheckHandler(e)}
+                />
+                <label htmlFor="or-search-select" className="form__radio-label">
+                  Or
+                </label>
               </div>
 
-              <div className="">
-                {searchContext.orFunctionality ? (
-                  <Link
-                    className="btn btn-primary ps-4 pe-4 rounded-pill mx-auto"
-                    onClick={searchQueryHandler}
-                    to={`/results?q=${searchContext.searchArray.join(
-                      '$'
-                    )}&doctype=activity,entity&operator=Or`}
-                  >
-                    Or Search <FontAwesomeIcon icon={faSearch} />
-                  </Link>
-                ) : (
-                  <Link
-                    className="btn btn-primary ps-4 pe-4 rounded-pill mx-auto"
-                    onClick={searchQueryHandler}
-                    to={`/results?q=${searchContext.searchArray.join(
-                      '+'
-                    )}&doctype=activity,entity&operator=And`}
-                  >
-                    And Search
-                    <FontAwesomeIcon icon={faSearch} />
-                  </Link>
-                )}
+              <div>
+                <Link
+                  className="btn btn-primary ps-4 pe-4 rounded-pill mx-auto"
+                  onClick={searchQueryHandler}
+                  to={`/results?q=${searchContext.searchArray.join(
+                    '$'
+                  )}&doctype=activity,entity&operator=Or`}
+                >
+                  Search <FontAwesomeIcon icon={faSearch} />
+                </Link>
               </div>
             </div>
           </div>

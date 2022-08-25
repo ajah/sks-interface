@@ -1,0 +1,11 @@
+.form--align-with-checkboxes .form__radio-label {
+  margin-left: 0.5em;
+}
+
+.form__input {
+  cursor: pointer;
+}
+
+.form__radio-label {
+  margin-left: 0.25em;
+}
