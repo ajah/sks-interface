@@ -3,7 +3,7 @@ import axios from 'axios'
 
 import { BackToEntButton } from 'components/BackButton'
 
-import './AllActivitiesPage.css'
+import './GrantsPage.css'
 
 function currencyFormat(amount) {
   return (
@@ -39,7 +39,7 @@ const Row = (props) => (
   </tr>
 )
 
-export default class AllActs extends Component {
+export default class GrantsPage extends Component {
   constructor(props) {
     super(props)
     this.state = {

@@ -306,7 +306,7 @@ export default class OrgPage extends Component {
                   'No activities associated with this organization'
                 )}
                 {this.state.activities.length >= 5 ? (
-                  <Link to={`/activitiesbyent/${this.state.ent_sks_id}`}>
+                  <Link to={`/grants/${this.state.ent_sks_id}`}>
                     <span> See a complete list of grants here</span>
                   </Link>
                 ) : (
