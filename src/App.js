@@ -1,5 +1,5 @@
 import React from 'react'
-import { BrowserRouter as Router, Route } from 'react-router-dom'
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom'
 
 import { Footer } from 'components/Footer'
 import { NavBar } from 'components/NavBar'
@@ -17,13 +17,15 @@ export default function App() {
     <Router>
       <NavBar />
       <br />
-      <Route exact path="/about-us" component={AboutUsPage} />
-      <Route exact path="/contact" component={ContactPage} />
-      <Route exact path="/results" component={ResultsPage} />
-      <Route exact path="/activities/:id" component={ActivitiesPage} />
-      <Route exact path="/entities/:id" component={OrgPage} />
-      <Route exact path="/grants/:id" component={GrantsPage} />
-      <Route path="/" component={HomePage} />
+      <Routes>
+        <Route path="about-us" element={<AboutUsPage />} />
+        <Route path="contact" element={<ContactPage />} />
+        <Route path="results" element={<ResultsPage />} />
+        <Route path="activities/:id" element={<ActivitiesPage />} />
+        <Route path="entities/:id" element={<OrgPage />} />
+        <Route path="grants/:id" element={<GrantsPage />} />
+        <Route path="/*" element={<HomePage />} />
+      </Routes>
       <Footer />
     </Router>
   )
