@@ -496,30 +496,50 @@ export default class ResultsPage extends Component {
               <div className="row">
                 <div className="col">
                   <h4 className="mt-3">Filter Your Search</h4>
-                  <div className="">
-                    <form>
+                  <div>
+                    <form className="form--align-with-checkboxes">
                       <hr />
-                      <div className="form-check">
+                      <div>
                         <input
-                          className="form-check-input"
-                          type="checkbox"
-                          checked={this.state.filter.includes('entity')}
-                          id="defaultCheck1"
+                          className="form-check-input form__input"
+                          type="radio"
+                          checked={this.state.filter.includes('all')}
+                          id="all-type-select"
                           name="entity"
                           onChange={this.handleFilters}
                         />
-                        <label className="form-check-label">Organizations</label>
+                        <label htmlFor="all-type-select" className="form__radio-label">
+                          All Types
+                        </label>
                       </div>
-                      <div className="form-check">
+                      <div>
                         <input
-                          className="form-check-input"
-                          type="checkbox"
+                          className="form-check-input form__input"
+                          type="radio"
+                          checked={this.state.filter.includes('entity')}
+                          id="entity-type-select"
+                          name="entity"
+                          onChange={this.handleFilters}
+                        />
+                        <label htmlFor="entity-type-select" className="form__radio-label">
+                          Organizations
+                        </label>
+                      </div>
+                      <div>
+                        <input
+                          className="form-check-input form__input"
+                          type="radio"
                           checked={this.state.filter.includes('activity')}
-                          id="defaultCheck2"
+                          id="activity-type-select"
                           name="activity"
                           onChange={this.handleFilters}
                         />
-                        <label className="form-check-label">Activities</label>
+                        <label
+                          htmlFor="activity-type-select"
+                          className="form__radio-label"
+                        >
+                          Activities
+                        </label>
                       </div>
                     </form>
                     <form>
@@ -529,7 +549,7 @@ export default class ResultsPage extends Component {
                           // TODO: Replace i with data relevant id
                           <div className="form-check" key={i}>
                             <input
-                              className="form-check-input"
+                              className="form-check-input form__input"
                               type="checkbox"
                               checked={this.state.location.includes(province)}
                               id="defaultCheck1"

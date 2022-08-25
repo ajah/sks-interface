@@ -235,7 +235,7 @@ const SearchBar = () => {
             <div className="inter-bar">
               <div className="mt-2 form__radio">
                 <input
-                  className="form__radio-input"
+                  className="form-check-input form__input"
                   type="radio"
                   id="and-search-select"
                   name="entity"
@@ -247,7 +247,7 @@ const SearchBar = () => {
               </div>
               <div className="form__radio mt-2 ms-3 me-3">
                 <input
-                  className="form__radio-input"
+                  className="form-check-input form__input"
                   type="radio"
                   id="or-search-select"
                   name="entity"
