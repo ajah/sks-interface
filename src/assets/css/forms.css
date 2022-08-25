@@ -1,0 +1,11 @@
+.form__radio {
+  cursor: pointer;
+}
+
+.form__radio-input {
+  cursor: pointer;
+}
+
+.form__radio-label {
+  margin-left: 0.25em;
+}

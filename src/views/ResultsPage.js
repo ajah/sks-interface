@@ -553,7 +553,7 @@ export default class ResultsPage extends Component {
                           />
                           <div>
                             <button
-                              className="ml-2 btn btn-primary"
+                              className="ms-2 btn btn-primary"
                               onClick={(e) => this.searchCity(e)}
                             >
                               <FontAwesomeIcon
