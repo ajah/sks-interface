@@ -6,7 +6,7 @@ import { NavBar } from 'components/NavBar'
 
 import { AboutUsPage } from 'views'
 import { ActivitiesPage } from 'views'
-import { AllActivitiesPage } from 'views'
+import { GrantsPage } from 'views'
 import { ContactPage } from 'views'
 import { HomePage } from 'views'
 import { OrgPage } from 'views'
@@ -18,11 +18,11 @@ export default function App() {
       <NavBar />
       <br />
       <Route exact path="/about-us" component={AboutUsPage} />
-      <Route exact path="/results" component={ResultsPage} />
       <Route exact path="/contact" component={ContactPage} />
+      <Route exact path="/results" component={ResultsPage} />
       <Route exact path="/activities/:id" component={ActivitiesPage} />
       <Route exact path="/entities/:id" component={OrgPage} />
-      <Route exact path="/activitiesbyent/:ent_id" component={AllActivitiesPage} />
+      <Route exact path="/grants/:id" component={GrantsPage} />
       <Route path="/" component={HomePage} />
       <Footer />
     </Router>
