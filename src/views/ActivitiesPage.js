@@ -1,9 +1,11 @@
 import React, { Component } from 'react'
-import { Link } from 'react-router-dom'
 import axios from 'axios'
-import './actPage.css'
-import BackButton from './common/BackButton'
-import { SearchContext } from '../context/search-context'
+import { Link } from 'react-router-dom'
+
+import { BackButton } from 'components/BackButton'
+import { SearchContext } from 'context/search-context'
+
+import './ActivitiesPage.css'
 
 const NoOrgBox = (props) => (
   <div id="recipient_org">

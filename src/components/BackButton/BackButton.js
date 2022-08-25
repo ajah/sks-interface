@@ -1,6 +1,7 @@
 import React, { useContext } from 'react'
-import { SearchContext } from '../../context/search-context'
 import { Link } from 'react-router-dom'
+
+import { SearchContext } from 'context/search-context'
 
 export default function BackButton() {
   const searchContext = useContext(SearchContext)

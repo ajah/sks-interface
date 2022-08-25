@@ -1,10 +1,11 @@
-import React, { Component } from 'react';
-import axios from 'axios';
-import './orgPage.css';
-import BackButton from './common/BackButton';
-import { Link } from 'react-router-dom';
+import React, { Component } from 'react'
+import axios from 'axios'
+import { Link } from 'react-router-dom'
 
-// const url = new URL(window.location.href);
+import { BackButton } from 'components/BackButton'
+
+import './OrgPage.css'
+
 // const ent_npk_id = url.pathname.split("/")[2];
 
 function currencyFormat(amount) {
@@ -13,7 +14,7 @@ function currencyFormat(amount) {
     Number.parseFloat(amount)
       .toFixed(2)
       .replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,')
-  );
+  )
 }
 
 const Row = (props) => (
@@ -27,11 +28,11 @@ const Row = (props) => (
       <div className="">{currencyFormat(props.funding_amount)}</div>
     </td>
   </tr>
-);
+)
 
 export default class OrgPage extends Component {
   constructor(props) {
-    super(props);
+    super(props)
     this.state = {
       FPE: '',
       focus_area: '',
@@ -54,7 +55,7 @@ export default class OrgPage extends Component {
       record_type: '',
       loading: true,
       activities: [],
-    };
+    }
   }
 
   currencyFormat(amount) {
@@ -63,12 +64,12 @@ export default class OrgPage extends Component {
       Number.parseFloat(amount)
         .toFixed(2)
         .replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,')
-    );
+    )
   }
 
   fpeFormat(fpe) {
     if (fpe !== undefined) {
-      return fpe.substring(5);
+      return fpe.substring(5)
     }
   }
 
@@ -82,13 +83,11 @@ export default class OrgPage extends Component {
   // }
 
   async componentDidMount() {
-    const url = new URL(window.location.href);
-    const ent_sks_id = url.pathname.split('/')[2];
+    const url = new URL(window.location.href)
+    const ent_sks_id = url.pathname.split('/')[2]
 
     await axios
-      .get(
-        `https://sks-server-ajah-ttwto.ondigitalocean.app/entities/${ent_sks_id}`
-      )
+      .get(`https://sks-server-ajah-ttwto.ondigitalocean.app/entities/${ent_sks_id}`)
       .then((response) => {
         this.setState({
           FPE: response['data'][0]['FPE'],
@@ -112,26 +111,26 @@ export default class OrgPage extends Component {
           record_type: response['data'][0]['record_type'],
           external_id: response['data'][0]['external_id'],
           loading: false,
-        });
+        })
       })
-      .catch((error) => console.log(error));
+      .catch((error) => console.log(error))
 
-    this.getActivitiesData(ent_sks_id);
+    this.getActivitiesData(ent_sks_id)
   }
 
   async getActivitiesData(ent_sks_id) {
     if (ent_sks_id) {
-      const url = `https://sks-server-ajah-ttwto.ondigitalocean.app/activities/mostrecentbyent/${ent_sks_id}`;
+      const url = `https://sks-server-ajah-ttwto.ondigitalocean.app/activities/mostrecentbyent/${ent_sks_id}`
       await axios
         .get(url)
         .then((res) => {
           this.setState({
             activities: res['data'],
-          });
+          })
         })
-        .catch((error) => console.log(error));
+        .catch((error) => console.log(error))
     } else {
-      console.log('No entity was found');
+      console.log('No entity was found')
     }
   }
 
@@ -143,12 +142,12 @@ export default class OrgPage extends Component {
           funding_amount={activity.funding_amount}
           act_npk_id={activity.act_sks_id}
         />
-      );
-    });
+      )
+    })
   }
 
   getActivitesLength() {
-    return this.state.activities.length;
+    return this.state.activities.length
   }
 
   render() {
@@ -196,14 +195,12 @@ export default class OrgPage extends Component {
                     <td>
                       <strong>Focus Area</strong>
                     </td>
-                    {(this.state.focus_area.includes(
-                      'Charity provided description'
-                    ) ||
+                    {(this.state.focus_area.includes('Charity provided description') ||
                       !this.state.focus_area) && <td>No data available</td>}
                     {this.state.focus_area &&
-                      !this.state.focus_area.includes(
-                        'Charity provided description'
-                      ) && <td>{this.state.focus_area}</td>}
+                      !this.state.focus_area.includes('Charity provided description') && (
+                        <td>{this.state.focus_area}</td>
+                      )}
                   </tr>
                   <tr>
                     <td>
@@ -348,8 +345,7 @@ export default class OrgPage extends Component {
             <div>
               <h5>Associated Links</h5>
               <div className="border border-2 p-2">
-                Associated links will appear in a later version, check back
-                later.
+                Associated links will appear in a later version, check back later.
                 {/* <table>
                 {/* <table>
                   <tbody>
@@ -372,6 +368,6 @@ export default class OrgPage extends Component {
           </div>
         </div>
       </div>
-    );
+    )
   }
 }

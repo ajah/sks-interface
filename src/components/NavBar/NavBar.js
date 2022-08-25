@@ -1,11 +1,11 @@
-import React, { Component } from "react";
-import "./Navbar.css";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faHandsHelping } from "@fortawesome/free-solid-svg-icons";
+import React, { Component } from 'react'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faHandsHelping } from '@fortawesome/free-solid-svg-icons'
+import { Link } from 'react-router-dom'
 
-import { Link } from "react-router-dom";
+import './NavBar.css'
 
-export default class Navbar extends Component {
+export class NavBar extends Component {
   render() {
     return (
       <nav className="navbar navbar-dark navbar-expand-lg fixed-top bg-white portfolio-navbar gradient">
@@ -25,7 +25,9 @@ export default class Navbar extends Component {
           <div className="collapse navbar-collapse" id="navbarNav">
             <ul className="navbar-nav ms-auto">
               <li className="nav-item">
-                <Link className="nav-link active" to="/" >Home</Link>
+                <Link className="nav-link active" to="/">
+                  Home
+                </Link>
               </li>
 
               <li className="nav-item">
@@ -37,16 +39,22 @@ export default class Navbar extends Component {
                 </a>
               </li>
               <li className="nav-item">
-                <Link className="nav-link active" to="/about-us" >About</Link>
+                <Link className="nav-link active" to="/about-us">
+                  About
+                </Link>
               </li>
               <li className="nav-item">
-                <Link className="nav-link active" to="/contact" >Contact</Link>
+                <Link className="nav-link active" to="/contact">
+                  Contact
+                </Link>
               </li>
             </ul>
           </div>
           <section></section>
         </div>
       </nav>
-    );
+    )
   }
 }
+
+export default NavBar

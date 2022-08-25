@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
-import './../assets/css/styles.css'
+
+import 'assets/css/styles.css'
 
 export default class AboutUs extends Component {
   render() {

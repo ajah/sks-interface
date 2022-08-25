@@ -1,11 +1,13 @@
 import React, { Component } from 'react'
+
+import { SearchBar } from 'components/SearchBar'
+import { TypesSection } from 'components/TypesSection'
+
+import './HomePage.css'
+
 // import img5 from "./../assets/img/nonprofits/brad-weaver-7IBmf8uH4WY-unsplash.jpg";
 // import img2 from "./../assets/img/nonprofits/joel-muniz-qvzjG2pF4bE-unsplash.jpg";
 // import img4 from "./../assets/img/nonprofits/tyler-lagalo-ZU94isADXDs-unsplash.jpg";
-// import "./../assets/css/styles.css";
-import TypesSection from './typesSection'
-import SearchBar from './searchBar'
-import './homePage.css'
 
 export default class HomePage extends Component {
   render() {

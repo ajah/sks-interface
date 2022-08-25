@@ -1,7 +1,9 @@
-import React, { Component } from 'react';
-import axios from 'axios';
-import './orgPage.css';
-import BackToEntButton from './common/BackToEntButton';
+import React, { Component } from 'react'
+import axios from 'axios'
+
+import { BackToEntButton } from 'components/BackButton'
+
+import './AllActivitiesPage.css'
 
 function currencyFormat(amount) {
   return (
@@ -9,7 +11,7 @@ function currencyFormat(amount) {
     Number.parseFloat(amount)
       .toFixed(2)
       .replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,')
-  );
+  )
 }
 
 const Row = (props) => (
@@ -35,19 +37,19 @@ const Row = (props) => (
       <div className="">{props.grant_description}</div>
     </td>
   </tr>
-);
+)
 
 export default class AllActs extends Component {
   constructor(props) {
-    super(props);
+    super(props)
     this.state = {
       activities: [],
-    };
+    }
   }
 
   async componentDidMount() {
-    const url = new URL(window.location.href);
-    const ent_sks_id = url.pathname.split('/')[2];
+    const url = new URL(window.location.href)
+    const ent_sks_id = url.pathname.split('/')[2]
 
     await axios
       .get(
@@ -56,9 +58,9 @@ export default class AllActs extends Component {
       .then((response) => {
         this.setState({
           activities: response['data'],
-        });
+        })
       })
-      .catch((error) => console.log(error));
+      .catch((error) => console.log(error))
   }
 
   tableRows() {
@@ -71,8 +73,8 @@ export default class AllActs extends Component {
           grant_description={activity.grant_description}
           date={activity.date}
         />
-      );
-    });
+      )
+    })
   }
 
   render() {
@@ -102,6 +104,6 @@ export default class AllActs extends Component {
           </div>
         </div>
       </div>
-    );
+    )
   }
 }

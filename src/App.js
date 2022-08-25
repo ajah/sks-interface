@@ -1,29 +1,29 @@
 import React from 'react'
 import { BrowserRouter as Router, Route } from 'react-router-dom'
 
-import Navbar from './components/common/Navbar'
-import Footer from './components/common/Footer'
-import HomePage from './components/homePage'
-import AboutUs from './components/aboutUs'
-import ResultsPage from './components/resultsPage'
-import Contact from './components/contact'
-import OrgPage from './components/orgPage'
-import ActPage from './components/actPage'
-import AllActs from './components/allActs'
+import { Footer } from 'components/Footer'
+import { NavBar } from 'components/NavBar'
+
+import { AboutUsPage } from 'views'
+import { ActivitiesPage } from 'views'
+import { AllActivitiesPage } from 'views'
+import { ContactPage } from 'views'
+import { HomePage } from 'views'
+import { OrgPage } from 'views'
+import { ResultsPage } from 'views'
 
 export default function App() {
   return (
     <Router>
-      <Navbar />
+      <NavBar />
       <br />
-      <Route exact path="/about-us" component={AboutUs} />
+      <Route exact path="/about-us" component={AboutUsPage} />
       <Route exact path="/results" component={ResultsPage} />
-      <Route exact path="/contact" component={Contact} />
-      <Route exact path="/activities/:id" component={ActPage} />
+      <Route exact path="/contact" component={ContactPage} />
+      <Route exact path="/activities/:id" component={ActivitiesPage} />
       <Route exact path="/entities/:id" component={OrgPage} />
-      <Route exact path="/activitiesbyent/:ent_id" component={AllActs} />
+      <Route exact path="/activitiesbyent/:ent_id" component={AllActivitiesPage} />
       <Route path="/" component={HomePage} />
-
       <Footer />
     </Router>
   )
