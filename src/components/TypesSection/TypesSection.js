@@ -1,18 +1,17 @@
-import React, { Component } from "react";
-import "./../assets/css/styles.css";
-import { MdVolunteerActivism, MdDescription, MdBusiness } from "react-icons/md";
+import React, { Component } from 'react'
+import { MdBusiness, MdDescription, MdVolunteerActivism } from 'react-icons/md'
+
+import 'assets/css/styles.css'
 
 class TypesSection extends Component {
-  state = {};
+  state = {}
   render() {
     return (
       <div className="container my-5">
         <div className="row">
           <div className="col">
             <div className="intro mb-3">
-              <h2 className="text-center">
-                Types of records you can search for:
-              </h2>
+              <h2 className="text-center">Types of records you can search for:</h2>
             </div>
           </div>
         </div>
@@ -25,21 +24,17 @@ class TypesSection extends Component {
                   <strong>Organizations</strong>
                 </h3>
                 <p className="description">
-                   Information about individual organizations in the nonprofit
-                  sector
+                   Information about individual organizations in the nonprofit sector
                 </p>
               </div>
               <div className="col-4">
-                <MdVolunteerActivism
-                  size="60px"
-                  className="feature-icon mb-3"
-                />
+                <MdVolunteerActivism size="60px" className="feature-icon mb-3" />
                 <h3 className="name">
                   <strong>Activities</strong>
                 </h3>
                 <p className="description">
-                  Grant data that provides information about the activities or
-                  programs carried out by organizations
+                  Grant data that provides information about the activities or programs
+                  carried out by organizations
                   <br />
                 </p>
               </div>
@@ -49,8 +44,8 @@ class TypesSection extends Component {
                   <strong>Documents (Coming Soon)</strong>
                 </h3>
                 <p className="description">
-                  Additional information about the activities and organization
-                  (e.g. evaluation reports, activity reports)
+                  Additional information about the activities and organization (e.g.
+                  evaluation reports, activity reports)
                   <br />
                 </p>
               </div>
@@ -58,8 +53,8 @@ class TypesSection extends Component {
           </div>
         </div>
       </div>
-    );
+    )
   }
 }
 
-export default TypesSection;
+export default TypesSection

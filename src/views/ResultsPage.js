@@ -1,16 +1,16 @@
 import React, { Component } from 'react'
-import './../assets/css/styles.css'
 import axios from 'axios'
 import queryString from 'query-string'
-import SearchBar from './searchBar'
 import { Link } from 'react-router-dom'
-import { SearchContext } from '../context/search-context'
-
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faSearch } from '@fortawesome/free-solid-svg-icons'
-import './resultsPage.css'
 
-// import { GoTriangleDown } from "react-icons/go";
+import { SearchBar } from 'components/SearchBar'
+
+import { SearchContext } from 'context/search-context'
+
+import 'assets/css/styles.css'
+import './ResultsPage.css'
 
 function Badge(props) {
   const type = props.type

@@ -3,11 +3,11 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faSearch, faTimesCircle } from '@fortawesome/free-solid-svg-icons'
 import { Link, useHistory } from 'react-router-dom'
 
-import { SearchContext } from '../context/search-context'
+import { SearchContext } from 'context/search-context'
 
-import './searchBar.css'
+import './SearchBar.css'
 
-const Search = () => {
+const SearchBar = () => {
   const history = useHistory()
 
   const searchContext = useContext(SearchContext)
@@ -275,4 +275,4 @@ const Search = () => {
   )
 }
 
-export default Search
+export default SearchBar
