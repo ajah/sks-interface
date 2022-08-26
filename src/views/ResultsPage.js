@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import { Component } from 'react'
 import axios from 'axios'
 import queryString from 'query-string'
 import { Link } from 'react-router-dom'
@@ -12,23 +12,22 @@ import { SearchContext } from 'context/search-context'
 import 'assets/css/styles.css'
 import './ResultsPage.css'
 
-function Badge(props) {
-  const type = props.type
+const Badge = ({ type }) => {
   if (type === 'activity') {
     return <span className="badge badge-primary">Activity</span>
-  } else if (type === 'entity') {
-    return <span className="badge bg-primary">Organization</span>
-  } else {
-    return ''
   }
+
+  if (type === 'entity') {
+    return <span className="badge bg-primary">Organization</span>
+  }
+
+  return null
 }
 
 const Row = (props) => (
   <tr>
     <td>
       <div>
-        {/* <a href={props.url}>{props.name}</a> */}
-
         <Link to={props.url}>{props.name}</Link>
       </div>
     </td>
