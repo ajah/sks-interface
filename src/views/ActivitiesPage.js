@@ -17,7 +17,11 @@ const NoOrgBox = (props) => (
         organization link below to search the database for this organization by its legal
         name:
       </div>
-      <Link to={`/results/?q=${encodeURI(props.recip_legal_name)}&filter=entity`}>
+      <Link
+        to={`/results/?q=${encodeURI(
+          props.recip_legal_name.replace(/\s/g, '+')
+        )}&doctype=organization`}
+      >
         {props.recip_legal_name}
       </Link>
     </div>
@@ -183,7 +187,7 @@ export default class ActPage extends Component {
   }
 
   async getEntitiesData() {
-    if (this.state.org_redirect !== undefined) {
+    if (this.state.org_redirect) {
       const url = `https://sks-server-ajah-ttwto.ondigitalocean.app/entities/${this.state.org_redirect}`
       await axios
         .get(url)
