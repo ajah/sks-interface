@@ -9,7 +9,7 @@ export default function BackButton() {
     <div>
       <Link
         className="btn btn-outline-primary"
-        to={`/results?q=${searchContext.searchArray.join(
+        to={`/search?q=${searchContext.searchArray.join(
           '+'
         )}&doctype=activity,organization`}
       >

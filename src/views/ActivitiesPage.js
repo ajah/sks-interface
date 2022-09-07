@@ -18,7 +18,7 @@ const NoOrgBox = (props) => (
         name:
       </div>
       <Link
-        to={`/results/?q=${encodeURI(
+        to={`/search/?q=${encodeURI(
           props.recip_legal_name.replace(/\s/g, '+')
         )}&doctype=organization`}
       >
