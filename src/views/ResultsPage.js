@@ -108,7 +108,7 @@ const ResultsPage = () => {
     act_total: '',
     ent_total: '',
     inc_activities: true,
-    inc_entities: true,
+    inc_organizations: true,
     contextState: '',
     filter: [ACTIVITY, ORGANIZATION],
     globalQuery: '',
@@ -184,7 +184,7 @@ const ResultsPage = () => {
       //   setResultsState({
       //     ...resultsState,
       //     inc_activities: false,
-      //     inc_entities: true,
+      //     inc_organizations: true,
       //     filter: resultsState.filter.slice(1),
       //   })
       // }
@@ -296,7 +296,7 @@ const ResultsPage = () => {
        });
      } else if (!filter.includes("entity")) {
        setResultsState({...resultsState, 
-         inc_entities: false,
+         inc_organizations: false,
        });
      } */
   // }
@@ -475,11 +475,11 @@ const ResultsPage = () => {
     let filter = []
     // if (resultsState.inc_activities) {
     //   filter.push('activity')
-    // } else if (resultsState.inc_entities) {
+    // } else if (resultsState.inc_organizations) {
     //   filter.push('entity')
-    // } else if (!resultsState.inc_activities & !resultsState.inc_entities) {
+    // } else if (!resultsState.inc_activities & !resultsState.inc_organizations) {
     //   filter.push('activity,entity') //.push("entity"); //
-    // } else if (resultsState.inc_activities & resultsState.inc_entities) {
+    // } else if (resultsState.inc_activities & resultsState.inc_organizations) {
     //   filter.push('activity,entity') //.push("entity"); //
     // }
 
@@ -539,12 +539,15 @@ const ResultsPage = () => {
                           doctype.includes('organization') &&
                           !doctype.includes('activity')
                         }
-                        id="entity-type-select"
+                        id="organization-type-select"
                         name="type-select"
                         value="organization"
                         onChange={handleDoctypeFilter}
                       />
-                      <label htmlFor="entity-type-select" className="form__radio-label">
+                      <label
+                        htmlFor="organization-type-select"
+                        className="form__radio-label"
+                      >
                         Organizations
                       </label>
                     </div>
