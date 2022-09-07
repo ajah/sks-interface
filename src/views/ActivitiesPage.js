@@ -40,7 +40,7 @@ const RecipientOrgBox = (props) => (
             </td>
             <td>
               {props.recip_legal_name ? (
-                <Link to={`/entities/${props.org_redirect}`}>
+                <Link to={`/organizations/${props.org_redirect}`}>
                   props.recip_legal_name{' '}
                 </Link>
               ) : (
@@ -355,7 +355,7 @@ export default class ActPage extends Component {
                     <td>
                       {' '}
                       {this.state.recip_legal_name ? (
-                        <Link to={`/entities/${this.state.org_redirect}`}>
+                        <Link to={`/organizations/${this.state.org_redirect}`}>
                           {this.state.recip_legal_name}
                         </Link>
                       ) : (

@@ -30,11 +30,11 @@ import 'assets/css/styles.css'
 import './ResultsPage.css'
 
 const Badge = ({ type }) => {
-  if (type === 'activity') {
+  if (type === ACTIVITY) {
     return <span className="badge badge-primary">Activity</span>
   }
 
-  if (type === 'entity') {
+  if (type === ORGANIZATION) {
     return <span className="badge bg-primary">Organization</span>
   }
 
@@ -76,14 +76,14 @@ const TableRows = ({ results }) => {
       name = _source.grant_title
       municipality = _source.grant_municipality
       region = _source.grant_region
-      type = 'activity'
+      type = ACTIVITY
       url = `/activities/${_source.act_sks_id}`
     } else if (_index === 'entities') {
       name = _source.name
       municipality = _source.location_municipality
       region = _source.location_region
-      type = 'entity'
-      url = `/entities/${_source.ent_sks_id}`
+      type = ORGANIZATION
+      url = `/organizations/${_source.ent_sks_id}`
     }
     return (
       <Row

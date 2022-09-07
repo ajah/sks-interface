@@ -22,7 +22,7 @@ export default function App() {
         <Route path="contact" element={<ContactPage />} />
         <Route path="results" element={<ResultsPage />} />
         <Route path="activities/:id" element={<ActivitiesPage />} />
-        <Route path="entities/:id" element={<OrgPage />} />
+        <Route path="organizations/:id" element={<OrgPage />} />
         <Route path="grants/:id" element={<GrantsPage />} />
         <Route path="/*" element={<HomePage />} />
       </Routes>

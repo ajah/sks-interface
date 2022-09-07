@@ -6,7 +6,7 @@ export default function BackToEntButton() {
 
   return (
     <div>
-      <a href={`/entities/${ent_sks_id}`}>
+      <a href={`/organizations/${ent_sks_id}`}>
         <button className="btn btn-outline-primary">Back to Organization</button>
       </a>
     </div>
