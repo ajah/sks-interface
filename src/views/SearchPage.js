@@ -25,9 +25,9 @@ import {
   // provinces,
 } from 'constants'
 
-// TODO: move styles.css import into ResultsPage.css
+// TODO: move styles.css import into SearchPage.css
 import 'assets/css/styles.css'
-import './ResultsPage.css'
+import './SearchPage.css'
 
 const Badge = ({ type }) => {
   if (type === ACTIVITY) {
@@ -98,7 +98,7 @@ const TableRows = ({ results }) => {
   })
 }
 
-const ResultsPage = () => {
+const SearchPage = () => {
   const searchContext = useContext(SearchContext)
 
   const [searchParams, setSearchParams] = useSearchParams()
@@ -223,7 +223,7 @@ const ResultsPage = () => {
           //   window.history.pushState(
           //     'page2',
           //     'Title',
-          //     `/results?q=${q}&doctype=${filter.toString()}&region=${
+          //     `/search?q=${q}&doctype=${filter.toString()}&region=${
           //       resultsState.location
           //     }&municipality=${resultsState.municipality}&operator=${resultsState.operator}`
           //   )
@@ -231,7 +231,7 @@ const ResultsPage = () => {
           //   window.history.pushState(
           //     'page2',
           //     'Title',
-          //     `/results?q=${query}&doctype=${filter.toString()}&region=${
+          //     `/search?q=${query}&doctype=${filter.toString()}&region=${
           //       resultsState.location
           //     }&operator=${resultsState.operator}`
           //   )
@@ -239,7 +239,7 @@ const ResultsPage = () => {
           //   window.history.pushState(
           //     'page2',
           //     'Title',
-          //     `/results?q=${query}&doctype=${filter.toString()}&municipality=${
+          //     `/search?q=${query}&doctype=${filter.toString()}&municipality=${
           //       resultsState.municipality
           //     }&operator=${resultsState.operator}`
           //   )
@@ -247,7 +247,7 @@ const ResultsPage = () => {
           //   window.history.pushState(
           //     'page2',
           //     'Title',
-          //     `/results?q=${query}&doctype=${filter.toString()}&operator=${
+          //     `/search?q=${query}&doctype=${filter.toString()}&operator=${
           //       resultsState.operator
           //     }`
           //   )
@@ -324,7 +324,7 @@ const ResultsPage = () => {
       window.history.pushState(
         'page2',
         'Title',
-        `/results?q=${resultsState.globalQuery}&doctype=${resultsState.filter.join(
+        `/search?q=${resultsState.globalQuery}&doctype=${resultsState.filter.join(
           ','
         )}&region=${resultsState.location}&municipality=${city}&operator=${
           resultsState.operator
@@ -334,7 +334,7 @@ const ResultsPage = () => {
       window.history.pushState(
         'page2',
         'Title',
-        `/results?q=${resultsState.globalQuery}&doctype=${resultsState.filter.join(
+        `/search?q=${resultsState.globalQuery}&doctype=${resultsState.filter.join(
           ','
         )}&municipality=${city}&operator=${resultsState.operator}`
       )
@@ -364,7 +364,7 @@ const ResultsPage = () => {
       window.history.pushState(
         'page2',
         'Title',
-        `/results?q=${resultsState.globalQuery}&doctype=${resultsState.filter.join(
+        `/search?q=${resultsState.globalQuery}&doctype=${resultsState.filter.join(
           ','
         )}&region=${resultsState.location}&municipality=${
           resultsState.municipality
@@ -374,7 +374,7 @@ const ResultsPage = () => {
       window.history.pushState(
         'page2',
         'Title',
-        `/results?q=${resultsState.globalQuery}&doctype=${resultsState.filter.join(
+        `/search?q=${resultsState.globalQuery}&doctype=${resultsState.filter.join(
           ','
         )}&region=${resultsState.location}&operator=${resultsState.operator}`
       )
@@ -490,12 +490,12 @@ const ResultsPage = () => {
       const { history } = this.props;
   
       if (filter) {
-        history.push(`/results?q=${orig_q}&filter=${filter.toString()}`);
+        history.push(`/search?q=${orig_q}&filter=${filter.toString()}`);
         window.location.reload(false);
         setFilter(filter.toString)
       }
   
-      history.push(`/results?q=${encodeURI(orig_q)}&filter=${filter.toString()}`);
+      history.push(`/search?q=${encodeURI(orig_q)}&filter=${filter.toString()}`);
       window.location.reload(false);*/
   }
 
@@ -789,4 +789,4 @@ const ResultsPage = () => {
   )
 }
 
-export default ResultsPage
+export default SearchPage

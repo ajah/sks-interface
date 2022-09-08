@@ -10,7 +10,7 @@ import { GrantsPage } from 'views'
 import { ContactPage } from 'views'
 import { HomePage } from 'views'
 import { OrgPage } from 'views'
-import { ResultsPage } from 'views'
+import { SearchPage } from 'views'
 
 export default function App() {
   return (
@@ -20,7 +20,7 @@ export default function App() {
       <Routes>
         <Route path="about-us" element={<AboutUsPage />} />
         <Route path="contact" element={<ContactPage />} />
-        <Route path="results" element={<ResultsPage />} />
+        <Route path="search" element={<SearchPage />} />
         <Route path="activities/:id" element={<ActivitiesPage />} />
         <Route path="organizations/:id" element={<OrgPage />} />
         <Route path="grants/:id" element={<GrantsPage />} />

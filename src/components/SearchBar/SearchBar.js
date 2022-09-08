@@ -73,7 +73,7 @@ const SearchBar = () => {
       setCurrentQuery(e)
       setSearchParams(
         { q: searchQuery.trim(), operator: searchContext.searchOperator },
-        { requestedPathname: '/results' }
+        { requestedPathname: '/search' }
       )
     }
   }
@@ -132,10 +132,10 @@ const SearchBar = () => {
       if (this.state.query && this.state.query.length > 1) {
         this.getInfo();
            history.push(
-             `/results?q=${encodeURI(this.state.query)}&filter=activity,entity`
+             `/search?q=${encodeURI(this.state.query)}&filter=activity,entity`
            );
            this.props.history.push({
-             pathname: '/results',
+             pathname: '/search',
              search:  `q=${encodeURI(this.state.query)}&filter=activity,entity`,
              state: { detail: "test" }
            })
@@ -168,7 +168,7 @@ const SearchBar = () => {
                 // TODO: Replace i with data relevant id
                 <div className="search-query border col-2 ps-3 rounded-pill" key={i}>
                   {searchTerm}
-                  {/*  <Link  to={`/results?q=${totalQuery.replace(('+'+query),"")}&filter=activity,entity`}>
+                  {/*  <Link  to={`/search?q=${totalQuery.replace(('+'+query),"")}&filter=activity,entity`}>
                   <FontAwesomeIcon transform="right-15" onClick={() => removeQuery({query})} icon={faTimesCircle} />
                   </Link> */}
                   <div className="mx-auto" size="sm">
@@ -238,7 +238,7 @@ const SearchBar = () => {
                 <Link
                   className="btn btn-primary ps-4 pe-4 rounded-pill mx-auto"
                   // onClick={searchQueryHandler}
-                  to={`/results${newSearchQuery}`}
+                  to={`/search${newSearchQuery}`}
                 >
                   Search <FontAwesomeIcon icon={faSearch} />
                 </Link>
