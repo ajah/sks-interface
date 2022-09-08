@@ -1,6 +1,6 @@
 import { useEffect, useState, useContext } from 'react'
 import axios from 'axios'
-import { Link } from 'react-router-dom'
+import { Link, useLocation } from 'react-router-dom'
 // import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 // import { faSearch } from '@fortawesome/free-solid-svg-icons'
 
@@ -45,7 +45,12 @@ const Row = (props) => (
   <tr>
     <td>
       <div>
-        <Link to={props.url}>{props.name}</Link>
+        <Link
+          to={props.url}
+          state={{ from: `${props.location.pathname}${props.location.search}` }}
+        >
+          {props.name}
+        </Link>
       </div>
     </td>
     <td>
@@ -63,6 +68,8 @@ const Row = (props) => (
 )
 
 const TableRows = ({ results }) => {
+  const location = useLocation()
+
   return results.map((hit) => {
     const { _id, _index, _source } = hit
 
@@ -87,6 +94,7 @@ const TableRows = ({ results }) => {
     }
     return (
       <Row
+        location={location}
         name={name}
         municipality={municipality}
         region={region}
