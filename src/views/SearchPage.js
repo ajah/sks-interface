@@ -131,15 +131,12 @@ const SearchPage = () => {
   })
 
   const { q = '', operator = '', doctype = [] } = searchParams
-  // Doctype can be either an array or a string, depending on the num
+  // Doctype can be either an array or a string, depending whether there is one value or two values separated by a comma
   const docTypeStr = doctype.toString()
 
   useEffect(() => {
     try {
-      if (!q.trim()) {
-        setSearchParams({}, { overwrite: true, replace: true })
-        return
-      }
+      if (!q.trim()) return
 
       const hasInvalidSearchParams = Object.keys(searchParams).some(
         (paramName) => !allowedSearchParams.includes(paramName)
@@ -173,7 +170,7 @@ const SearchPage = () => {
         return
       }
 
-      // Backend uses 'entity' keyword to refer to 'organization'
+      // Backend uses 'entity' keyword to refer to ORGANIZATION
       const doctypeForApi = parsedDoctype.map((type) =>
         type === ORGANIZATION ? 'entity' : type
       )
@@ -482,7 +479,7 @@ const SearchPage = () => {
 
     let filter = []
     // if (resultsState.inc_activities) {
-    //   filter.push('activity')
+    //   filter.push(ACTIVITY)
     // } else if (resultsState.inc_organizations) {
     //   filter.push('entity')
     // } else if (!resultsState.inc_activities & !resultsState.inc_organizations) {
@@ -528,11 +525,12 @@ const SearchPage = () => {
                         className="form-check-input form__input"
                         type="radio"
                         checked={
-                          doctype.includes('organization') && doctype.includes('activity')
+                          !doctype.length ||
+                          (doctype.includes(ORGANIZATION) && doctype.includes(ACTIVITY))
                         }
                         id="all-type-select"
                         name="type-select"
-                        value="organization,activity"
+                        value={`${ORGANIZATION},${ACTIVITY}`}
                         onChange={handleDoctypeFilter}
                       />
                       <label htmlFor="all-type-select" className="form__radio-label">
@@ -544,12 +542,11 @@ const SearchPage = () => {
                         className="form-check-input form__input"
                         type="radio"
                         checked={
-                          doctype.includes('organization') &&
-                          !doctype.includes('activity')
+                          doctype.includes(ORGANIZATION) && !doctype.includes(ACTIVITY)
                         }
                         id="organization-type-select"
                         name="type-select"
-                        value="organization"
+                        value={ORGANIZATION}
                         onChange={handleDoctypeFilter}
                       />
                       <label
@@ -564,12 +561,11 @@ const SearchPage = () => {
                         className="form-check-input form__input"
                         type="radio"
                         checked={
-                          !doctype.includes('organization') &&
-                          doctype.includes('activity')
+                          !doctype.includes(ORGANIZATION) && doctype.includes(ACTIVITY)
                         }
                         id="activity-type-select"
                         name="type-select"
-                        value="activity"
+                        value={ACTIVITY}
                         onChange={handleDoctypeFilter}
                       />
                       <label htmlFor="activity-type-select" className="form__radio-label">
