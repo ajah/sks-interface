@@ -160,7 +160,7 @@ const SearchPage = () => {
       if (!qStr) return setResultsState(initialResultsState)
       const qArr = Array.isArray(q) ? q : [q]
       // Each query term should be limited to 30 chars, and there should be a max of 5 query terms
-      const parsedQ = qArr.map((query) => query.slice(0, 31)).slice(0, 6)
+      const parsedQ = qArr.map((query) => query.slice(0, 30)).slice(0, 5)
 
       // Check 'operator'
       const parsedOperator = allowedOperators.includes(operator)
