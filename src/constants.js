@@ -4,7 +4,7 @@ export const AND = 'and'
 export const OR = 'or'
 
 export const allowedOperators = [AND, OR]
-export const defaultOperator = AND
+export const DEFAULT_OPERATOR = AND
 
 export const ACTIVITY = 'activity'
 export const ORGANIZATION = 'organization'

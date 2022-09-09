@@ -14,7 +14,7 @@ import {
 
   // Operators
   allowedOperators,
-  defaultOperator,
+  DEFAULT_OPERATOR,
 
   // Types
   ACTIVITY,
@@ -133,10 +133,11 @@ const SearchPage = () => {
     downloadLink: '',
   })
 
-  const { q = '', doctype = [], operator = '', region = [] } = searchParams
+  const { q = [], doctype = [], operator = '', region = [] } = searchParams
 
   // Params that can have multiple values separated by commas will be a string when one value is provided,
   // and an array when multiple values are provided
+  const qStr = q.toString()
   const doctypeStr = doctype.toString()
   const regionStr = region.toString()
 
@@ -156,12 +157,13 @@ const SearchPage = () => {
       }
 
       // Check 'q'
-      if (!q.trim()) return
+      if (!qStr) return
+      const parsedQ = Array.isArray(q) ? q : [q]
 
       // Check 'operator'
       const parsedOperator = allowedOperators.includes(operator)
         ? operator
-        : defaultOperator
+        : DEFAULT_OPERATOR
 
       if (searchContext.searchOperator !== parsedOperator)
         searchContext.setOperatorHandler(parsedOperator)
@@ -199,6 +201,8 @@ const SearchPage = () => {
       const parsedRegionForApi = parsedRegion.map(
         (code) => provincesCodeToNameMap[code].name
       )
+
+      const parsedQForApi = encodeURI(parsedQ.join('+'))
       // if (!searchContext.searchArray[0]) {
       //   let queryArray = (q || '').split(' ')
 
@@ -224,20 +228,14 @@ const SearchPage = () => {
       // } else if (searchContext.searchArray[0]) {
       //   // query = searchContext.searchArray[0]
       // }
-      console.log('parsedRegionForApi', parsedRegionForApi)
+
       // TODO: Move all api calls into api service
       Promise.all([
         axios.get(
-          `https://sks-server-ajah-ttwto.ondigitalocean.app/search?q=${encodeURI(
-            q
-          )}&doctype=${parsedDoctypeForApi}&operator=${parsedOperator}&region=${parsedRegionForApi}&municipality=${
-            resultsState.municipality
-          }`
+          `https://sks-server-ajah-ttwto.ondigitalocean.app/search?q=${parsedQForApi}&doctype=${parsedDoctypeForApi}&operator=${parsedOperator}&region=${parsedRegionForApi}&municipality=${resultsState.municipality}`
         ),
         axios.get(
-          `https://sks-server-ajah-ttwto.ondigitalocean.app/count?q=${encodeURI(
-            q
-          )}&operator=${operator}`
+          `https://sks-server-ajah-ttwto.ondigitalocean.app/count?q=${parsedQForApi}&operator=${parsedOperator}`
         ),
       ]).then(
         axios.spread((search, count) => {
@@ -315,7 +313,7 @@ const SearchPage = () => {
     } catch (error) {
       console.log(error)
     }
-  }, [doctypeStr, operator, q, regionStr])
+  }, [doctypeStr, operator, qStr, regionStr])
 
   // componentDidMount() {
   // const parsed = queryString.parse(this.props.location.search)
