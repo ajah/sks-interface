@@ -1,5 +1,6 @@
 import { useEffect, useState, useContext } from 'react'
 import axios from 'axios'
+import { kebabCase, keyBy, pick, without } from 'lodash'
 import { Link, useLocation } from 'react-router-dom'
 // import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 // import { faSearch } from '@fortawesome/free-solid-svg-icons'
@@ -22,12 +23,14 @@ import {
   defaultDoctype,
 
   // Other constants
-  // provinces,
+  provinces,
 } from 'constants'
 
 // TODO: move styles.css import into SearchPage.css
 import 'assets/css/styles.css'
 import './SearchPage.css'
+
+const provincesCodeToNameMap = keyBy(provinces, 'code')
 
 const Badge = ({ type }) => {
   if (type === ACTIVITY) {
@@ -111,6 +114,7 @@ const SearchPage = () => {
 
   const [searchParams, setSearchParams] = useSearchParams()
   const [resultsState, setResultsState] = useState({
+    // TODO: Go state vars below and see which are unnecessry
     total: '',
     results: [],
     act_total: '',
@@ -122,7 +126,6 @@ const SearchPage = () => {
     globalQuery: '',
     queryProp: [],
     city: '',
-    location: [],
     region: '',
     municipality: '',
     downloadData: '',
@@ -130,23 +133,32 @@ const SearchPage = () => {
     downloadLink: '',
   })
 
-  const { q = '', operator = '', doctype = [] } = searchParams
-  // Doctype can be either an array or a string, depending whether there is one value or two values separated by a comma
-  const docTypeStr = doctype.toString()
+  const { q = '', doctype = [], operator = '', region = [] } = searchParams
+
+  // Params that can have multiple values separated by commas will be a string when one value is provided,
+  // and an array when multiple values are provided
+  const doctypeStr = doctype.toString()
+  const regionStr = region.toString()
 
   useEffect(() => {
     try {
-      if (!q.trim()) return
-
-      const hasInvalidSearchParams = Object.keys(searchParams).some(
+      const searchParamNames = Object.keys(searchParams)
+      const hasInvalidSearchParams = searchParamNames.some(
         (paramName) => !allowedSearchParams.includes(paramName)
       )
 
       if (hasInvalidSearchParams) {
-        setSearchParams({}, { replace: true })
+        setSearchParams(
+          { ...pick(searchParamNames, allowedSearchParams) },
+          { replace: true }
+        )
         return
       }
 
+      // Check 'q'
+      if (!q.trim()) return
+
+      // Check 'operator'
       const parsedOperator = allowedOperators.includes(operator)
         ? operator
         : defaultOperator
@@ -154,16 +166,25 @@ const SearchPage = () => {
       if (searchContext.searchOperator !== parsedOperator)
         searchContext.setOperatorHandler(parsedOperator)
 
-      const doctypeArr = docTypeStr.split(',')
+      // Check 'doctype'
+      const doctypeArr = doctypeStr ? doctypeStr.split(',') : []
       const filteredDoctype = doctypeArr.filter((type) => allowedDoctypes.includes(type))
       const parsedDoctype = filteredDoctype.length ? filteredDoctype : defaultDoctype
 
+      // Check 'region'
+      const regionArr = regionStr ? regionStr.split(',') : []
+      const parsedRegion = regionArr.filter((regionCode) =>
+        provinces.some(({ code }) => code === regionCode)
+      )
+
       const changedParams =
-        doctypeArr.length !== parsedDoctype.length || operator !== parsedOperator
+        doctypeArr.length !== parsedDoctype.length ||
+        operator !== parsedOperator ||
+        regionArr.length !== parsedRegion.length
 
       if (changedParams) {
         setSearchParams(
-          { q, doctype: parsedDoctype, operator: parsedOperator },
+          { q, doctype: parsedDoctype, operator: parsedOperator, region: parsedRegion },
           { overwrite: true }
         )
 
@@ -171,8 +192,12 @@ const SearchPage = () => {
       }
 
       // Backend uses 'entity' keyword to refer to ORGANIZATION
-      const doctypeForApi = parsedDoctype.map((type) =>
+      const parsedDoctypeForApi = parsedDoctype.map((type) =>
         type === ORGANIZATION ? 'entity' : type
+      )
+
+      const parsedRegionForApi = parsedRegion.map(
+        (code) => provincesCodeToNameMap[code].name
       )
       // if (!searchContext.searchArray[0]) {
       //   let queryArray = (q || '').split(' ')
@@ -199,15 +224,15 @@ const SearchPage = () => {
       // } else if (searchContext.searchArray[0]) {
       //   // query = searchContext.searchArray[0]
       // }
-
+      console.log('parsedRegionForApi', parsedRegionForApi)
       // TODO: Move all api calls into api service
       Promise.all([
         axios.get(
           `https://sks-server-ajah-ttwto.ondigitalocean.app/search?q=${encodeURI(
             q
-          )}&doctype=${doctypeForApi}&operator=${parsedOperator}&region=${
-            resultsState.location
-          }&municipality=${resultsState.municipality}`
+          )}&doctype=${parsedDoctypeForApi}&operator=${parsedOperator}&region=${parsedRegionForApi}&municipality=${
+            resultsState.municipality
+          }`
         ),
         axios.get(
           `https://sks-server-ajah-ttwto.ondigitalocean.app/count?q=${encodeURI(
@@ -290,7 +315,7 @@ const SearchPage = () => {
     } catch (error) {
       console.log(error)
     }
-  }, [docTypeStr, operator, q, resultsState.location, resultsState.municipality])
+  }, [doctypeStr, operator, q, regionStr])
 
   // componentDidMount() {
   // const parsed = queryString.parse(this.props.location.search)
@@ -346,44 +371,35 @@ const SearchPage = () => {
     }
   }
 
-  const handleLocation = (e) => {
-    //e.preventDefault();
+  const handleRegionFilter = (e) => {
+    const regionCode = e.target.name
+    const regionArr = Array.isArray(region) ? region : [region]
 
-    let loc
+    const adjustedRegion = regionArr.includes(regionCode)
+      ? without(regionArr, regionCode)
+      : [...regionArr, regionCode]
 
-    loc = e.target.name
+    setSearchParams({ region: adjustedRegion })
 
-    if (!resultsState.location.includes(loc)) {
-      resultsState.location.push(loc)
-
-      setResultsState({ ...resultsState, location: resultsState.location })
-    } else if (resultsState.location.includes(loc)) {
-      const index = resultsState.location.indexOf(loc)
-
-      resultsState.location.splice(index, 1)
-
-      setResultsState({ ...resultsState, location: resultsState.location })
-    }
-
-    if (resultsState.municipality) {
-      window.history.pushState(
-        'page2',
-        'Title',
-        `/search?q=${resultsState.globalQuery}&doctype=${resultsState.filter.join(
-          ','
-        )}&region=${resultsState.location}&municipality=${
-          resultsState.municipality
-        }&operator=${resultsState.operator}`
-      )
-    } else {
-      window.history.pushState(
-        'page2',
-        'Title',
-        `/search?q=${resultsState.globalQuery}&doctype=${resultsState.filter.join(
-          ','
-        )}&region=${resultsState.location}&operator=${resultsState.operator}`
-      )
-    }
+    // if (resultsState.municipality) {
+    //   window.history.pushState(
+    //     'page2',
+    //     'Title',
+    //     `/search?q=${resultsState.globalQuery}&doctype=${resultsState.filter.join(
+    //       ','
+    //     )}&region=${region}&municipality=${resultsState.municipality}&operator=${
+    //       resultsState.operator
+    //     }`
+    //   )
+    // } else {
+    //   window.history.pushState(
+    //     'page2',
+    //     'Title',
+    //     `/search?q=${resultsState.globalQuery}&doctype=${resultsState.filter.join(
+    //       ','
+    //     )}&region=${region}&operator=${resultsState.operator}`
+    //   )
+    // }
   }
 
   const handleDoctypeFilter = (e) => {
@@ -573,25 +589,31 @@ const SearchPage = () => {
                       </label>
                     </div>
                   </form>
-                  {/* <form>
+                  <form>
                     <hr />
-                    // {provinces.map((province) => {
+                    {provinces.map(({ name, code }) => {
+                      const inputId = `province-checkbox-${kebabCase(name)}`
+                      const isChecked = Array.isArray(region)
+                        ? region.includes(code)
+                        : region === code
+
                       return (
-                        <div className="form-check" key={province}>
+                        <div className="form-check" key={code}>
                           <input
                             className="form-check-input form__input"
                             type="checkbox"
-                            checked={resultsState.location.includes(province)}
-                            id="defaultCheck1"
-                            name={province}
-                            onChange={handleLocation}
+                            checked={isChecked}
+                            id={inputId}
+                            name={code}
+                            onChange={handleRegionFilter}
                           />
-                          <label className="form-check-label">{province}</label>
+                          <label htmlFor={inputId} className="form-check-label">
+                            {name}
+                          </label>
                         </div>
                       )
                     })}
-
-                    <div className="mt-4">
+                    {/* <div className="mt-4">
                       <label className="form-check-label">City:</label>
 
                       <div className="city-block">
@@ -614,8 +636,8 @@ const SearchPage = () => {
                           </button>
                         </div>
                       </div>
-                    </div>
-                  </form> */}
+                    </div> */}
+                  </form>
                   <hr />
                   <p className="text-secondary">More filters coming soon!</p>
                 </div>

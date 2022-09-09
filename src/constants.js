@@ -1,4 +1,4 @@
-export const allowedSearchParams = ['q', 'operator', 'doctype']
+export const allowedSearchParams = ['q', 'doctype', 'operator', 'region']
 
 export const AND = 'and'
 export const OR = 'or'
@@ -13,14 +13,14 @@ export const allowedDoctypes = [ACTIVITY, ORGANIZATION]
 export const defaultDoctype = [ACTIVITY, ORGANIZATION]
 
 export const provinces = [
-  'Alberta',
-  'British Columbia',
-  'Manitoba',
-  'New Brunswick',
-  'Newfoundland and Labrador',
-  'Nova Scotia',
-  'Ontario',
-  'Prince Edward Island',
-  'Quebec',
-  'Saskatchewan',
+  { name: 'Alberta', code: 'ab' },
+  { name: 'British Columbia', code: 'bc' },
+  { name: 'Manitoba', code: 'mb' },
+  { name: 'New Brunswick', code: 'nb' },
+  { name: 'Newfoundland and Labrador', code: 'nl' },
+  { name: 'Nova Scotia', code: 'ns' },
+  { name: 'Ontario', code: 'on' },
+  { name: 'Prince Edward Island', code: 'pe' },
+  { name: 'Quebec', code: 'qc' },
+  { name: 'Saskatchewan', code: 'sk' },
 ]
