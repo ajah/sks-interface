@@ -109,29 +109,29 @@ const TableRows = ({ results }) => {
   })
 }
 
+const initialResultsState = {
+  // TODO: Go state vars below and see which are unnecessry
+  total: '',
+  results: [],
+  act_total: '',
+  ent_total: '',
+  inc_activities: true,
+  inc_organizations: true,
+  contextState: '',
+  filter: [ACTIVITY, ORGANIZATION],
+  globalQuery: '',
+  queryProp: [],
+  city: '',
+  municipality: '',
+  downloadData: '',
+  downloadLink: '',
+}
+
 const SearchPage = () => {
   const searchContext = useContext(SearchContext)
 
   const [searchParams, setSearchParams] = useSearchParams()
-  const [resultsState, setResultsState] = useState({
-    // TODO: Go state vars below and see which are unnecessry
-    total: '',
-    results: [],
-    act_total: '',
-    ent_total: '',
-    inc_activities: true,
-    inc_organizations: true,
-    contextState: '',
-    filter: [ACTIVITY, ORGANIZATION],
-    globalQuery: '',
-    queryProp: [],
-    city: '',
-    region: '',
-    municipality: '',
-    downloadData: '',
-    operator: '',
-    downloadLink: '',
-  })
+  const [resultsState, setResultsState] = useState(initialResultsState)
 
   const { q = [], doctype = [], operator = '', region = [] } = searchParams
 
@@ -157,7 +157,7 @@ const SearchPage = () => {
       }
 
       // Check 'q'
-      if (!qStr) return
+      if (!qStr) return setResultsState(initialResultsState)
       const parsedQ = Array.isArray(q) ? q : [q]
 
       // Check 'operator'
