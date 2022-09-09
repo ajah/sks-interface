@@ -20,7 +20,7 @@ const SearchBar = () => {
   const [searchParams, setSearchParams] = useSearchParams()
 
   const { q = [] } = searchParams
-  const qArr = Array.isArray(q) ? q : [q]
+  const qArr = (Array.isArray(q) ? q : [q]).slice(0, 6)
 
   const [existingQueries, setExistingQueries] = useState(qArr)
   const [inputQuery, setInputQuery] = useState('')
