@@ -18,9 +18,12 @@ export const provinces = [
   { name: 'Manitoba', code: 'mb' },
   { name: 'New Brunswick', code: 'nb' },
   { name: 'Newfoundland and Labrador', code: 'nl' },
+  { name: 'Northwest Territories', code: 'nt' },
   { name: 'Nova Scotia', code: 'ns' },
+  { name: 'Nunavut', code: 'nu' },
   { name: 'Ontario', code: 'on' },
   { name: 'Prince Edward Island', code: 'pe' },
   { name: 'Quebec', code: 'qc' },
   { name: 'Saskatchewan', code: 'sk' },
+  { name: 'Yukon', code: 'yk' },
 ]
