@@ -87,9 +87,6 @@ const SearchBar = () => {
                 key={searchTerm}
               >
                 {searchTerm}
-                {/*  <Link  to={`/search?q=${totalQuery.replace(('+'+query),"")}&filter=activity,entity`}>
-                  <FontAwesomeIcon transform="right-15" onClick={() => removeQuery({query})} icon={faTimesCircle} />
-                  </Link> */}
                 <div className="ms-2 me-1" size="sm">
                   <FontAwesomeIcon
                     className="remove-query"
@@ -162,7 +159,6 @@ const SearchBar = () => {
               <div>
                 <button
                   className="btn btn-primary ps-4 pe-4 rounded-pill mx-auto"
-                  // onClick={searchQueryHandler}
                   onClick={setCurrentQueryHandler}
                 >
                   Search <FontAwesomeIcon icon={faSearch} />

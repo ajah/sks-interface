@@ -266,7 +266,7 @@ export default class OrgPage extends Component {
                   </tr>
                   <tr>
                     <td>
-                      <strong>Province</strong>
+                      <strong>Region</strong>
                     </td>
                     <td>{this.state.location_region}</td>
                   </tr>

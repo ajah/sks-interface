@@ -306,7 +306,7 @@ export default class ActPage extends Component {
                   </tr>
                   <tr>
                     <td>
-                      <strong>Province</strong>
+                      <strong>Region</strong>
                     </td>
                     <td>{this.state.grant_region || <span>No data available</span>}</td>
                   </tr>

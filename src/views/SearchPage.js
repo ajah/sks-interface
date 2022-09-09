@@ -23,14 +23,14 @@ import {
   defaultDoctype,
 
   // Other constants
-  provinces,
+  regions,
 } from 'constants'
 
 // TODO: move styles.css import into SearchPage.css
 import 'assets/css/styles.css'
 import './SearchPage.css'
 
-const provincesCodeToNameMap = keyBy(provinces, 'code')
+const regionsCodeToNameMap = keyBy(regions, 'code')
 
 const Badge = ({ type }) => {
   if (type === ACTIVITY) {
@@ -110,21 +110,18 @@ const TableRows = ({ results }) => {
 }
 
 const initialResultsState = {
-  // TODO: Go state vars below and see which are unnecessry
+  // TODO: Review state vars below and see which are unnecessry
   total: '',
   results: [],
   act_total: '',
   ent_total: '',
   inc_activities: true,
   inc_organizations: true,
-  contextState: '',
-  filter: [ACTIVITY, ORGANIZATION],
   globalQuery: '',
-  queryProp: [],
-  city: '',
   municipality: '',
   downloadData: '',
   downloadLink: '',
+  // city: '',
 }
 
 const SearchPage = () => {
@@ -178,7 +175,7 @@ const SearchPage = () => {
       // Check 'region'
       const regionArr = regionStr ? regionStr.split(',') : []
       const parsedRegion = regionArr.filter((regionCode) =>
-        provinces.some(({ code }) => code === regionCode)
+        regions.some(({ code }) => code === regionCode)
       )
 
       const changedParams =
@@ -202,35 +199,10 @@ const SearchPage = () => {
       )
 
       const parsedRegionForApi = parsedRegion.map(
-        (code) => provincesCodeToNameMap[code].name
+        (code) => regionsCodeToNameMap[code].name
       )
 
       const parsedQForApi = encodeURI(parsedQ.join('+'))
-      // if (!searchContext.searchArray[0]) {
-      //   let queryArray = (q || '').split(' ')
-
-      //   if (queryArray[0]) {
-      //     // queryArray.forEach((item) => searchContext.addQueryHandler(item))
-      //   }
-      // }
-
-      // if (filter === 'entity') {
-      //   // isRedirect = true
-      //   filter = 'entity'
-
-      //   setResultsState({
-      //     ...resultsState,
-      //     inc_activities: false,
-      //     inc_organizations: true,
-      //     filter: resultsState.filter.slice(1),
-      //   })
-      // }
-
-      // if (searchContext.searchArray.length) {
-      //   // query = searchContext.searchArray.join('+')
-      // } else if (searchContext.searchArray[0]) {
-      //   // query = searchContext.searchArray[0]
-      // }
 
       // TODO: Move all api calls into api service
       Promise.all([
@@ -250,127 +222,13 @@ const SearchPage = () => {
             ent_total: count.data['entities'],
           }))
           // searchContext.loadingHandler(false)
-          // if (resultsState.location.length && resultsState.municipality) {
-          //   window.history.pushState(
-          //     'page2',
-          //     'Title',
-          //     `/search?q=${q}&doctype=${filter.toString()}&region=${
-          //       resultsState.location
-          //     }&municipality=${resultsState.municipality}&operator=${resultsState.operator}`
-          //   )
-          // } else if (resultsState.location.length && !resultsState.municipality) {
-          //   window.history.pushState(
-          //     'page2',
-          //     'Title',
-          //     `/search?q=${query}&doctype=${filter.toString()}&region=${
-          //       resultsState.location
-          //     }&operator=${resultsState.operator}`
-          //   )
-          // } else if (resultsState.municipality && !resultsState.location.length) {
-          //   window.history.pushState(
-          //     'page2',
-          //     'Title',
-          //     `/search?q=${query}&doctype=${filter.toString()}&municipality=${
-          //       resultsState.municipality
-          //     }&operator=${resultsState.operator}`
-          //   )
-          // } else {
-          //   window.history.pushState(
-          //     'page2',
-          //     'Title',
-          //     `/search?q=${query}&doctype=${filter.toString()}&operator=${
-          //       resultsState.operator
-          //     }`
-          //   )
-          // }
-          // setResultsState({
-          //   ...resultsState,
-          //   globalQuery: queryString.parse(window.location.search).q,
-          // })
-          // if (resultsState.globalQuery !== undefined) {
-          //   const url = `https://sks-server-ajah-ttwto.ondigitalocean.app/search?q=${
-          //     resultsState.globalQuery
-          //   }&doctype=${filter.toString()}&region=${resultsState.location}&municipality=${
-          //     resultsState.municipality
-          //   }&operator=${resultsState.operator}`
-          //   axios
-          //     .get(url)
-          //     .then(() => {
-          //       setResultsState({
-          //         ...resultsState,
-          //         downloadLink: `https://sks-server-ajah-ttwto.ondigitalocean.app//download?q=${
-          //           resultsState.globalQuery
-          //         }&doctype=${filter.toString()}&region=${
-          //           resultsState.location
-          //         }&municipality=${resultsState.municipality}&operator=${
-          //           resultsState.operator
-          //         }`,
-          //       })
-          //     })
-          //     .catch((error) => console.log(error))
-          // } else {
-          //   console.log('No entity was found')
-          // }
         })
       )
     } catch (error) {
       console.log(error)
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [doctypeStr, operator, qStr, regionStr])
-
-  // componentDidMount() {
-  // const parsed = queryString.parse(this.props.location.search)
-
-  /*  if (!filter.includes("activity")) {
-       setResultsState({...resultsState, 
-         inc_activities: false,
-       });
-     } else if (!filter.includes("entity")) {
-       setResultsState({...resultsState, 
-         inc_organizations: false,
-       });
-     } */
-  // }
-
-  // componentDidUpdate() {
-  //   // Typical usage (don't forget to compare props):
-
-  //   if (searchContext.loading) {
-  //     this.componentDidMount()
-  //   }
-  // }
-
-  const setCity = (e) => {
-    setResultsState({ ...resultsState, city: e.target.value })
-  }
-
-  const searchCity = (e, city) => {
-    e.preventDefault()
-
-    city = resultsState.city
-
-    setResultsState({ ...resultsState, municipality: city })
-
-    if (resultsState.location) {
-      window.history.pushState(
-        'page2',
-        'Title',
-        `/search?q=${resultsState.globalQuery}&doctype=${resultsState.filter.join(
-          ','
-        )}&region=${resultsState.location}&municipality=${city}&operator=${
-          resultsState.operator
-        }`
-      )
-    } else {
-      window.history.pushState(
-        'page2',
-        'Title',
-        `/search?q=${resultsState.globalQuery}&doctype=${resultsState.filter.join(
-          ','
-        )}&municipality=${city}&operator=${resultsState.operator}`
-      )
-    }
-  }
 
   const handleRegionFilter = (e) => {
     const regionCode = e.target.name
@@ -381,100 +239,11 @@ const SearchPage = () => {
       : [...regionArr, regionCode]
 
     setSearchParams({ region: adjustedRegion })
-
-    // if (resultsState.municipality) {
-    //   window.history.pushState(
-    //     'page2',
-    //     'Title',
-    //     `/search?q=${resultsState.globalQuery}&doctype=${resultsState.filter.join(
-    //       ','
-    //     )}&region=${region}&municipality=${resultsState.municipality}&operator=${
-    //       resultsState.operator
-    //     }`
-    //   )
-    // } else {
-    //   window.history.pushState(
-    //     'page2',
-    //     'Title',
-    //     `/search?q=${resultsState.globalQuery}&doctype=${resultsState.filter.join(
-    //       ','
-    //     )}&region=${region}&operator=${resultsState.operator}`
-    //   )
-    // }
   }
 
   const handleDoctypeFilter = (e) => {
     const newDoctype = e.target.value
     setSearchParams({ doctype: newDoctype.split(',') })
-
-    /* 
-
-    const parsed = queryString.parse(this.props.location.search);
-    const query =  searchContext.query;
-    const filter = parsed.filter;
-  
-
-
-    axios
-      .all([
-        axios.get(
-          `https://sks-server-hbl9d.ondigitalocean.app/search?q=${encodeURI(
-            query
-          )}&filter=${filter}`
-        ),
-        axios.get(
-          `https://sks-server-hbl9d.ondigitalocean.app/count?q=${encodeURI(
-            query
-          )}`
-        ),
-      ])
-      .then(
-        axios.spread((search, count) => {
-          setResultsState({...resultsState, 
-            results: search["data"]["hits"],
-            total: count["data"]["new-activities,entities"],
-            act_total: count["data"]["new-activities"],
-            ent_total: count["data"]["entities"],
-          });
-        })
-      ); 
-    const value =
-      e.target.type === 'checkbox' ? e.target.checked : e.target.value;
-    const name = e.target.name;
-
-
-    const queryParams = queryString.parse(window.location.search);
-    const filters = resultsState.filter;
-
-    if (value === true) {
-      filters.push(name);
-      setResultsState({...resultsState, 
-        filter: filters,
-      });
-      //this.componentDidMount()
-    }
-
-    const index = filters.indexOf(name);
-
-    setResultsState({...resultsState, 
-      filter: filters,
-    });
-
-    if (index > -1) {
-      filters.splice(index, 1); // 2nd parameter means remove one item only
-      setResultsState({...resultsState, 
-        filter: filters,
-      });
-    }
-
-    this.componentDidMount();
-    /*   setResultsState({...resultsState, 
-        queryParams: filters,
-      });
-  
-      setResultsState({...resultsState, 
-        queryParams: name,
-      }); */
   }
 
   // const handleDownload = () => {
@@ -491,21 +260,21 @@ const SearchPage = () => {
   //   }
   // }
 
-  const handleButton = (e) => {
-    e.preventDefault()
+  // const handleButton = (e) => {
+  //   e.preventDefault()
 
-    let filter = []
-    // if (resultsState.inc_activities) {
-    //   filter.push(ACTIVITY)
-    // } else if (resultsState.inc_organizations) {
-    //   filter.push('entity')
-    // } else if (!resultsState.inc_activities & !resultsState.inc_organizations) {
-    //   filter.push('activity,entity') //.push("entity"); //
-    // } else if (resultsState.inc_activities & resultsState.inc_organizations) {
-    //   filter.push('activity,entity') //.push("entity"); //
-    // }
+  //   let filter = []
+  // if (resultsState.inc_activities) {
+  //   filter.push(ACTIVITY)
+  // } else if (resultsState.inc_organizations) {
+  //   filter.push('entity')
+  // } else if (!resultsState.inc_activities & !resultsState.inc_organizations) {
+  //   filter.push('activity,entity') //.push("entity"); //
+  // } else if (resultsState.inc_activities & resultsState.inc_organizations) {
+  //   filter.push('activity,entity') //.push("entity"); //
+  // }
 
-    /*   const queryParams = queryString.parse(window.location.search);
+  /*   const queryParams = queryString.parse(window.location.search);
       // const newQueries = { ...queryParams, filter: filter.toString() };
       const orig_q = queryParams["q"];
   
@@ -519,13 +288,45 @@ const SearchPage = () => {
   
       history.push(`/search?q=${encodeURI(orig_q)}&filter=${filter.toString()}`);
       window.location.reload(false);*/
-  }
+  // }
+
+  // const setCity = (e) => {
+  //   setResultsState({ ...resultsState, city: e.target.value })
+  // }
+
+  // const searchCity = (e, city) => {
+  //   e.preventDefault()
+
+  //   city = resultsState.city
+
+  //   setResultsState({ ...resultsState, municipality: city })
+
+  //   if (resultsState.location) {
+  //     window.history.pushState(
+  //       'page2',
+  //       'Title',
+  //       `/search?q=${resultsState.globalQuery}&doctype=${resultsState.filter.join(
+  //         ','
+  //       )}&region=${resultsState.location}&municipality=${city}&operator=${
+  //         resultsState.operator
+  //       }`
+  //     )
+  //   } else {
+  //     window.history.pushState(
+  //       'page2',
+  //       'Title',
+  //       `/search?q=${resultsState.globalQuery}&doctype=${resultsState.filter.join(
+  //         ','
+  //       )}&municipality=${city}&operator=${resultsState.operator}`
+  //     )
+  //   }
+  // }
 
   return (
     <main className="page projects-page mt-5">
       <div className="container ">
         <div className="row mt-5" id="SearchBar">
-          <SearchBar queryProp={resultsState.queryProp} />
+          <SearchBar />
         </div>
         <div className="row">
           {/* SIDEBAR */}
@@ -592,8 +393,8 @@ const SearchPage = () => {
                   </form>
                   <form>
                     <hr />
-                    {provinces.map(({ name, code }) => {
-                      const inputId = `province-checkbox-${kebabCase(name)}`
+                    {regions.map(({ name, code }) => {
+                      const inputId = `region-checkbox-${kebabCase(name)}`
                       const isChecked = Array.isArray(region)
                         ? region.includes(code)
                         : region === code
@@ -614,6 +415,7 @@ const SearchPage = () => {
                         </div>
                       )
                     })}
+                    {/* TODO: Refactor the city filter */}
                     {/* <div className="mt-4">
                       <label className="form-check-label">City:</label>
 
@@ -642,11 +444,6 @@ const SearchPage = () => {
                   <hr />
                   <p className="text-secondary">More filters coming soon!</p>
                 </div>
-                {/* <div className="">
-                  <button className="btn btn-primary" onClick={handleButton}>
-                    Update
-                  </button>
-                </div> */}
               </div>
               {/* <div className="row mt-4">
                   <div className="col">

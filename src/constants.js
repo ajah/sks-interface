@@ -12,7 +12,7 @@ export const ORGANIZATION = 'organization'
 export const allowedDoctypes = [ACTIVITY, ORGANIZATION]
 export const defaultDoctype = [ACTIVITY, ORGANIZATION]
 
-export const provinces = [
+export const regions = [
   { name: 'Alberta', code: 'ab' },
   { name: 'British Columbia', code: 'bc' },
   { name: 'Manitoba', code: 'mb' },
