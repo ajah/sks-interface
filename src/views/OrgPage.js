@@ -3,19 +3,9 @@ import { Link } from 'react-router-dom'
 
 import { BackButton } from 'components/BackButton'
 import { Get } from 'services/api'
+import { fpeFormat, currencyFormat } from 'utils/format'
 
 import './OrgPage.css'
-
-// const ent_npk_id = url.pathname.split("/")[2];
-
-function currencyFormat(amount) {
-  return (
-    '$' +
-    Number.parseFloat(amount)
-      .toFixed(2)
-      .replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,')
-  )
-}
 
 const Row = (props) => (
   <tr>
@@ -57,30 +47,6 @@ export default class OrgPage extends Component {
       activities: [],
     }
   }
-
-  currencyFormat(amount) {
-    return (
-      '$' +
-      Number.parseFloat(amount)
-        .toFixed(2)
-        .replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,')
-    )
-  }
-
-  fpeFormat(fpe) {
-    if (fpe !== undefined) {
-      return fpe.substring(5)
-    }
-  }
-
-  // formatDatapoints(datapoint) {
-  //   let result = "";
-  //   if (datapoint == null) {
-  //     result = "Unavailable";
-  //   } else result = datapoint;
-
-  //   return result;
-  // }
 
   async componentDidMount() {
     const url = new URL(window.location.href)
@@ -233,7 +199,7 @@ export default class OrgPage extends Component {
                       <strong>{this.state.revenue_year} Revenue</strong>
                     </td>
                     {this.state.revenue ? (
-                      <td>{this.currencyFormat(this.state.revenue)}</td>
+                      <td>{currencyFormat(this.state.revenue)}</td>
                     ) : (
                       <td>No data available</td>
                     )}
@@ -243,7 +209,7 @@ export default class OrgPage extends Component {
                       <strong>Fiscal Period (MM-DD)</strong>
                     </td>
                     {this.state.FPE ? (
-                      <td>{this.fpeFormat(this.state.FPE)}</td>
+                      <td>{fpeFormat(this.state.FPE)}</td>
                     ) : (
                       <td>No data available</td>
                     )}

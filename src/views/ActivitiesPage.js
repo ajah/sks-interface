@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom'
 import { BackButton } from 'components/BackButton'
 import { SearchContext } from 'context/search-context'
 import { Get } from 'services/api'
+import { currencyFormat } from 'utils/format'
 
 import './ActivitiesPage.css'
 
@@ -124,28 +125,6 @@ export default class ActPage extends Component {
       recip_focus_area: '',
       recip_website: '',
     }
-  }
-
-  currencyFormat(amount) {
-    return (
-      '$' +
-      Number.parseFloat(amount)
-        .toFixed(2)
-        .replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,')
-    )
-  }
-
-  fpeFormat(fpe) {
-    return fpe.substring(5)
-  }
-
-  formatDatapoints(datapoint) {
-    let result = ''
-    if (datapoint == null) {
-      result = 'Unavailable'
-    } else result = datapoint
-
-    return result
   }
 
   async componentDidMount() {
@@ -277,7 +256,7 @@ export default class ActPage extends Component {
                     <td style={{ width: '35%' }} className="pr-4">
                       <strong>{this.state.funding_type}</strong>
                     </td>
-                    <td>{this.currencyFormat(this.state.funding_amount)}</td>
+                    <td>{currencyFormat(this.state.funding_amount)}</td>
                   </tr>
                   <tr>
                     <td>
