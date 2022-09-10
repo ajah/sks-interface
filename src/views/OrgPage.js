@@ -1,8 +1,8 @@
 import React, { Component } from 'react'
-import axios from 'axios'
 import { Link } from 'react-router-dom'
 
 import { BackButton } from 'components/BackButton'
+import { Get } from 'services/api'
 
 import './OrgPage.css'
 
@@ -86,30 +86,29 @@ export default class OrgPage extends Component {
     const url = new URL(window.location.href)
     const ent_sks_id = url.pathname.split('/')[2]
 
-    await axios
-      .get(`https://sks-server-ajah-ttwto.ondigitalocean.app/entities/${ent_sks_id}`)
-      .then((response) => {
+    await Get(`/entities/${ent_sks_id}`)
+      .then((data) => {
         this.setState({
-          FPE: response['data'][0]['FPE'],
-          focus_area: response['data'][0]['focus_area'],
-          legal_status: response['data'][0]['legal_status'],
-          name: response['data'][0]['name'],
-          location_municipality: response['data'][0]['location_municipality'],
-          location_postal_code: response['data'][0]['location_postal_code'],
-          legal_designation_type: response['data'][0]['legal_designation_type'],
-          location_region: response['data'][0]['location_region'],
-          location_country: response['data'][0]['location_country'],
-          revenue: response['data'][0]['revenue'],
-          employees: response['data'][0]['employees'],
-          website: response['data'][0]['website'],
-          ent_sks_id: response['data'][0]['ent_sks_id'],
-          regulating_authority: response['data'][0]['regulating_authority'],
-          revenue_currency: response['data'][0]['revenue_currency'],
-          revenue_year: response['data'][0]['revenue_year'],
-          data_source: response['data'][0]['data_source'],
-          legal_status_date: response['data'][0]['legal_status_date'],
-          record_type: response['data'][0]['record_type'],
-          external_id: response['data'][0]['external_id'],
+          FPE: data[0].FPE,
+          focus_area: data[0].focus_area,
+          legal_status: data[0].legal_status,
+          name: data[0].name,
+          location_municipality: data[0].location_municipality,
+          location_postal_code: data[0].location_postal_code,
+          legal_designation_type: data[0].legal_designation_type,
+          location_region: data[0].location_region,
+          location_country: data[0].location_country,
+          revenue: data[0].revenue,
+          employees: data[0].employees,
+          website: data[0].website,
+          ent_sks_id: data[0].ent_sks_id,
+          regulating_authority: data[0].regulating_authority,
+          revenue_currency: data[0].revenue_currency,
+          revenue_year: data[0].revenue_year,
+          data_source: data[0].data_source,
+          legal_status_date: data[0].legal_status_date,
+          record_type: data[0].record_type,
+          external_id: data[0].external_id,
           loading: false,
         })
       })
@@ -119,19 +118,18 @@ export default class OrgPage extends Component {
   }
 
   async getActivitiesData(ent_sks_id) {
-    if (ent_sks_id) {
-      const url = `https://sks-server-ajah-ttwto.ondigitalocean.app/activities/mostrecentbyent/${ent_sks_id}`
-      await axios
-        .get(url)
-        .then((res) => {
-          this.setState({
-            activities: res['data'],
-          })
-        })
-        .catch((error) => console.log(error))
-    } else {
+    if (!ent_sks_id) {
       console.log('No entity was found')
+      return
     }
+
+    Get(`/activities/mostrecentbyent/${ent_sks_id}`)
+      .then((activities) => {
+        this.setState({
+          activities,
+        })
+      })
+      .catch((error) => console.log(error))
   }
 
   tableRows() {

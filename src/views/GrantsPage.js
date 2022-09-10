@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
-import axios from 'axios'
 
 import { BackToEntButton } from 'components/BackButton'
+import { Get } from 'services/api'
 
 import './GrantsPage.css'
 
@@ -47,17 +47,14 @@ export default class GrantsPage extends Component {
     }
   }
 
-  async componentDidMount() {
+  componentDidMount() {
     const url = new URL(window.location.href)
     const ent_sks_id = url.pathname.split('/')[2]
 
-    await axios
-      .get(
-        `https://sks-server-ajah-ttwto.ondigitalocean.app//activities/byentity/${ent_sks_id}`
-      )
-      .then((response) => {
+    Get(`/activities/byentity/${ent_sks_id}`)
+      .then((activities) => {
         this.setState({
-          activities: response['data'],
+          activities,
         })
       })
       .catch((error) => console.log(error))

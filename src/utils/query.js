@@ -31,11 +31,8 @@ export const getQueryString = (params, options = {}) => {
 
   const prefix = addQueryPrefix ? '?' : ''
 
-  if (searchTermQuery.length && !remainingQuery.length)
-    return `${prefix}${searchTermQuery}`
-
-  if (!searchTermQuery.length && remainingQuery.length)
-    return `${prefix}${remainingQuery}`
+  if (!searchTermQuery.length || !remainingQuery.length)
+    return `${prefix}${searchTermQuery || remainingQuery}`
 
   return `${prefix}${searchTermQuery}&${remainingQuery}`
 }
