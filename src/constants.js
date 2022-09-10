@@ -7,6 +7,7 @@ export const allowedOperators = [AND, OR]
 export const DEFAULT_OPERATOR = AND
 
 export const ACTIVITY = 'activity'
+export const ENTITY = 'entity' // api only
 export const ORGANIZATION = 'organization'
 
 export const allowedDoctypes = [ACTIVITY, ORGANIZATION]

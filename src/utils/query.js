@@ -1,10 +1,41 @@
 import queryString from 'query-string'
+import { mapValues, omit } from 'lodash'
 
-export const getQueryString = (keyVals) => {
-  const query = queryString.stringify(keyVals, {
+export const getQueryString = (keyVals, options = {}) => {
+  const { addQueryPrefix = true, skipEmptyString = true } = options
+
+  const searchTermQuery = queryString.stringify(
+    { q: keyVals.q },
+    {
+      skipEmptyString,
+      arrayFormat: 'separator',
+      arrayFormatSeparator: '+',
+      skipNull: true,
+    }
+  )
+
+  const remainingParams = omit(keyVals, 'q')
+  // Since qs will remove params with value equal to [],
+  //  convert it to a '' so that the key will be kept in the query if skipEmptyString is false
+  const parsedRemainingParams = mapValues(remainingParams, (val) =>
+    skipEmptyString ? val : Array.isArray(val) && val.length === 0 ? '' : val
+  )
+
+  const remainingQuery = queryString.stringify(parsedRemainingParams, {
+    skipEmptyString,
     arrayFormat: 'comma',
     skipNull: true,
   })
 
-  return query.length ? `?${query}` : ''
+  if (!searchTermQuery.length && !remainingQuery.length) return ''
+
+  const prefix = addQueryPrefix ? '?' : ''
+
+  if (searchTermQuery.length && !remainingQuery.length)
+    return `${prefix}${searchTermQuery}`
+
+  if (!searchTermQuery.length && remainingQuery.length)
+    return `${prefix}${remainingQuery}`
+
+  return `${prefix}${searchTermQuery}&${remainingQuery}`
 }

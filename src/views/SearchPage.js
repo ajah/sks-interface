@@ -1,5 +1,4 @@
 import { useEffect, useState, useContext } from 'react'
-import axios from 'axios'
 import { kebabCase, keyBy, pick, without } from 'lodash'
 import { Link, useLocation } from 'react-router-dom'
 // import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
@@ -8,6 +7,7 @@ import { Link, useLocation } from 'react-router-dom'
 import { SearchBar } from 'components/SearchBar'
 import { SearchContext } from 'context/search-context'
 import { useSearchParams } from 'hooks'
+import { Get } from 'services/api'
 
 import {
   allowedSearchParams,
@@ -73,9 +73,7 @@ const Row = (props) => (
 const TableRows = ({ results }) => {
   const location = useLocation()
 
-  return results.map((hit) => {
-    const { _id, _index, _source } = hit
-
+  return results.map(({ _id, _index, _source }) => {
     let name
     let municipality
     let region
@@ -88,22 +86,25 @@ const TableRows = ({ results }) => {
       region = _source.grant_region
       type = ACTIVITY
       url = `/activities/${_source.act_sks_id}`
-    } else if (_index === 'entities') {
+    }
+
+    if (_index === 'entities') {
       name = _source.name
       municipality = _source.location_municipality
       region = _source.location_region
       type = ORGANIZATION
       url = `/organizations/${_source.ent_sks_id}`
     }
+
     return (
       <Row
+        key={_id}
         location={location}
         name={name}
         municipality={municipality}
         region={region}
         type={type}
         url={url}
-        key={_id}
       />
     )
   })
@@ -193,37 +194,34 @@ const SearchPage = () => {
         return
       }
 
-      // Backend uses 'entity' keyword to refer to ORGANIZATION
-      const parsedDoctypeForApi = parsedDoctype.map((type) =>
-        type === ORGANIZATION ? 'entity' : type
-      )
-
       const parsedRegionForApi = parsedRegion.map(
         (code) => regionsCodeToNameMap[code].name
       )
 
-      const parsedQForApi = encodeURI(parsedQ.join('+'))
-
       // TODO: Move all api calls into api service
       Promise.all([
-        axios.get(
-          `https://sks-server-ajah-ttwto.ondigitalocean.app/search?q=${parsedQForApi}&doctype=${parsedDoctypeForApi}&operator=${parsedOperator}&region=${parsedRegionForApi}&municipality=${resultsState.municipality}`
-        ),
-        axios.get(
-          `https://sks-server-ajah-ttwto.ondigitalocean.app/count?q=${parsedQForApi}&operator=${parsedOperator}`
-        ),
-      ]).then(
-        axios.spread((search, count) => {
-          setResultsState((prevState) => ({
-            ...prevState,
-            results: search.data.hits,
-            total: count.data['new-activities,entities'],
-            act_total: count.data['new-activities'],
-            ent_total: count.data['entities'],
-          }))
+        Get('/search', {
+          q: parsedQ,
+          doctype: parsedDoctype,
+          operator: parsedOperator,
+          region: parsedRegionForApi,
+          municipality: resultsState.municipality,
+        }),
+        Get('/count', { q: parsedQ, operator: parsedOperator }),
+      ])
+        .then(
+          ([search, count]) =>
+            setResultsState((prevState) => ({
+              ...prevState,
+              results: search.hits,
+              total: count['new-activities,entities'],
+              act_total: count['new-activities'],
+              ent_total: count['entities'],
+            }))
+
           // searchContext.loadingHandler(false)
-        })
-      )
+        )
+        .catch((err) => console.log('req err', err))
     } catch (error) {
       console.log(error)
     }
