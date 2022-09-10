@@ -1,11 +1,11 @@
 import queryString from 'query-string'
 import { mapValues, omit } from 'lodash'
 
-export const getQueryString = (keyVals, options = {}) => {
+export const getQueryString = (params, options = {}) => {
   const { addQueryPrefix = true, skipEmptyString = true } = options
 
   const searchTermQuery = queryString.stringify(
-    { q: keyVals.q },
+    { q: params.q },
     {
       skipEmptyString,
       arrayFormat: 'separator',
@@ -14,9 +14,9 @@ export const getQueryString = (keyVals, options = {}) => {
     }
   )
 
-  const remainingParams = omit(keyVals, 'q')
+  const remainingParams = omit(params, 'q')
   // Since qs will remove params with value equal to [],
-  //  convert it to a '' so that the key will be kept in the query if skipEmptyString is false
+  // convert it to a '' so that the key will be kept in the query if skipEmptyString is false
   const parsedRemainingParams = mapValues(remainingParams, (val) =>
     skipEmptyString ? val : Array.isArray(val) && val.length === 0 ? '' : val
   )

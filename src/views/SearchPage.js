@@ -149,7 +149,7 @@ const SearchPage = () => {
       if (hasInvalidSearchParams) {
         setSearchParams(
           { ...pick(searchParamNames, allowedSearchParams) },
-          { replace: true }
+          { replacePage: true }
         )
         return
       }
@@ -157,6 +157,7 @@ const SearchPage = () => {
       // Check 'q'
       if (!qStr) return setResultsState(initialResultsState)
       const qArr = Array.isArray(q) ? q : [q]
+
       // Each query term should be limited to 30 chars, and there should be a max of 5 query terms
       const parsedQ = qArr.map((query) => query.slice(0, 30)).slice(0, 5)
 
@@ -187,8 +188,13 @@ const SearchPage = () => {
 
       if (changedParams) {
         setSearchParams(
-          { q, doctype: parsedDoctype, operator: parsedOperator, region: parsedRegion },
-          { overwrite: true }
+          {
+            q: parsedQ,
+            doctype: parsedDoctype,
+            operator: parsedOperator,
+            region: parsedRegion,
+          },
+          { replaceParams: true }
         )
 
         return
@@ -198,7 +204,6 @@ const SearchPage = () => {
         (code) => regionsCodeToNameMap[code].name
       )
 
-      // TODO: Move all api calls into api service
       Promise.all([
         Get('/search', {
           q: parsedQ,
@@ -208,25 +213,23 @@ const SearchPage = () => {
           municipality: resultsState.municipality,
         }),
         Get('/count', { q: parsedQ, operator: parsedOperator }),
-      ])
-        .then(
-          ([search, count]) =>
-            setResultsState((prevState) => ({
-              ...prevState,
-              results: search.hits,
-              total: count['new-activities,entities'],
-              act_total: count['new-activities'],
-              ent_total: count['entities'],
-            }))
+      ]).then(
+        ([search, count]) =>
+          setResultsState((prevState) => ({
+            ...prevState,
+            results: search.hits,
+            total: count['new-activities,entities'],
+            act_total: count['new-activities'],
+            ent_total: count['entities'],
+          }))
 
-          // searchContext.loadingHandler(false)
-        )
-        .catch((err) => console.log('req err', err))
+        // searchContext.loadingHandler(false)
+      )
     } catch (error) {
-      console.log(error)
+      console.log('Query parsing error', error)
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [doctypeStr, operator, qStr, regionStr])
+  }, [qStr, doctypeStr, operator, regionStr])
 
   const handleRegionFilter = (e) => {
     const regionCode = e.target.name
