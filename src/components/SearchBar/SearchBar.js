@@ -14,11 +14,10 @@ import { useSearchParams } from 'hooks'
 
 const SearchBar = () => {
   const { pathname } = useLocation()
-  const isOnSearchPage = pathname === '/search'
-
   const searchContext = useContext(SearchContext)
   const [searchParams, setSearchParams] = useSearchParams()
 
+  const isOnSearchPage = pathname === '/search'
   const { q = [] } = searchParams
   const qArr = (Array.isArray(q) ? q : [q]).slice(0, 5)
 

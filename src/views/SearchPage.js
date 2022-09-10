@@ -223,7 +223,7 @@ const SearchPage = () => {
             ent_total: count['entities'],
           }))
 
-        // searchContext.loadingHandler(false)
+        // searchContext.isLoadingHandler(false)
       )
     } catch (error) {
       console.log('Query parsing error', error)

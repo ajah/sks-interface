@@ -2,7 +2,6 @@ import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
 
 import { BackButton } from 'components/BackButton'
-import { SearchContext } from 'context/search-context'
 import { Get } from 'services/api'
 import { currencyFormat } from 'utils/format'
 
@@ -91,8 +90,6 @@ const ExpectedResults = ({ expected_results }) => <p>{expected_results}</p>
 const NoResults = () => <p>No expected results were found for this activity.</p>
 
 export default class ActPage extends Component {
-  static contextType = SearchContext
-
   constructor(props) {
     super(props)
     this.state = {
