@@ -153,11 +153,11 @@ export default class ActPage extends Component {
           source_authority: data[0].source_authority,
           source_id: data[0].source_id,
           source_url: data[0].source_url,
-          loading: false,
           org_redirect: data[0].ent_sks_id,
         })
       })
       .catch((error) => console.log(error))
+      .finally(() => this.setState({ loading: false }))
 
     this.getEntitiesData()
   }
