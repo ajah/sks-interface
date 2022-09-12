@@ -1,48 +1,57 @@
-import React, { useState } from "react";
+import { createContext, useState } from 'react'
 
-// query is the state
-// SearchHandler is a function for changing the state.
-export const SearchContext = React.createContext({
-  query: "",
+import { AND, allowedOperators } from 'constants'
+
+export const SearchContext = createContext({
+  query: '',
   searchHandler: () => {},
-});
+})
 
-// Defining a simple HOC component
-const SearchContextProvider = (props) => {
-  const [query, setQuery] = useState("");
-  const [searchArray, setSearchArray] = useState([])
-  const [loading, setLoading] = useState('false')
-  const [orFunctionality, setOrFunctionality] = useState(false)
+const SearchContextProvider = ({ children }) => {
+  const [inputFieldQuery, setInputFieldQuery] = useState('')
+  const [allQueries, setAllQueries] = useState([])
+  const [isLoading, setIsLoading] = useState(false)
+  const [searchOperator, setSearchOperator] = useState(AND)
 
-  const searchHandler = (query) => {
-    setQuery(query);
-  };
-
-  const searchArrayHandler = (query) => {
-    searchArray.push(query)
-    setSearchArray(searchArray);
-  };
-
-  const loadingHandler = (item) => {
-    setLoading(item)
+  const searchHandler = (newQuery) => {
+    setInputFieldQuery(newQuery)
   }
 
-  const orHandler = (item) => {
-    setOrFunctionality(item)
+  const addQueryHandler = (newQuery) => {
+    setAllQueries([...allQueries, newQuery])
   }
-  
+
+  const removeQueryHandler = (removeQuery) => {
+    setAllQueries(allQueries.filter((query) => query !== removeQuery))
+  }
+
+  const isLoadingHandler = (newIsLoading) => {
+    setIsLoading(newIsLoading)
+  }
+
+  const setOperatorHandler = (newOperator) => {
+    if (!allowedOperators.includes(newOperator)) return
+
+    setSearchOperator(newOperator)
+  }
+
   return (
     <SearchContext.Provider
-      value={{ 
-          query: query, searchHandler: searchHandler,
-          searchArray: searchArray, searchArrayHandler: searchArrayHandler,
-          loading: loading, loadingHandler: loadingHandler,
-          orFunctionality: orFunctionality, orHandler: orHandler,
-        }}
+      value={{
+        query: inputFieldQuery,
+        searchHandler,
+        searchArray: allQueries,
+        addQueryHandler,
+        removeQueryHandler,
+        loading: isLoading,
+        loadingHandler: isLoadingHandler,
+        searchOperator,
+        setOperatorHandler,
+      }}
     >
-      {props.children}
+      {children}
     </SearchContext.Provider>
-  );
-};
+  )
+}
 
-export default SearchContextProvider;
+export default SearchContextProvider
