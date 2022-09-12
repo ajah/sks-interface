@@ -18,7 +18,7 @@ export const getQueryString = (params, options = {}) => {
   // Since qs will remove params with value equal to [],
   // convert it to a '' so that the key will be kept in the query if skipEmptyString is false
   const parsedRemainingParams = mapValues(remainingParams, (val) =>
-    skipEmptyString ? val : Array.isArray(val) && val.length === 0 ? '' : val
+    skipEmptyString ? val : Array.isArray(val) && !val.length ? '' : val
   )
 
   const remainingQuery = queryString.stringify(parsedRemainingParams, {
