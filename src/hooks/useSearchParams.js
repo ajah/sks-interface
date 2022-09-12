@@ -1,7 +1,6 @@
-import { useMemo } from 'react'
 import queryString from 'query-string'
 import { useLocation, useNavigate } from 'react-router-dom'
-import { pick } from 'lodash'
+import { omit, pick } from 'lodash'
 
 import { allowedSearchParams } from 'constants'
 import { getQueryString } from 'utils/query'
@@ -10,27 +9,36 @@ export const useSearchParams = () => {
   const navigate = useNavigate()
   const { pathname, search } = useLocation()
 
-  const currentSearchParams = queryString.parse(search, { arrayFormat: 'comma' })
+  const qParam = pick(
+    queryString.parse(search, {
+      arrayFormat: 'separator',
+      arrayFormatSeparator: '+',
+      skipEmptyString: true,
+    }),
+    'q'
+  )
 
-  return useMemo(() => {
-    const modifySearchParams = (newSearchParams, options = {}) => {
-      const { overwrite = false, replace = false, requestedPathname } = options
+  const remainingParams = omit(
+    queryString.parse(search, { arrayFormat: 'comma', skipEmptyString: true }),
+    'q'
+  )
 
-      const combinedSearchParams = {
-        ...(!overwrite && currentSearchParams),
-        ...newSearchParams,
-      }
+  const currentSearchParams = { ...qParam, ...remainingParams }
 
-      const filteredSearchParams = pick(combinedSearchParams, allowedSearchParams)
+  const modifySearchParams = (newSearchParams, options = {}) => {
+    const { replaceParams = false, replacePage = false, requestedPathname } = options
 
-      navigate(
-        `${requestedPathname || pathname}${getQueryString(filteredSearchParams)}`,
-        {
-          replace,
-        }
-      )
+    const combinedSearchParams = {
+      ...(!replaceParams && currentSearchParams),
+      ...newSearchParams,
     }
 
-    return [currentSearchParams, modifySearchParams]
-  }, [currentSearchParams, navigate, pathname])
+    const filteredSearchParams = pick(combinedSearchParams, allowedSearchParams)
+
+    navigate(`${requestedPathname || pathname}${getQueryString(filteredSearchParams)}`, {
+      replace: replacePage,
+    })
+  }
+
+  return [currentSearchParams, modifySearchParams]
 }

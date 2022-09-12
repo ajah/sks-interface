@@ -4,7 +4,7 @@ import GrantsPage from './GrantsPage'
 import ContactPage from './ContactPage'
 import HomePage from './HomePage'
 import OrgPage from './OrgPage'
-import ResultsPage from './ResultsPage'
+import SearchPage from './SearchPage'
 
 export {
   AboutUsPage,
@@ -13,5 +13,5 @@ export {
   ContactPage,
   HomePage,
   OrgPage,
-  ResultsPage,
+  SearchPage,
 }

@@ -1,18 +1,20 @@
-import React, { useContext } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useLocation } from 'react-router-dom'
 
-import { SearchContext } from 'context/search-context'
+const BackButton = ({ to, label }) => {
+  const { state } = useLocation()
 
-export default function BackButton() {
-  const searchContext = useContext(SearchContext)
   return (
     <div>
-      <Link
-        className="btn btn-outline-primary"
-        to={`/results?q=${searchContext.searchArray.join('+')}&filter=activity,entity`}
-      >
-        Back to Results
+      <Link className="btn btn-outline-primary" to={state?.from || to}>
+        {label}
       </Link>
     </div>
   )
 }
+
+BackButton.defaultProps = {
+  label: 'Back to results',
+  to: '/search',
+}
+
+export default BackButton

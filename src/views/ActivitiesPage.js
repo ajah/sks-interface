@@ -1,9 +1,9 @@
 import React, { Component } from 'react'
-import axios from 'axios'
 import { Link } from 'react-router-dom'
 
 import { BackButton } from 'components/BackButton'
-import { SearchContext } from 'context/search-context'
+import { Get } from 'services/api'
+import { currencyFormat } from 'utils/format'
 
 import './ActivitiesPage.css'
 
@@ -18,8 +18,8 @@ const NoOrgBox = (props) => (
         name:
       </div>
       <Link
-        to={`/results/?q=${encodeURI(
-          props.recip_legal_name.replace(/\s/g, '+')
+        to={`/search?q=${encodeURI(
+          props.recip_legal_name.replace(/\s+/g, '+')
         )}&doctype=organization`}
       >
         {props.recip_legal_name}
@@ -40,8 +40,8 @@ const RecipientOrgBox = (props) => (
             </td>
             <td>
               {props.recip_legal_name ? (
-                <Link to={`/entities/${props.org_redirect}`}>
-                  props.recip_legal_name{' '}
+                <Link to={`/organizations/${props.org_redirect}`}>
+                  {props.recip_legal_name}
                 </Link>
               ) : (
                 <span>Data not available</span>
@@ -85,13 +85,11 @@ const RecipientOrgBox = (props) => (
   </div>
 )
 
-const ExpectedResults = (props) => <p>{props.expected_results}</p>
+const ExpectedResults = ({ expected_results }) => <p>{expected_results}</p>
 
 const NoResults = () => <p>No expected results were found for this activity.</p>
 
 export default class ActPage extends Component {
-  static contextType = SearchContext
-
   constructor(props) {
     super(props)
     this.state = {
@@ -126,86 +124,63 @@ export default class ActPage extends Component {
     }
   }
 
-  currencyFormat(amount) {
-    return (
-      '$' +
-      Number.parseFloat(amount)
-        .toFixed(2)
-        .replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,')
-    )
-  }
-
-  fpeFormat(fpe) {
-    return fpe.substring(5)
-  }
-
-  formatDatapoints(datapoint) {
-    let result = ''
-    if (datapoint == null) {
-      result = 'Unavailable'
-    } else result = datapoint
-
-    return result
-  }
-
   async componentDidMount() {
     const url = new URL(window.location.href)
     const npk_id = url.pathname.split('/')[2]
-    await axios
-      .get(`https://sks-server-ajah-ttwto.ondigitalocean.app/activities/${npk_id}`)
-      .then((res) => {
-        if (!res.data[0]) return
+
+    await Get(`/activities/${npk_id}`)
+      .then((data) => {
+        if (!data[0]) return
 
         this.setState({
-          date: res.data[0].date,
-          date_type: res.data[0].date_type,
-          end_date: res.data[0].end_date,
-          end_date_type: res.data[0].end_date_type,
-          expected_results: res.data[0].expected_results,
-          funder: res.data[0].funder,
-          funder_id: res.data[0].funder_id,
-          funding_amount: res.data[0].funding_amount,
-          funding_type: res.data[0].funding_type,
-          grant_description: res.data[0].grant_description,
-          grant_municipality: res.data[0].grant_municipality,
-          grant_region: res.data[0].grant_region,
-          grant_title: res.data[0].grant_title,
-          npk_id: res.data[0].npk_id,
-          program_name: res.data[0].program_name,
-          recipient_id: res.data[0].recipient_id,
-          recipient_organization: res.data[0].recipient_organization,
-          source_authority: res.data[0].source_authority,
-          source_id: res.data[0].source_id,
-          source_url: res.data[0].source_url,
-          loading: false,
-          org_redirect: res.data[0].ent_sks_id,
+          date: data[0].date,
+          date_type: data[0].date_type,
+          end_date: data[0].end_date,
+          end_date_type: data[0].end_date_type,
+          expected_lts: data[0].expected_lts,
+          funder: data[0].funder,
+          funder_id: data[0].funder_id,
+          funding_amount: data[0].funding_amount,
+          funding_type: data[0].funding_type,
+          grant_description: data[0].grant_description,
+          grant_municipality: data[0].grant_municipality,
+          grant_region: data[0].grant_region,
+          grant_title: data[0].grant_title,
+          npk_id: data[0].npk_id,
+          program_name: data[0].program_name,
+          recipient_id: data[0].recipient_id,
+          recipient_organization: data[0].recipient_organization,
+          source_authority: data[0].source_authority,
+          source_id: data[0].source_id,
+          source_url: data[0].source_url,
+          org_redirect: data[0].ent_sks_id,
         })
       })
       .catch((error) => console.log(error))
+      .finally(() => this.setState({ loading: false }))
 
     this.getEntitiesData()
   }
 
-  async getEntitiesData() {
-    if (this.state.org_redirect) {
-      const url = `https://sks-server-ajah-ttwto.ondigitalocean.app/entities/${this.state.org_redirect}`
-      await axios
-        .get(url)
-        .then((res) => {
-          if (!res.data[0]) return
-
-          this.setState({
-            recip_legal_name: res.data[0].name,
-            recip_business_number: res.data[0].external_id,
-            recip_designation_type: res.data[0].legal_designation_type,
-            recip_focus_area: res.data[0].focus_area,
-            recip_website: res.data[0].website,
-          })
-        })
-        .catch((error) => console.log(error))
-    } else {
+  getEntitiesData() {
+    if (!this.state.org_redirect) {
       console.log('No entity was found')
+      return
     }
+
+    Get(`/entities/${this.state.org_redirect}`)
+      .then((data) => {
+        if (!data[0]) return
+
+        this.setState({
+          recip_legal_name: data[0].name,
+          recip_business_number: data[0].external_id,
+          recip_designation_type: data[0].legal_designation_type,
+          recip_focus_area: data[0].focus_area,
+          recip_website: data[0].website,
+        })
+      })
+      .catch((error) => console.log(error))
   }
 
   render() {
@@ -278,7 +253,7 @@ export default class ActPage extends Component {
                     <td style={{ width: '35%' }} className="pr-4">
                       <strong>{this.state.funding_type}</strong>
                     </td>
-                    <td>{this.currencyFormat(this.state.funding_amount)}</td>
+                    <td>{currencyFormat(this.state.funding_amount)}</td>
                   </tr>
                   <tr>
                     <td>
@@ -306,7 +281,7 @@ export default class ActPage extends Component {
                   </tr>
                   <tr>
                     <td>
-                      <strong>Province</strong>
+                      <strong>Region</strong>
                     </td>
                     <td>{this.state.grant_region || <span>No data available</span>}</td>
                   </tr>
@@ -355,7 +330,7 @@ export default class ActPage extends Component {
                     <td>
                       {' '}
                       {this.state.recip_legal_name ? (
-                        <Link to={`/entities/${this.state.org_redirect}`}>
+                        <Link to={`/organizations/${this.state.org_redirect}`}>
                           {this.state.recip_legal_name}
                         </Link>
                       ) : (

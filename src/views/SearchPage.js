@@ -1,19 +1,20 @@
 import { useEffect, useState, useContext } from 'react'
-import axios from 'axios'
-import { Link } from 'react-router-dom'
+import { kebabCase, keyBy, pick, without } from 'lodash'
+import { Link, useLocation } from 'react-router-dom'
 // import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 // import { faSearch } from '@fortawesome/free-solid-svg-icons'
 
 import { SearchBar } from 'components/SearchBar'
 import { SearchContext } from 'context/search-context'
 import { useSearchParams } from 'hooks'
+import { Get } from 'services/api'
 
 import {
   allowedSearchParams,
 
   // Operators
   allowedOperators,
-  defaultOperator,
+  DEFAULT_OPERATOR,
 
   // Types
   ACTIVITY,
@@ -22,19 +23,21 @@ import {
   defaultDoctype,
 
   // Other constants
-  // provinces,
+  regions,
 } from 'constants'
 
-// TODO: move styles.css import into ResultsPage.css
+// TODO: move styles.css import into SearchPage.css
 import 'assets/css/styles.css'
-import './ResultsPage.css'
+import './SearchPage.css'
+
+const regionsCodeToNameMap = keyBy(regions, 'code')
 
 const Badge = ({ type }) => {
-  if (type === 'activity') {
+  if (type === ACTIVITY) {
     return <span className="badge badge-primary">Activity</span>
   }
 
-  if (type === 'entity') {
+  if (type === ORGANIZATION) {
     return <span className="badge bg-primary">Organization</span>
   }
 
@@ -45,7 +48,12 @@ const Row = (props) => (
   <tr>
     <td>
       <div>
-        <Link to={props.url}>{props.name}</Link>
+        <Link
+          to={props.url}
+          state={{ from: `${props.location.pathname}${props.location.search}` }}
+        >
+          {props.name}
+        </Link>
       </div>
     </td>
     <td>
@@ -63,9 +71,9 @@ const Row = (props) => (
 )
 
 const TableRows = ({ results }) => {
-  return results.map((hit) => {
-    const { _id, _index, _source } = hit
+  const location = useLocation()
 
+  return results.map(({ _id, _index, _source }) => {
     let name
     let municipality
     let region
@@ -76,383 +84,167 @@ const TableRows = ({ results }) => {
       name = _source.grant_title
       municipality = _source.grant_municipality
       region = _source.grant_region
-      type = 'activity'
+      type = ACTIVITY
       url = `/activities/${_source.act_sks_id}`
-    } else if (_index === 'entities') {
+    }
+
+    if (_index === 'entities') {
       name = _source.name
       municipality = _source.location_municipality
       region = _source.location_region
-      type = 'entity'
-      url = `/entities/${_source.ent_sks_id}`
+      type = ORGANIZATION
+      url = `/organizations/${_source.ent_sks_id}`
     }
+
     return (
       <Row
+        key={_id}
+        location={location}
         name={name}
         municipality={municipality}
         region={region}
         type={type}
         url={url}
-        key={_id}
       />
     )
   })
 }
 
-const ResultsPage = () => {
+const initialResultsState = {
+  // TODO: Review state vars below and see which are unnecessry
+  total: '',
+  results: [],
+  act_total: '',
+  ent_total: '',
+  inc_activities: true,
+  inc_organizations: true,
+  globalQuery: '',
+  municipality: '',
+  downloadData: '',
+  downloadLink: '',
+  // city: '',
+}
+
+const SearchPage = () => {
   const searchContext = useContext(SearchContext)
 
   const [searchParams, setSearchParams] = useSearchParams()
-  const [resultsState, setResultsState] = useState({
-    total: '',
-    results: [],
-    act_total: '',
-    ent_total: '',
-    inc_activities: true,
-    inc_entities: true,
-    contextState: '',
-    filter: [ACTIVITY, ORGANIZATION],
-    globalQuery: '',
-    queryProp: [],
-    city: '',
-    location: [],
-    region: '',
-    municipality: '',
-    downloadData: '',
-    operator: '',
-    downloadLink: '',
-  })
+  const [resultsState, setResultsState] = useState(initialResultsState)
 
-  const { q = '', operator = '', doctype = [] } = searchParams
-  // Doctype can be either an array or a string, depending on the num
-  const docTypeStr = doctype.toString()
+  const { q = [], doctype = [], operator = '', region = [] } = searchParams
+
+  // Params that can have multiple values separated by commas will be a string when one value is provided,
+  // and an array when multiple values are provided
+  const qStr = q.toString()
+  const doctypeStr = doctype.toString()
+  const regionStr = region.toString()
 
   useEffect(() => {
     try {
-      if (!q.trim()) {
-        setSearchParams({}, { overwrite: true, replace: true })
-        return
-      }
-
-      const hasInvalidSearchParams = Object.keys(searchParams).some(
+      const searchParamNames = Object.keys(searchParams)
+      const hasInvalidSearchParams = searchParamNames.some(
         (paramName) => !allowedSearchParams.includes(paramName)
       )
 
       if (hasInvalidSearchParams) {
-        setSearchParams({}, { replace: true })
+        setSearchParams(
+          { ...pick(searchParamNames, allowedSearchParams) },
+          { replacePage: true }
+        )
         return
       }
 
+      // Check 'q'
+      if (!qStr) return setResultsState(initialResultsState)
+      const qArr = Array.isArray(q) ? q : [q]
+
+      // Each query term should be limited to 30 chars, and there should be a max of 5 query terms
+      const parsedQ = qArr.map((query) => query.slice(0, 30)).slice(0, 5)
+
+      // Check 'operator'
       const parsedOperator = allowedOperators.includes(operator)
         ? operator
-        : defaultOperator
+        : DEFAULT_OPERATOR
 
       if (searchContext.searchOperator !== parsedOperator)
         searchContext.setOperatorHandler(parsedOperator)
 
-      const doctypeArr = docTypeStr.split(',')
+      // Check 'doctype'
+      const doctypeArr = doctypeStr ? doctypeStr.split(',') : []
       const filteredDoctype = doctypeArr.filter((type) => allowedDoctypes.includes(type))
       const parsedDoctype = filteredDoctype.length ? filteredDoctype : defaultDoctype
 
+      // Check 'region'
+      const regionArr = regionStr ? regionStr.split(',') : []
+      const parsedRegion = regionArr.filter((regionCode) =>
+        regions.some(({ code }) => code === regionCode)
+      )
+
       const changedParams =
-        doctypeArr.length !== parsedDoctype.length || operator !== parsedOperator
+        qStr.length !== parsedQ.toString().length ||
+        doctypeArr.length !== parsedDoctype.length ||
+        operator !== parsedOperator ||
+        regionArr.length !== parsedRegion.length
 
       if (changedParams) {
         setSearchParams(
-          { q, doctype: parsedDoctype, operator: parsedOperator },
-          { overwrite: true }
+          {
+            q: parsedQ,
+            doctype: parsedDoctype,
+            operator: parsedOperator,
+            region: parsedRegion,
+          },
+          { replaceParams: true }
         )
 
         return
       }
 
-      // Backend uses 'entity' keyword to refer to 'organization'
-      const doctypeForApi = parsedDoctype.map((type) =>
-        type === ORGANIZATION ? 'entity' : type
+      const parsedRegionForApi = parsedRegion.map(
+        (code) => regionsCodeToNameMap[code].name
       )
-      // if (!searchContext.searchArray[0]) {
-      //   let queryArray = (q || '').split(' ')
 
-      //   if (queryArray[0]) {
-      //     // queryArray.forEach((item) => searchContext.addQueryHandler(item))
-      //   }
-      // }
-
-      // if (filter === 'entity') {
-      //   // isRedirect = true
-      //   filter = 'entity'
-
-      //   setResultsState({
-      //     ...resultsState,
-      //     inc_activities: false,
-      //     inc_entities: true,
-      //     filter: resultsState.filter.slice(1),
-      //   })
-      // }
-
-      // if (searchContext.searchArray.length) {
-      //   // query = searchContext.searchArray.join('+')
-      // } else if (searchContext.searchArray[0]) {
-      //   // query = searchContext.searchArray[0]
-      // }
-
-      // TODO: Move all api calls into api service
       Promise.all([
-        axios.get(
-          `https://sks-server-ajah-ttwto.ondigitalocean.app/search?q=${encodeURI(
-            q
-          )}&doctype=${doctypeForApi}&operator=${parsedOperator}&region=${
-            resultsState.location
-          }&municipality=${resultsState.municipality}`
-        ),
-        axios.get(
-          `https://sks-server-ajah-ttwto.ondigitalocean.app/count?q=${encodeURI(
-            q
-          )}&operator=${operator}`
-        ),
+        Get('/search', {
+          q: parsedQ,
+          doctype: parsedDoctype,
+          operator: parsedOperator,
+          region: parsedRegionForApi,
+          municipality: resultsState.municipality,
+        }),
+        Get('/count', { q: parsedQ, operator: parsedOperator }),
       ]).then(
-        axios.spread((search, count) => {
+        ([search, count]) =>
           setResultsState((prevState) => ({
             ...prevState,
-            results: search.data.hits,
-            total: count.data['new-activities,entities'],
-            act_total: count.data['new-activities'],
-            ent_total: count.data['entities'],
+            results: search.hits,
+            total: count['new-activities,entities'],
+            act_total: count['new-activities'],
+            ent_total: count['entities'],
           }))
-          // searchContext.loadingHandler(false)
-          // if (resultsState.location.length && resultsState.municipality) {
-          //   window.history.pushState(
-          //     'page2',
-          //     'Title',
-          //     `/results?q=${q}&doctype=${filter.toString()}&region=${
-          //       resultsState.location
-          //     }&municipality=${resultsState.municipality}&operator=${resultsState.operator}`
-          //   )
-          // } else if (resultsState.location.length && !resultsState.municipality) {
-          //   window.history.pushState(
-          //     'page2',
-          //     'Title',
-          //     `/results?q=${query}&doctype=${filter.toString()}&region=${
-          //       resultsState.location
-          //     }&operator=${resultsState.operator}`
-          //   )
-          // } else if (resultsState.municipality && !resultsState.location.length) {
-          //   window.history.pushState(
-          //     'page2',
-          //     'Title',
-          //     `/results?q=${query}&doctype=${filter.toString()}&municipality=${
-          //       resultsState.municipality
-          //     }&operator=${resultsState.operator}`
-          //   )
-          // } else {
-          //   window.history.pushState(
-          //     'page2',
-          //     'Title',
-          //     `/results?q=${query}&doctype=${filter.toString()}&operator=${
-          //       resultsState.operator
-          //     }`
-          //   )
-          // }
-          // setResultsState({
-          //   ...resultsState,
-          //   globalQuery: queryString.parse(window.location.search).q,
-          // })
-          // if (resultsState.globalQuery !== undefined) {
-          //   const url = `https://sks-server-ajah-ttwto.ondigitalocean.app/search?q=${
-          //     resultsState.globalQuery
-          //   }&doctype=${filter.toString()}&region=${resultsState.location}&municipality=${
-          //     resultsState.municipality
-          //   }&operator=${resultsState.operator}`
-          //   axios
-          //     .get(url)
-          //     .then(() => {
-          //       setResultsState({
-          //         ...resultsState,
-          //         downloadLink: `https://sks-server-ajah-ttwto.ondigitalocean.app//download?q=${
-          //           resultsState.globalQuery
-          //         }&doctype=${filter.toString()}&region=${
-          //           resultsState.location
-          //         }&municipality=${resultsState.municipality}&operator=${
-          //           resultsState.operator
-          //         }`,
-          //       })
-          //     })
-          //     .catch((error) => console.log(error))
-          // } else {
-          //   console.log('No entity was found')
-          // }
-        })
+
+        // searchContext.isLoadingHandler(false)
       )
     } catch (error) {
-      console.log(error)
+      console.log('Query parsing error', error)
     }
-  }, [docTypeStr, operator, q, resultsState.location, resultsState.municipality])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [qStr, doctypeStr, operator, regionStr])
 
-  // componentDidMount() {
-  // const parsed = queryString.parse(this.props.location.search)
+  const handleRegionFilter = (e) => {
+    const regionCode = e.target.name
+    const regionArr = Array.isArray(region) ? region : [region]
 
-  /*  if (!filter.includes("activity")) {
-       setResultsState({...resultsState, 
-         inc_activities: false,
-       });
-     } else if (!filter.includes("entity")) {
-       setResultsState({...resultsState, 
-         inc_entities: false,
-       });
-     } */
-  // }
+    const adjustedRegion = regionArr.includes(regionCode)
+      ? without(regionArr, regionCode)
+      : [...regionArr, regionCode]
 
-  // componentDidUpdate() {
-  //   // Typical usage (don't forget to compare props):
-
-  //   if (searchContext.loading) {
-  //     this.componentDidMount()
-  //   }
-  // }
-
-  const setCity = (e) => {
-    setResultsState({ ...resultsState, city: e.target.value })
-  }
-
-  const searchCity = (e, city) => {
-    e.preventDefault()
-
-    city = resultsState.city
-
-    setResultsState({ ...resultsState, municipality: city })
-
-    if (resultsState.location) {
-      window.history.pushState(
-        'page2',
-        'Title',
-        `/results?q=${resultsState.globalQuery}&doctype=${resultsState.filter.join(
-          ','
-        )}&region=${resultsState.location}&municipality=${city}&operator=${
-          resultsState.operator
-        }`
-      )
-    } else {
-      window.history.pushState(
-        'page2',
-        'Title',
-        `/results?q=${resultsState.globalQuery}&doctype=${resultsState.filter.join(
-          ','
-        )}&municipality=${city}&operator=${resultsState.operator}`
-      )
-    }
-  }
-
-  const handleLocation = (e) => {
-    //e.preventDefault();
-
-    let loc
-
-    loc = e.target.name
-
-    if (!resultsState.location.includes(loc)) {
-      resultsState.location.push(loc)
-
-      setResultsState({ ...resultsState, location: resultsState.location })
-    } else if (resultsState.location.includes(loc)) {
-      const index = resultsState.location.indexOf(loc)
-
-      resultsState.location.splice(index, 1)
-
-      setResultsState({ ...resultsState, location: resultsState.location })
-    }
-
-    if (resultsState.municipality) {
-      window.history.pushState(
-        'page2',
-        'Title',
-        `/results?q=${resultsState.globalQuery}&doctype=${resultsState.filter.join(
-          ','
-        )}&region=${resultsState.location}&municipality=${
-          resultsState.municipality
-        }&operator=${resultsState.operator}`
-      )
-    } else {
-      window.history.pushState(
-        'page2',
-        'Title',
-        `/results?q=${resultsState.globalQuery}&doctype=${resultsState.filter.join(
-          ','
-        )}&region=${resultsState.location}&operator=${resultsState.operator}`
-      )
-    }
+    setSearchParams({ region: adjustedRegion })
   }
 
   const handleDoctypeFilter = (e) => {
     const newDoctype = e.target.value
     setSearchParams({ doctype: newDoctype.split(',') })
-
-    /* 
-
-    const parsed = queryString.parse(this.props.location.search);
-    const query =  searchContext.query;
-    const filter = parsed.filter;
-  
-
-
-    axios
-      .all([
-        axios.get(
-          `https://sks-server-hbl9d.ondigitalocean.app/search?q=${encodeURI(
-            query
-          )}&filter=${filter}`
-        ),
-        axios.get(
-          `https://sks-server-hbl9d.ondigitalocean.app/count?q=${encodeURI(
-            query
-          )}`
-        ),
-      ])
-      .then(
-        axios.spread((search, count) => {
-          setResultsState({...resultsState, 
-            results: search["data"]["hits"],
-            total: count["data"]["new-activities,entities"],
-            act_total: count["data"]["new-activities"],
-            ent_total: count["data"]["entities"],
-          });
-        })
-      ); 
-    const value =
-      e.target.type === 'checkbox' ? e.target.checked : e.target.value;
-    const name = e.target.name;
-
-
-    const queryParams = queryString.parse(window.location.search);
-    const filters = resultsState.filter;
-
-    if (value === true) {
-      filters.push(name);
-      setResultsState({...resultsState, 
-        filter: filters,
-      });
-      //this.componentDidMount()
-    }
-
-    const index = filters.indexOf(name);
-
-    setResultsState({...resultsState, 
-      filter: filters,
-    });
-
-    if (index > -1) {
-      filters.splice(index, 1); // 2nd parameter means remove one item only
-      setResultsState({...resultsState, 
-        filter: filters,
-      });
-    }
-
-    this.componentDidMount();
-    /*   setResultsState({...resultsState, 
-        queryParams: filters,
-      });
-  
-      setResultsState({...resultsState, 
-        queryParams: name,
-      }); */
   }
 
   // const handleDownload = () => {
@@ -469,41 +261,73 @@ const ResultsPage = () => {
   //   }
   // }
 
-  const handleButton = (e) => {
-    e.preventDefault()
+  // const handleButton = (e) => {
+  //   e.preventDefault()
 
-    let filter = []
-    // if (resultsState.inc_activities) {
-    //   filter.push('activity')
-    // } else if (resultsState.inc_entities) {
-    //   filter.push('entity')
-    // } else if (!resultsState.inc_activities & !resultsState.inc_entities) {
-    //   filter.push('activity,entity') //.push("entity"); //
-    // } else if (resultsState.inc_activities & resultsState.inc_entities) {
-    //   filter.push('activity,entity') //.push("entity"); //
-    // }
+  //   let filter = []
+  // if (resultsState.inc_activities) {
+  //   filter.push(ACTIVITY)
+  // } else if (resultsState.inc_organizations) {
+  //   filter.push('entity')
+  // } else if (!resultsState.inc_activities & !resultsState.inc_organizations) {
+  //   filter.push('activity,entity') //.push("entity"); //
+  // } else if (resultsState.inc_activities & resultsState.inc_organizations) {
+  //   filter.push('activity,entity') //.push("entity"); //
+  // }
 
-    /*   const queryParams = queryString.parse(window.location.search);
+  /*   const queryParams = queryString.parse(window.location.search);
       // const newQueries = { ...queryParams, filter: filter.toString() };
       const orig_q = queryParams["q"];
   
       const { history } = this.props;
   
       if (filter) {
-        history.push(`/results?q=${orig_q}&filter=${filter.toString()}`);
+        history.push(`/search?q=${orig_q}&filter=${filter.toString()}`);
         window.location.reload(false);
         setFilter(filter.toString)
       }
   
-      history.push(`/results?q=${encodeURI(orig_q)}&filter=${filter.toString()}`);
+      history.push(`/search?q=${encodeURI(orig_q)}&filter=${filter.toString()}`);
       window.location.reload(false);*/
-  }
+  // }
+
+  // const setCity = (e) => {
+  //   setResultsState({ ...resultsState, city: e.target.value })
+  // }
+
+  // const searchCity = (e, city) => {
+  //   e.preventDefault()
+
+  //   city = resultsState.city
+
+  //   setResultsState({ ...resultsState, municipality: city })
+
+  //   if (resultsState.location) {
+  //     window.history.pushState(
+  //       'page2',
+  //       'Title',
+  //       `/search?q=${resultsState.globalQuery}&doctype=${resultsState.filter.join(
+  //         ','
+  //       )}&region=${resultsState.location}&municipality=${city}&operator=${
+  //         resultsState.operator
+  //       }`
+  //     )
+  //   } else {
+  //     window.history.pushState(
+  //       'page2',
+  //       'Title',
+  //       `/search?q=${resultsState.globalQuery}&doctype=${resultsState.filter.join(
+  //         ','
+  //       )}&municipality=${city}&operator=${resultsState.operator}`
+  //     )
+  //   }
+  // }
 
   return (
     <main className="page projects-page mt-5">
       <div className="container ">
         <div className="row mt-5" id="SearchBar">
-          <SearchBar queryProp={resultsState.queryProp} />
+          <SearchBar />
         </div>
         <div className="row">
           {/* SIDEBAR */}
@@ -520,11 +344,12 @@ const ResultsPage = () => {
                         className="form-check-input form__input"
                         type="radio"
                         checked={
-                          doctype.includes('organization') && doctype.includes('activity')
+                          !doctype.length ||
+                          (doctype.includes(ORGANIZATION) && doctype.includes(ACTIVITY))
                         }
                         id="all-type-select"
                         name="type-select"
-                        value="organization,activity"
+                        value={`${ORGANIZATION},${ACTIVITY}`}
                         onChange={handleDoctypeFilter}
                       />
                       <label htmlFor="all-type-select" className="form__radio-label">
@@ -536,15 +361,17 @@ const ResultsPage = () => {
                         className="form-check-input form__input"
                         type="radio"
                         checked={
-                          doctype.includes('organization') &&
-                          !doctype.includes('activity')
+                          doctype.includes(ORGANIZATION) && !doctype.includes(ACTIVITY)
                         }
-                        id="entity-type-select"
+                        id="organization-type-select"
                         name="type-select"
-                        value="organization"
+                        value={ORGANIZATION}
                         onChange={handleDoctypeFilter}
                       />
-                      <label htmlFor="entity-type-select" className="form__radio-label">
+                      <label
+                        htmlFor="organization-type-select"
+                        className="form__radio-label"
+                      >
                         Organizations
                       </label>
                     </div>
@@ -553,12 +380,11 @@ const ResultsPage = () => {
                         className="form-check-input form__input"
                         type="radio"
                         checked={
-                          !doctype.includes('organization') &&
-                          doctype.includes('activity')
+                          !doctype.includes(ORGANIZATION) && doctype.includes(ACTIVITY)
                         }
                         id="activity-type-select"
                         name="type-select"
-                        value="activity"
+                        value={ACTIVITY}
                         onChange={handleDoctypeFilter}
                       />
                       <label htmlFor="activity-type-select" className="form__radio-label">
@@ -566,25 +392,32 @@ const ResultsPage = () => {
                       </label>
                     </div>
                   </form>
-                  {/* <form>
+                  <form>
                     <hr />
-                    // {provinces.map((province) => {
+                    {regions.map(({ name, code }) => {
+                      const inputId = `region-checkbox-${kebabCase(name)}`
+                      const isChecked = Array.isArray(region)
+                        ? region.includes(code)
+                        : region === code
+
                       return (
-                        <div className="form-check" key={province}>
+                        <div className="form-check" key={code}>
                           <input
                             className="form-check-input form__input"
                             type="checkbox"
-                            checked={resultsState.location.includes(province)}
-                            id="defaultCheck1"
-                            name={province}
-                            onChange={handleLocation}
+                            checked={isChecked}
+                            id={inputId}
+                            name={code}
+                            onChange={handleRegionFilter}
                           />
-                          <label className="form-check-label">{province}</label>
+                          <label htmlFor={inputId} className="form-check-label">
+                            {name}
+                          </label>
                         </div>
                       )
                     })}
-
-                    <div className="mt-4">
+                    {/* TODO: Refactor the city filter */}
+                    {/* <div className="mt-4">
                       <label className="form-check-label">City:</label>
 
                       <div className="city-block">
@@ -607,16 +440,11 @@ const ResultsPage = () => {
                           </button>
                         </div>
                       </div>
-                    </div>
-                  </form> */}
+                    </div> */}
+                  </form>
                   <hr />
                   <p className="text-secondary">More filters coming soon!</p>
                 </div>
-                {/* <div className="">
-                  <button className="btn btn-primary" onClick={handleButton}>
-                    Update
-                  </button>
-                </div> */}
               </div>
               {/* <div className="row mt-4">
                   <div className="col">
@@ -786,4 +614,4 @@ const ResultsPage = () => {
   )
 }
 
-export default ResultsPage
+export default SearchPage
