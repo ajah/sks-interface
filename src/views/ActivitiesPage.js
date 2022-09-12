@@ -41,7 +41,7 @@ const RecipientOrgBox = (props) => (
             <td>
               {props.recip_legal_name ? (
                 <Link to={`/organizations/${props.org_redirect}`}>
-                  props.recip_legal_name{' '}
+                  {props.recip_legal_name}
                 </Link>
               ) : (
                 <span>Data not available</span>
