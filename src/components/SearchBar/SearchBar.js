@@ -66,7 +66,7 @@ const SearchBar = () => {
     )
   }
 
-  const removeQuery = (key) => {
+  const removeQueryHandler = (key) => {
     const newExistingQueries = without(existingQueries, existingQueries[key])
     setExistingQueries(newExistingQueries)
     setSearchParams(
@@ -91,7 +91,7 @@ const SearchBar = () => {
                 <div className="ms-2 me-1" size="sm">
                   <FontAwesomeIcon
                     className="remove-query"
-                    onClick={() => removeQuery(i)}
+                    onClick={() => removeQueryHandler(i)}
                     icon={faTimesCircle}
                   />
                 </div>

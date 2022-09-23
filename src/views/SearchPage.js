@@ -2,7 +2,7 @@ import { useEffect, useState, useContext } from 'react'
 import { castArray, isEqual, kebabCase, pick, toLower, without, uniq } from 'lodash'
 import { Link, useLocation } from 'react-router-dom'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faPlus } from '@fortawesome/free-solid-svg-icons'
+import { faPlus, faTimesCircle } from '@fortawesome/free-solid-svg-icons'
 
 import { SearchBar } from 'components/SearchBar'
 import { SearchContext } from 'context/search-context'
@@ -121,7 +121,6 @@ const initialResultsState = {
   city: '',
   downloadData: '',
   downloadLink: '',
-  // city: '',
 }
 
 const SearchPage = () => {
@@ -264,15 +263,25 @@ const SearchPage = () => {
 
   const handleCityFilter = (e) => {
     e.preventDefault()
-    setCityInput('')
+
+    if (!cityInput) return
 
     const cityArr = castArray(city)
     const cityArrLower = cityArr.map(toLower)
     const cleanedCityInput = cityInput.trim().toLowerCase()
     const cleanedCityInputLower = cleanedCityInput.toLowerCase()
+
+    setCityInput('')
+
     if (cityArrLower.includes(cleanedCityInputLower)) return
 
     setSearchParams({ city: [...cityArr, cleanedCityInput] })
+  }
+
+  const handleRemoveCity = (cityToRemove) => {
+    const cityArr = castArray(city)
+    const newCityArr = without(cityArr, cityToRemove)
+    setSearchParams({ city: newCityArr })
   }
 
   // const handleDownload = () => {
@@ -317,38 +326,6 @@ const SearchPage = () => {
   
       history.push(`/search?q=${encodeURI(orig_q)}&filter=${filter.toString()}`);
       window.location.reload(false);*/
-  // }
-
-  // const setCity = (e) => {
-  //   setResultsState({ ...resultsState, city: e.target.value })
-  // }
-
-  // const searchCity = (e, city) => {
-  //   e.preventDefault()
-
-  //   city = resultsState.city
-
-  //   setResultsState({ ...resultsState, city })
-
-  //   if (resultsState.location) {
-  //     window.history.pushState(
-  //       'page2',
-  //       'Title',
-  //       `/search?q=${resultsState.globalQuery}&doctype=${resultsState.filter.join(
-  //         ','
-  //       )}&region=${resultsState.location}&municipality=${city}&operator=${
-  //         resultsState.operator
-  //       }`
-  //     )
-  //   } else {
-  //     window.history.pushState(
-  //       'page2',
-  //       'Title',
-  //       `/search?q=${resultsState.globalQuery}&doctype=${resultsState.filter.join(
-  //         ','
-  //       )}&municipality=${city}&operator=${resultsState.operator}`
-  //     )
-  //   }
   // }
 
   // TODO: Move city filter into own component along with line below:
@@ -480,6 +457,24 @@ const SearchPage = () => {
                             />
                           </button>
                         </div>
+                      </div>
+                      <div>
+                        {castArray(city).map((aCity, i) => (
+                          <div
+                            className="search-query border col-2 ps-3 rounded-pill mt-2"
+                            // Search terms should be unique
+                            key={aCity}
+                          >
+                            {aCity}
+                            <div className="ms-2 me-1" size="sm">
+                              <FontAwesomeIcon
+                                className="remove-query"
+                                onClick={() => handleRemoveCity(aCity)}
+                                icon={faTimesCircle}
+                              />
+                            </div>
+                          </div>
+                        ))}
                       </div>
                     </div>
                   </form>
