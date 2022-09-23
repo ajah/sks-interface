@@ -126,7 +126,7 @@ const SearchBar = () => {
                 }
                 onKeyPress={enterHandler}
                 disabled={existingQueries.length >= maxQueryTerms}
-              ></input>
+              />
             </div>
           </div>
           <div className="col-4 col-xl-3">

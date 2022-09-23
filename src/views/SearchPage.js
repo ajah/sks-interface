@@ -284,6 +284,12 @@ const SearchPage = () => {
     setSearchParams({ city: newCityArr })
   }
 
+  const handleEnterKeyCityHandler = (e) => {
+    if (e.key !== 'Enter') return
+
+    handleCityFilter(e)
+  }
+
   // const handleDownload = () => {
   //   if (resultsState.globalQuery !== undefined) {
   //     const url = `https://sks-server-ajah-ttwto.ondigitalocean.app/search?q=${this.global.query}&doctype=activity,entity`
@@ -443,6 +449,7 @@ const SearchPage = () => {
                           id="city-select"
                           disabled={cityInputDisabled}
                           placeholder={cityInputDisabled ? 'Max reached' : ''}
+                          onKeyPress={handleEnterKeyCityHandler}
                         />
                         <div>
                           <button
@@ -459,7 +466,7 @@ const SearchPage = () => {
                         </div>
                       </div>
                       <div>
-                        {castArray(city).map((aCity, i) => (
+                        {castArray(city).map((aCity) => (
                           <div
                             className="search-query border col-2 ps-3 rounded-pill mt-2"
                             // Search terms should be unique
