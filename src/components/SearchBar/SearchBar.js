@@ -1,7 +1,7 @@
 import { useContext, useState } from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faSearch, faTimesCircle } from '@fortawesome/free-solid-svg-icons'
-import { without } from 'lodash'
+import { castArray, without } from 'lodash'
 import { useLocation } from 'react-router-dom'
 
 import { SearchContext } from 'context/search-context'
@@ -20,7 +20,7 @@ const SearchBar = () => {
 
   const isOnSearchPage = pathname === '/search'
   const { q = [] } = searchParams
-  const qArr = (Array.isArray(q) ? q : [q]).slice(0, maxQueryTerms)
+  const qArr = castArray(q).slice(0, maxQueryTerms)
 
   const [existingQueries, setExistingQueries] = useState(qArr)
   const [inputQuery, setInputQuery] = useState('')
