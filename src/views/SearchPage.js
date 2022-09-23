@@ -114,10 +114,10 @@ const initialResultsState = {
   // TODO: Review state vars below and see which are unnecessry
   total: '',
   results: [],
-  act_total: '',
-  ent_total: '',
-  inc_activities: true,
-  inc_organizations: true,
+  actTotal: '',
+  entTotal: '',
+  incActivities: true,
+  incOrganizations: true,
   globalQuery: '',
   municipality: '',
   downloadData: '',
@@ -219,8 +219,8 @@ const SearchPage = () => {
             ...prevState,
             results: search.hits,
             total: count['new-activities,entities'],
-            act_total: count['new-activities'],
-            ent_total: count['entities'],
+            actTotal: count['new-activities'],
+            entTotal: count['entities'],
           }))
 
         // searchContext.isLoadingHandler(false)
@@ -265,13 +265,13 @@ const SearchPage = () => {
   //   e.preventDefault()
 
   //   let filter = []
-  // if (resultsState.inc_activities) {
+  // if (resultsState.incActivities) {
   //   filter.push(ACTIVITY)
-  // } else if (resultsState.inc_organizations) {
+  // } else if (resultsState.incOrganizations) {
   //   filter.push('entity')
-  // } else if (!resultsState.inc_activities & !resultsState.inc_organizations) {
+  // } else if (!resultsState.incActivities & !resultsState.incOrganizations) {
   //   filter.push('activity,entity') //.push("entity"); //
-  // } else if (resultsState.inc_activities & resultsState.inc_organizations) {
+  // } else if (resultsState.incActivities & resultsState.incOrganizations) {
   //   filter.push('activity,entity') //.push("entity"); //
   // }
 
@@ -562,7 +562,7 @@ const SearchPage = () => {
                   <div className="bg-light p-3">
                     <span>Organizations: </span>
                     <span className="badge rounded-pill bg-secondary ms-2">
-                      {resultsState.ent_total}
+                      {resultsState.entTotal}
                     </span>
                   </div>
                 </div>
@@ -570,7 +570,7 @@ const SearchPage = () => {
                   <div className="bg-light p-3">
                     <span>Activities: </span>
                     <span className="badge rounded-pill bg-secondary ms-2">
-                      {resultsState.act_total}
+                      {resultsState.actTotal}
                     </span>
                   </div>
                 </div>
