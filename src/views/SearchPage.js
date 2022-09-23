@@ -1,5 +1,5 @@
 import { useEffect, useState, useContext } from 'react'
-import { isEqual, kebabCase, keyBy, pick, toLower, without, uniq } from 'lodash'
+import { isEqual, kebabCase, pick, toLower, without, uniq } from 'lodash'
 import { Link, useLocation } from 'react-router-dom'
 // import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 // import { faSearch } from '@fortawesome/free-solid-svg-icons'
@@ -30,8 +30,6 @@ import {
 // TODO: move styles.css import into SearchPage.css
 import 'assets/css/styles.css'
 import './SearchPage.css'
-
-const regionsCodeToNameMap = keyBy(regions, 'code')
 
 const Badge = ({ type }) => {
   if (type === ACTIVITY) {
@@ -219,16 +217,12 @@ const SearchPage = () => {
         return
       }
 
-      const parsedRegionArrForApi = parsedRegionArr.map(
-        (code) => regionsCodeToNameMap[code].name
-      )
-
       Promise.all([
         Get('/search', {
           q: parsedQArr,
           doctype: parsedDoctypeArr,
           operator: parsedOperator,
-          region: parsedRegionArrForApi,
+          region: parsedRegionArr,
           city: parsedCityArr,
         }),
         Get('/count', { q: parsedQArr, operator: parsedOperator }),
