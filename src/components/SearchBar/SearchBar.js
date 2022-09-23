@@ -6,11 +6,12 @@ import { useLocation } from 'react-router-dom'
 
 import { SearchContext } from 'context/search-context'
 
-import 'assets/css/forms.css'
-import './SearchBar.css'
-
 import { AND, OR, DEFAULT_OPERATOR } from 'constants'
 import { useSearchParams } from 'hooks'
+import { maxQueryTermLength, maxQueryTerms } from 'utils/query'
+
+import 'assets/css/forms.css'
+import './SearchBar.css'
 
 const SearchBar = () => {
   const { pathname } = useLocation()
@@ -19,7 +20,7 @@ const SearchBar = () => {
 
   const isOnSearchPage = pathname === '/search'
   const { q = [] } = searchParams
-  const qArr = (Array.isArray(q) ? q : [q]).slice(0, 5)
+  const qArr = (Array.isArray(q) ? q : [q]).slice(0, maxQueryTerms)
 
   const [existingQueries, setExistingQueries] = useState(qArr)
   const [inputQuery, setInputQuery] = useState('')
@@ -111,18 +112,19 @@ const SearchBar = () => {
                 type="text"
                 name="search"
                 placeholder={
-                  existingQueries.length >= 5
+                  existingQueries.length >= maxQueryTerms
                     ? 'Max search term limit reached'
                     : 'Enter search terms here'
                 }
                 value={inputQuery}
                 data-toggle="tooltip"
-                title="To complete your search enter a keyword or phrase and hit the enter key or click the search button. Enter one keyword at a time. Your results will update automatically as more keywords are added. The maximum keywords you can search for is 5."
+                title={`To complete your search enter a keyword or phrase and hit the enter key or click the search button. Enter one keyword at a time. Your results will update automatically as more keywords are added. The maximum keywords you can search for is ${maxQueryTerms}.`}
                 onInput={(e) =>
-                  e.target.value.length < 30 && setInputQuery(e.target.value)
+                  e.target.value.length < maxQueryTermLength &&
+                  setInputQuery(e.target.value)
                 }
                 onKeyPress={enterHandler}
-                disabled={existingQueries.length >= 5}
+                disabled={existingQueries.length >= maxQueryTerms}
               ></input>
             </div>
           </div>

@@ -8,6 +8,7 @@ import { SearchBar } from 'components/SearchBar'
 import { SearchContext } from 'context/search-context'
 import { useSearchParams } from 'hooks'
 import { Get } from 'services/api'
+import { maxQueryTermLength, maxQueryTerms } from 'utils/query'
 
 import {
   allowedSearchParams,
@@ -131,13 +132,15 @@ const SearchPage = () => {
   const [searchParams, setSearchParams] = useSearchParams()
   const [resultsState, setResultsState] = useState(initialResultsState)
 
-  const { q = [], doctype = [], operator = '', region = [] } = searchParams
+  const { q = [], city = [], doctype = [], operator = '', region = [] } = searchParams
 
   // Params that can have multiple values separated by commas will be a string when one value is provided,
   // and an array when multiple values are provided
   const qStr = q.toString()
   const doctypeStr = doctype.toString()
   const regionStr = region.toString()
+
+  const cityStr = city.toString()
 
   useEffect(() => {
     try {
@@ -158,8 +161,10 @@ const SearchPage = () => {
       if (!qStr) return setResultsState(initialResultsState)
       const qArr = Array.isArray(q) ? q : [q]
 
-      // Each query term should be limited to 30 chars, and there should be a max of 5 query terms
-      const parsedQ = qArr.map((query) => query.slice(0, 30)).slice(0, 5)
+      // Each query term should be limited to maxQueryTermLength chars, and there should be a max of maxQueryTerms query terms
+      const parsedQ = qArr
+        .map((query) => query.slice(0, maxQueryTermLength))
+        .slice(0, maxQueryTerms)
 
       // Check 'operator'
       const parsedOperator = allowedOperators.includes(operator)
@@ -180,6 +185,7 @@ const SearchPage = () => {
         regions.some(({ code }) => code === regionCode)
       )
 
+      // Check 'city'
       const changedParams =
         qStr.length !== parsedQ.toString().length ||
         doctypeArr.length !== parsedDoctype.length ||
@@ -582,9 +588,10 @@ const SearchPage = () => {
                   <div className="mt-2">
                     <h4>Search Results</h4>
                   </div>
-                  {resultsState.globalQuery && (
+                  {/* TODO: Disabled until downloading data fixed */}
+                  {/* {resultsState.globalQuery && (
                     <a href={resultsState.downloadLink}>Download Results</a>
-                  )}
+                  )} */}
                 </div>
               </div>
               <div className="row">

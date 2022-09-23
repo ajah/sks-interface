@@ -36,3 +36,10 @@ export const getQueryString = (params, options = {}) => {
 
   return `${prefix}${searchTermQuery}&${remainingQuery}`
 }
+
+export const maxQueryTerms = parseInt(process.env.REACT_APP_MAX_QUERY_TERMS, 10)
+
+export const maxQueryTermLength = parseInt(
+  process.env.REACT_APP_MAX_QUERY_TERM_LENGTH,
+  10
+)
