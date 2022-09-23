@@ -1,8 +1,8 @@
 import { useEffect, useState, useContext } from 'react'
-import { isEqual, kebabCase, pick, toLower, without, uniq } from 'lodash'
+import { castArray, isEqual, kebabCase, pick, toLower, without, uniq } from 'lodash'
 import { Link, useLocation } from 'react-router-dom'
-// import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-// import { faSearch } from '@fortawesome/free-solid-svg-icons'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faPlus } from '@fortawesome/free-solid-svg-icons'
 
 import { SearchBar } from 'components/SearchBar'
 import { SearchContext } from 'context/search-context'
@@ -57,7 +57,7 @@ const Row = (props) => (
     </td>
     <td>
       <div>
-        {props.municipality}
+        {props.city}
         {props.region ? `, ${props.region}` : ''}
       </div>
     </td>
@@ -74,14 +74,14 @@ const TableRows = ({ results }) => {
 
   return results.map(({ _id, _index, _source }) => {
     let name
-    let municipality
+    let city
     let region
     let type
     let url
 
     if (_index === 'new-activities') {
       name = _source.grant_title
-      municipality = _source.grant_municipality
+      city = _source.grant_municipality
       region = _source.grant_region
       type = ACTIVITY
       url = `/activities/${_source.act_sks_id}`
@@ -89,7 +89,7 @@ const TableRows = ({ results }) => {
 
     if (_index === 'entities') {
       name = _source.name
-      municipality = _source.location_municipality
+      city = _source.location_municipality
       region = _source.location_region
       type = ORGANIZATION
       url = `/organizations/${_source.ent_sks_id}`
@@ -100,7 +100,7 @@ const TableRows = ({ results }) => {
         key={_id}
         location={location}
         name={name}
-        municipality={municipality}
+        city={city}
         region={region}
         type={type}
         url={url}
@@ -118,7 +118,7 @@ const initialResultsState = {
   incActivities: true,
   incOrganizations: true,
   globalQuery: '',
-  municipality: '',
+  city: '',
   downloadData: '',
   downloadLink: '',
   // city: '',
@@ -129,6 +129,7 @@ const SearchPage = () => {
 
   const [searchParams, setSearchParams] = useSearchParams()
   const [resultsState, setResultsState] = useState(initialResultsState)
+  const [cityInput, setCityInput] = useState('')
 
   const { q = [], city = [], doctype = [], operator = '', region = [] } = searchParams
 
@@ -156,7 +157,7 @@ const SearchPage = () => {
 
       // Check 'q'
       if (!qStr) return setResultsState(initialResultsState)
-      const qArr = Array.isArray(q) ? q : [q]
+      const qArr = castArray(q)
 
       // Each query term should be limited to maxQueryTermLength chars
       // and there should be a max of maxQueryTerms query terms
@@ -225,6 +226,7 @@ const SearchPage = () => {
           region: parsedRegionArr,
           city: parsedCityArr,
         }),
+        // TODO: Check why count route does not take more params?
         Get('/count', { q: parsedQArr, operator: parsedOperator }),
       ]).then(
         ([search, count]) =>
@@ -246,7 +248,7 @@ const SearchPage = () => {
 
   const handleRegionFilter = (e) => {
     const regionCode = e.target.name
-    const regionArr = Array.isArray(region) ? region : [region]
+    const regionArr = castArray(region)
 
     const adjustedRegion = regionArr.includes(regionCode)
       ? without(regionArr, regionCode)
@@ -258,6 +260,19 @@ const SearchPage = () => {
   const handleDoctypeFilter = (e) => {
     const newDoctype = e.target.value
     setSearchParams({ doctype: newDoctype.split(',') })
+  }
+
+  const handleCityFilter = (e) => {
+    e.preventDefault()
+    setCityInput('')
+
+    const cityArr = castArray(city)
+    const cityArrLower = cityArr.map(toLower)
+    const cleanedCityInput = cityInput.trim().toLowerCase()
+    const cleanedCityInputLower = cleanedCityInput.toLowerCase()
+    if (cityArrLower.includes(cleanedCityInputLower)) return
+
+    setSearchParams({ city: [...cityArr, cleanedCityInput] })
   }
 
   // const handleDownload = () => {
@@ -313,7 +328,7 @@ const SearchPage = () => {
 
   //   city = resultsState.city
 
-  //   setResultsState({ ...resultsState, municipality: city })
+  //   setResultsState({ ...resultsState, city })
 
   //   if (resultsState.location) {
   //     window.history.pushState(
@@ -335,6 +350,10 @@ const SearchPage = () => {
   //     )
   //   }
   // }
+
+  // TODO: Move city filter into own component along with line below:
+  const cityInputDisabled =
+    castArray(city).length >= process.env.REACT_APP_MAX_QUERY_CITIES
 
   return (
     <main className="page projects-page mt-5">
@@ -429,31 +448,40 @@ const SearchPage = () => {
                         </div>
                       )
                     })}
-                    {/* TODO: Refactor the city filter */}
-                    {/* <div className="mt-4">
-                      <label className="form-check-label">City:</label>
+                    <div className="mt-4">
+                      <label htmlFor="city-select" className="form-check-label mb-2">
+                        City:
+                      </label>
 
                       <div className="city-block">
                         <input
                           className="form-control rounded-pill"
                           type="text"
-                          name={resultsState.city}
-                          onChange={(e) => setCity(e)}
+                          name="city-select"
+                          onChange={(e) =>
+                            e.target.value.length < maxQueryTermLength &&
+                            setCityInput(e.target.value)
+                          }
+                          value={cityInput}
+                          id="city-select"
+                          disabled={cityInputDisabled}
+                          placeholder={cityInputDisabled ? 'Max reached' : ''}
                         />
                         <div>
                           <button
+                            disabled={cityInputDisabled}
                             className="ms-2 btn btn-primary"
-                            onClick={(e) => searchCity(e)}
+                            onClick={(e) => handleCityFilter(e)}
                           >
                             <FontAwesomeIcon
                               className="d-inline"
                               size="sm"
-                              icon={faSearch}
+                              icon={faPlus}
                             />
                           </button>
                         </div>
                       </div>
-                    </div> */}
+                    </div>
                   </form>
                   <hr />
                   <p className="text-secondary">More filters coming soon!</p>
