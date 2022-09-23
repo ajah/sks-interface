@@ -1,5 +1,5 @@
 import { useEffect, useState, useContext } from 'react'
-import { isEqual, kebabCase, keyBy, pick, without, uniq } from 'lodash'
+import { isEqual, kebabCase, keyBy, pick, toLower, without, uniq } from 'lodash'
 import { Link, useLocation } from 'react-router-dom'
 // import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 // import { faSearch } from '@fortawesome/free-solid-svg-icons'
@@ -162,9 +162,9 @@ const SearchPage = () => {
 
       // Each query term should be limited to maxQueryTermLength chars
       // and there should be a max of maxQueryTerms query terms
-      const parsedQArr = qArr
-        .map((query) => query.slice(0, maxQueryTermLength))
-        .slice(0, maxQueryTerms)
+      const parsedQArr = uniq(
+        qArr.map((query) => query.slice(0, maxQueryTermLength))
+      ).slice(0, maxQueryTerms)
 
       // Check 'operator'
       const parsedOperator = allowedOperators.includes(operator)
@@ -202,7 +202,7 @@ const SearchPage = () => {
         doctypeArr.length !== parsedDoctypeArr.length ||
         operator !== parsedOperator ||
         regionArr.length !== parsedRegionArr.length ||
-        !isEqual(cityArr, parsedCityArr)
+        !isEqual(cityArr.map(toLower), parsedCityArr.map(toLower))
 
       if (changedParams) {
         setSearchParams(
