@@ -43,3 +43,5 @@ export const maxQueryTermLength = parseInt(
   process.env.REACT_APP_MAX_QUERY_TERM_LENGTH,
   10
 )
+
+export const maxQueryCities = parseInt(process.env.REACT_APP_MAX_QUERY_CITIES, 10)

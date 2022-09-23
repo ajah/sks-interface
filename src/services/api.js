@@ -1,4 +1,5 @@
 import axios from 'axios'
+import { omit } from 'lodash'
 
 import { ENTITY, ORGANIZATION } from 'constants'
 import { getQueryString } from 'utils/query'
@@ -18,6 +19,12 @@ api.interceptors.request.use(
         config.params.doctype = doctypeParam.map((type) =>
           type === ORGANIZATION ? ENTITY : type
         )
+      }
+
+      const cityParam = config.params?.city
+      if (cityParam) {
+        // Backend uses 'municipality' property instead of 'city'
+        config.params = omit({ ...config.params, municipality: cityParam }, 'city')
       }
 
       // Custom params serializer, for using our preferred array delimiters, etc

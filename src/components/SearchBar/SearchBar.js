@@ -33,6 +33,7 @@ const SearchBar = () => {
 
   const setCurrentQueryHandler = (e) => {
     e.preventDefault()
+
     const operatorIsSame =
       searchContext.searchOperator === searchParams.operator ||
       (searchContext.searchOperator === DEFAULT_OPERATOR && !searchParams.operator)

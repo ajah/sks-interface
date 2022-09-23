@@ -1,5 +1,5 @@
 import { useEffect, useState, useContext } from 'react'
-import { kebabCase, keyBy, pick, without } from 'lodash'
+import { isEqual, kebabCase, keyBy, pick, without, uniq } from 'lodash'
 import { Link, useLocation } from 'react-router-dom'
 // import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 // import { faSearch } from '@fortawesome/free-solid-svg-icons'
@@ -8,7 +8,7 @@ import { SearchBar } from 'components/SearchBar'
 import { SearchContext } from 'context/search-context'
 import { useSearchParams } from 'hooks'
 import { Get } from 'services/api'
-import { maxQueryTermLength, maxQueryTerms } from 'utils/query'
+import { maxQueryCities, maxQueryTermLength, maxQueryTerms } from 'utils/query'
 
 import {
   allowedSearchParams,
@@ -139,7 +139,6 @@ const SearchPage = () => {
   const qStr = q.toString()
   const doctypeStr = doctype.toString()
   const regionStr = region.toString()
-
   const cityStr = city.toString()
 
   useEffect(() => {
@@ -161,8 +160,9 @@ const SearchPage = () => {
       if (!qStr) return setResultsState(initialResultsState)
       const qArr = Array.isArray(q) ? q : [q]
 
-      // Each query term should be limited to maxQueryTermLength chars, and there should be a max of maxQueryTerms query terms
-      const parsedQ = qArr
+      // Each query term should be limited to maxQueryTermLength chars
+      // and there should be a max of maxQueryTerms query terms
+      const parsedQArr = qArr
         .map((query) => query.slice(0, maxQueryTermLength))
         .slice(0, maxQueryTerms)
 
@@ -174,31 +174,44 @@ const SearchPage = () => {
       if (searchContext.searchOperator !== parsedOperator)
         searchContext.setOperatorHandler(parsedOperator)
 
+      // Check 'city'
+      const cityArr = cityStr ? cityStr.split(',') : []
+      const parsedCityArr = uniq(
+        cityArr
+          .map((aCity) => aCity.trim())
+          .filter((aCity) => aCity.length < maxQueryTermLength)
+      ).slice(0, maxQueryCities)
+
       // Check 'doctype'
       const doctypeArr = doctypeStr ? doctypeStr.split(',') : []
-      const filteredDoctype = doctypeArr.filter((type) => allowedDoctypes.includes(type))
-      const parsedDoctype = filteredDoctype.length ? filteredDoctype : defaultDoctype
+      const filteredDoctypeArr = uniq(doctypeArr).filter((type) =>
+        allowedDoctypes.includes(type)
+      )
+      const parsedDoctypeArr = filteredDoctypeArr.length
+        ? filteredDoctypeArr
+        : defaultDoctype
 
       // Check 'region'
       const regionArr = regionStr ? regionStr.split(',') : []
-      const parsedRegion = regionArr.filter((regionCode) =>
+      const parsedRegionArr = uniq(regionArr).filter((regionCode) =>
         regions.some(({ code }) => code === regionCode)
       )
 
-      // Check 'city'
       const changedParams =
-        qStr.length !== parsedQ.toString().length ||
-        doctypeArr.length !== parsedDoctype.length ||
+        qStr.length !== parsedQArr.toString().length ||
+        doctypeArr.length !== parsedDoctypeArr.length ||
         operator !== parsedOperator ||
-        regionArr.length !== parsedRegion.length
+        regionArr.length !== parsedRegionArr.length ||
+        !isEqual(cityArr, parsedCityArr)
 
       if (changedParams) {
         setSearchParams(
           {
-            q: parsedQ,
-            doctype: parsedDoctype,
+            q: parsedQArr,
+            city: parsedCityArr,
+            doctype: parsedDoctypeArr,
             operator: parsedOperator,
-            region: parsedRegion,
+            region: parsedRegionArr,
           },
           { replaceParams: true }
         )
@@ -206,19 +219,19 @@ const SearchPage = () => {
         return
       }
 
-      const parsedRegionForApi = parsedRegion.map(
+      const parsedRegionArrForApi = parsedRegionArr.map(
         (code) => regionsCodeToNameMap[code].name
       )
 
       Promise.all([
         Get('/search', {
-          q: parsedQ,
-          doctype: parsedDoctype,
+          q: parsedQArr,
+          doctype: parsedDoctypeArr,
           operator: parsedOperator,
-          region: parsedRegionForApi,
-          municipality: resultsState.municipality,
+          region: parsedRegionArrForApi,
+          city: parsedCityArr,
         }),
-        Get('/count', { q: parsedQ, operator: parsedOperator }),
+        Get('/count', { q: parsedQArr, operator: parsedOperator }),
       ]).then(
         ([search, count]) =>
           setResultsState((prevState) => ({
@@ -235,7 +248,7 @@ const SearchPage = () => {
       console.log('Query parsing error', error)
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [qStr, doctypeStr, operator, regionStr])
+  }, [qStr, cityStr, doctypeStr, operator, regionStr])
 
   const handleRegionFilter = (e) => {
     const regionCode = e.target.name
