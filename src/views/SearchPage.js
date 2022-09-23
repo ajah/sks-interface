@@ -1,5 +1,14 @@
 import { useEffect, useState, useContext } from 'react'
-import { castArray, isEqual, kebabCase, pick, toLower, without, uniq } from 'lodash'
+import {
+  castArray,
+  deburr,
+  isEqual,
+  kebabCase,
+  pick,
+  toLower,
+  without,
+  uniq,
+} from 'lodash'
 import { Link, useLocation } from 'react-router-dom'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPlus, faTimesCircle } from '@fortawesome/free-solid-svg-icons'
@@ -161,7 +170,12 @@ const SearchPage = () => {
       // Each query term should be limited to maxQueryTermLength chars
       // and there should be a max of maxQueryTerms query terms
       const parsedQArr = uniq(
-        qArr.map((query) => query.slice(0, maxQueryTermLength))
+        qArr
+          .map((aQuery) => aQuery.trim())
+          .map((aQuery) => aQuery.replace(/[\s]{2,}/g, ' '))
+          .map((aQuery) => aQuery.slice(0, maxQueryTermLength))
+          .map(deburr)
+          .filter((aQuery) => aQuery)
       ).slice(0, maxQueryTerms)
 
       // Check 'operator'
@@ -177,7 +191,10 @@ const SearchPage = () => {
       const parsedCityArr = uniq(
         cityArr
           .map((aCity) => aCity.trim())
+          .map((aCity) => aCity.replace(/[\s]{2,}/g, ' '))
+          .map(deburr)
           .filter((aCity) => aCity.length < maxQueryTermLength)
+          .filter((aCity) => aCity)
       ).slice(0, maxQueryCities)
 
       // Check 'doctype'
@@ -268,7 +285,7 @@ const SearchPage = () => {
 
     const cityArr = castArray(city)
     const cityArrLower = cityArr.map(toLower)
-    const cleanedCityInput = cityInput.trim().toLowerCase()
+    const cleanedCityInput = deburr(cityInput.trim().replace(/[\s]{2,}/g, ' '))
     const cleanedCityInputLower = cleanedCityInput.toLowerCase()
 
     setCityInput('')
@@ -466,7 +483,7 @@ const SearchPage = () => {
                         </div>
                       </div>
                       <div>
-                        {castArray(city).map((aCity) => (
+                        {uniq(castArray(city)).map((aCity) => (
                           <div
                             className="search-query border col-2 ps-3 rounded-pill mt-2"
                             // Search terms should be unique
