@@ -16,7 +16,7 @@ import { faPlus, faTimesCircle } from '@fortawesome/free-solid-svg-icons'
 import { SearchBar } from 'components/SearchBar'
 import { SearchContext } from 'context/search-context'
 import { useSearchParams } from 'hooks'
-import { Get } from 'services/api'
+import { createDownloadLink, Get } from 'services/api'
 import { maxQueryCities, maxQueryTermLength, maxQueryTerms } from 'utils/query'
 
 import {
@@ -134,7 +134,6 @@ const initialResultsState = {
 
 const SearchPage = () => {
   const searchContext = useContext(SearchContext)
-
   const [searchParams, setSearchParams] = useSearchParams()
   const [resultsState, setResultsState] = useState(initialResultsState)
   const [cityInput, setCityInput] = useState('')
@@ -306,20 +305,6 @@ const SearchPage = () => {
 
     handleCityFilter(e)
   }
-
-  // const handleDownload = () => {
-  //   if (resultsState.globalQuery !== undefined) {
-  //     const url = `https://sks-server-ajah-ttwto.ondigitalocean.app/search?q=${this.global.query}&doctype=activity,entity`
-  //     axios
-  //       .get(url)
-  //       .then((res) => {
-  //         setResultsState({ ...resultsState, downloadData: res.data.hits })
-  //       })
-  //       .catch((error) => console.log(error))
-  //   } else {
-  //     console.log('No entity was found')
-  //   }
-  // }
 
   // const handleButton = (e) => {
   //   e.preventDefault()
@@ -642,15 +627,23 @@ const SearchPage = () => {
                   <div className="mt-2">
                     <h4>Search Results</h4>
                   </div>
-                  {/* TODO: Disabled until downloading data fixed */}
-                  {/* {resultsState.globalQuery && (
-                    <a href={resultsState.downloadLink}>Download Results</a>
-                  )} */}
+                  {!!resultsState.results.length && (
+                    <a
+                      href={createDownloadLink({
+                        q,
+                        city,
+                        doctype,
+                        operator,
+                        region,
+                      })}
+                    >
+                      Download Results
+                    </a>
+                  )}
                 </div>
               </div>
               <div className="row">
                 <div className="col">
-                  {/* <div>{this.tableRows()}</div> */}
                   <table className="table table-striped">
                     <thead className="thead-light">
                       <tr>
