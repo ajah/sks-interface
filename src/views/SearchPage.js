@@ -1,13 +1,23 @@
 import { useEffect, useState, useContext } from 'react'
-import { kebabCase, keyBy, pick, without } from 'lodash'
+import {
+  castArray,
+  deburr,
+  isEqual,
+  kebabCase,
+  pick,
+  toLower,
+  without,
+  uniq,
+} from 'lodash'
 import { Link, useLocation } from 'react-router-dom'
-// import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-// import { faSearch } from '@fortawesome/free-solid-svg-icons'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faPlus, faTimesCircle } from '@fortawesome/free-solid-svg-icons'
 
 import { SearchBar } from 'components/SearchBar'
 import { SearchContext } from 'context/search-context'
 import { useSearchParams } from 'hooks'
 import { Get } from 'services/api'
+import { maxQueryCities, maxQueryTermLength, maxQueryTerms } from 'utils/query'
 
 import {
   allowedSearchParams,
@@ -29,8 +39,6 @@ import {
 // TODO: move styles.css import into SearchPage.css
 import 'assets/css/styles.css'
 import './SearchPage.css'
-
-const regionsCodeToNameMap = keyBy(regions, 'code')
 
 const Badge = ({ type }) => {
   if (type === ACTIVITY) {
@@ -58,7 +66,7 @@ const Row = (props) => (
     </td>
     <td>
       <div>
-        {props.municipality}
+        {props.city}
         {props.region ? `, ${props.region}` : ''}
       </div>
     </td>
@@ -75,14 +83,14 @@ const TableRows = ({ results }) => {
 
   return results.map(({ _id, _index, _source }) => {
     let name
-    let municipality
+    let city
     let region
     let type
     let url
 
     if (_index === 'new-activities') {
       name = _source.grant_title
-      municipality = _source.grant_municipality
+      city = _source.grant_municipality
       region = _source.grant_region
       type = ACTIVITY
       url = `/activities/${_source.act_sks_id}`
@@ -90,7 +98,7 @@ const TableRows = ({ results }) => {
 
     if (_index === 'entities') {
       name = _source.name
-      municipality = _source.location_municipality
+      city = _source.location_municipality
       region = _source.location_region
       type = ORGANIZATION
       url = `/organizations/${_source.ent_sks_id}`
@@ -101,7 +109,7 @@ const TableRows = ({ results }) => {
         key={_id}
         location={location}
         name={name}
-        municipality={municipality}
+        city={city}
         region={region}
         type={type}
         url={url}
@@ -114,15 +122,14 @@ const initialResultsState = {
   // TODO: Review state vars below and see which are unnecessry
   total: '',
   results: [],
-  act_total: '',
-  ent_total: '',
-  inc_activities: true,
-  inc_organizations: true,
+  actTotal: '',
+  entTotal: '',
+  incActivities: true,
+  incOrganizations: true,
   globalQuery: '',
-  municipality: '',
+  city: '',
   downloadData: '',
   downloadLink: '',
-  // city: '',
 }
 
 const SearchPage = () => {
@@ -130,14 +137,16 @@ const SearchPage = () => {
 
   const [searchParams, setSearchParams] = useSearchParams()
   const [resultsState, setResultsState] = useState(initialResultsState)
+  const [cityInput, setCityInput] = useState('')
 
-  const { q = [], doctype = [], operator = '', region = [] } = searchParams
+  const { q = [], city = [], doctype = [], operator = '', region = [] } = searchParams
 
   // Params that can have multiple values separated by commas will be a string when one value is provided,
   // and an array when multiple values are provided
   const qStr = q.toString()
   const doctypeStr = doctype.toString()
   const regionStr = region.toString()
+  const cityStr = city.toString()
 
   useEffect(() => {
     try {
@@ -156,10 +165,18 @@ const SearchPage = () => {
 
       // Check 'q'
       if (!qStr) return setResultsState(initialResultsState)
-      const qArr = Array.isArray(q) ? q : [q]
+      const qArr = castArray(q)
 
-      // Each query term should be limited to 30 chars, and there should be a max of 5 query terms
-      const parsedQ = qArr.map((query) => query.slice(0, 30)).slice(0, 5)
+      // Each query term should be limited to maxQueryTermLength chars
+      // and there should be a max of maxQueryTerms query terms
+      const parsedQArr = uniq(
+        qArr
+          .map((aQuery) => aQuery.trim())
+          .map((aQuery) => aQuery.replace(/[\s]{2,}/g, ' '))
+          .map((aQuery) => aQuery.slice(0, maxQueryTermLength))
+          .map(deburr)
+          .filter((aQuery) => aQuery)
+      ).slice(0, maxQueryTerms)
 
       // Check 'operator'
       const parsedOperator = allowedOperators.includes(operator)
@@ -169,30 +186,47 @@ const SearchPage = () => {
       if (searchContext.searchOperator !== parsedOperator)
         searchContext.setOperatorHandler(parsedOperator)
 
+      // Check 'city'
+      const cityArr = cityStr ? cityStr.split(',') : []
+      const parsedCityArr = uniq(
+        cityArr
+          .map((aCity) => aCity.trim())
+          .map((aCity) => aCity.replace(/[\s]{2,}/g, ' '))
+          .map(deburr)
+          .filter((aCity) => aCity.length < maxQueryTermLength)
+          .filter((aCity) => aCity)
+      ).slice(0, maxQueryCities)
+
       // Check 'doctype'
       const doctypeArr = doctypeStr ? doctypeStr.split(',') : []
-      const filteredDoctype = doctypeArr.filter((type) => allowedDoctypes.includes(type))
-      const parsedDoctype = filteredDoctype.length ? filteredDoctype : defaultDoctype
+      const filteredDoctypeArr = uniq(doctypeArr).filter((type) =>
+        allowedDoctypes.includes(type)
+      )
+      const parsedDoctypeArr = filteredDoctypeArr.length
+        ? filteredDoctypeArr
+        : defaultDoctype
 
       // Check 'region'
       const regionArr = regionStr ? regionStr.split(',') : []
-      const parsedRegion = regionArr.filter((regionCode) =>
+      const parsedRegionArr = uniq(regionArr).filter((regionCode) =>
         regions.some(({ code }) => code === regionCode)
       )
 
       const changedParams =
-        qStr.length !== parsedQ.toString().length ||
-        doctypeArr.length !== parsedDoctype.length ||
+        qStr.length !== parsedQArr.toString().length ||
+        doctypeArr.length !== parsedDoctypeArr.length ||
         operator !== parsedOperator ||
-        regionArr.length !== parsedRegion.length
+        regionArr.length !== parsedRegionArr.length ||
+        !isEqual(cityArr.map(toLower), parsedCityArr.map(toLower))
 
       if (changedParams) {
         setSearchParams(
           {
-            q: parsedQ,
-            doctype: parsedDoctype,
+            q: parsedQArr,
+            city: parsedCityArr,
+            doctype: parsedDoctypeArr,
             operator: parsedOperator,
-            region: parsedRegion,
+            region: parsedRegionArr,
           },
           { replaceParams: true }
         )
@@ -200,27 +234,24 @@ const SearchPage = () => {
         return
       }
 
-      const parsedRegionForApi = parsedRegion.map(
-        (code) => regionsCodeToNameMap[code].name
-      )
-
       Promise.all([
         Get('/search', {
-          q: parsedQ,
-          doctype: parsedDoctype,
+          q: parsedQArr,
+          doctype: parsedDoctypeArr,
           operator: parsedOperator,
-          region: parsedRegionForApi,
-          municipality: resultsState.municipality,
+          region: parsedRegionArr,
+          city: parsedCityArr,
         }),
-        Get('/count', { q: parsedQ, operator: parsedOperator }),
+        // TODO: Check why count route does not take more params?
+        Get('/count', { q: parsedQArr, operator: parsedOperator }),
       ]).then(
         ([search, count]) =>
           setResultsState((prevState) => ({
             ...prevState,
             results: search.hits,
             total: count['new-activities,entities'],
-            act_total: count['new-activities'],
-            ent_total: count['entities'],
+            actTotal: count['new-activities'],
+            entTotal: count['entities'],
           }))
 
         // searchContext.isLoadingHandler(false)
@@ -229,11 +260,11 @@ const SearchPage = () => {
       console.log('Query parsing error', error)
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [qStr, doctypeStr, operator, regionStr])
+  }, [qStr, cityStr, doctypeStr, operator, regionStr])
 
   const handleRegionFilter = (e) => {
     const regionCode = e.target.name
-    const regionArr = Array.isArray(region) ? region : [region]
+    const regionArr = castArray(region)
 
     const adjustedRegion = regionArr.includes(regionCode)
       ? without(regionArr, regionCode)
@@ -245,6 +276,35 @@ const SearchPage = () => {
   const handleDoctypeFilter = (e) => {
     const newDoctype = e.target.value
     setSearchParams({ doctype: newDoctype.split(',') })
+  }
+
+  const handleCityFilter = (e) => {
+    e.preventDefault()
+
+    if (!cityInput) return
+
+    const cityArr = castArray(city)
+    const cityArrLower = cityArr.map(toLower)
+    const cleanedCityInput = deburr(cityInput.trim().replace(/[\s]{2,}/g, ' '))
+    const cleanedCityInputLower = cleanedCityInput.toLowerCase()
+
+    setCityInput('')
+
+    if (cityArrLower.includes(cleanedCityInputLower)) return
+
+    setSearchParams({ city: [...cityArr, cleanedCityInput] })
+  }
+
+  const handleRemoveCity = (cityToRemove) => {
+    const cityArr = castArray(city)
+    const newCityArr = without(cityArr, cityToRemove)
+    setSearchParams({ city: newCityArr })
+  }
+
+  const handleEnterKeyCityHandler = (e) => {
+    if (e.key !== 'Enter') return
+
+    handleCityFilter(e)
   }
 
   // const handleDownload = () => {
@@ -265,13 +325,13 @@ const SearchPage = () => {
   //   e.preventDefault()
 
   //   let filter = []
-  // if (resultsState.inc_activities) {
+  // if (resultsState.incActivities) {
   //   filter.push(ACTIVITY)
-  // } else if (resultsState.inc_organizations) {
+  // } else if (resultsState.incOrganizations) {
   //   filter.push('entity')
-  // } else if (!resultsState.inc_activities & !resultsState.inc_organizations) {
+  // } else if (!resultsState.incActivities & !resultsState.incOrganizations) {
   //   filter.push('activity,entity') //.push("entity"); //
-  // } else if (resultsState.inc_activities & resultsState.inc_organizations) {
+  // } else if (resultsState.incActivities & resultsState.incOrganizations) {
   //   filter.push('activity,entity') //.push("entity"); //
   // }
 
@@ -291,37 +351,9 @@ const SearchPage = () => {
       window.location.reload(false);*/
   // }
 
-  // const setCity = (e) => {
-  //   setResultsState({ ...resultsState, city: e.target.value })
-  // }
-
-  // const searchCity = (e, city) => {
-  //   e.preventDefault()
-
-  //   city = resultsState.city
-
-  //   setResultsState({ ...resultsState, municipality: city })
-
-  //   if (resultsState.location) {
-  //     window.history.pushState(
-  //       'page2',
-  //       'Title',
-  //       `/search?q=${resultsState.globalQuery}&doctype=${resultsState.filter.join(
-  //         ','
-  //       )}&region=${resultsState.location}&municipality=${city}&operator=${
-  //         resultsState.operator
-  //       }`
-  //     )
-  //   } else {
-  //     window.history.pushState(
-  //       'page2',
-  //       'Title',
-  //       `/search?q=${resultsState.globalQuery}&doctype=${resultsState.filter.join(
-  //         ','
-  //       )}&municipality=${city}&operator=${resultsState.operator}`
-  //     )
-  //   }
-  // }
+  // TODO: Move city filter into own component along with line below:
+  const cityInputDisabled =
+    castArray(city).length >= process.env.REACT_APP_MAX_QUERY_CITIES
 
   return (
     <main className="page projects-page mt-5">
@@ -416,31 +448,59 @@ const SearchPage = () => {
                         </div>
                       )
                     })}
-                    {/* TODO: Refactor the city filter */}
-                    {/* <div className="mt-4">
-                      <label className="form-check-label">City:</label>
+                    <div className="mt-4">
+                      <label htmlFor="city-select" className="form-check-label mb-2">
+                        City:
+                      </label>
 
                       <div className="city-block">
                         <input
                           className="form-control rounded-pill"
                           type="text"
-                          name={resultsState.city}
-                          onChange={(e) => setCity(e)}
+                          name="city-select"
+                          onChange={(e) =>
+                            e.target.value.length < maxQueryTermLength &&
+                            setCityInput(e.target.value)
+                          }
+                          value={cityInput}
+                          id="city-select"
+                          disabled={cityInputDisabled}
+                          placeholder={cityInputDisabled ? 'Max reached' : ''}
+                          onKeyPress={handleEnterKeyCityHandler}
                         />
                         <div>
                           <button
+                            disabled={cityInputDisabled}
                             className="ms-2 btn btn-primary"
-                            onClick={(e) => searchCity(e)}
+                            onClick={(e) => handleCityFilter(e)}
                           >
                             <FontAwesomeIcon
                               className="d-inline"
                               size="sm"
-                              icon={faSearch}
+                              icon={faPlus}
                             />
                           </button>
                         </div>
                       </div>
-                    </div> */}
+                      <div>
+                        {uniq(castArray(city)).map((aCity) => (
+                          <div
+                            className="search-query border col-2 ps-3 rounded-pill mt-2"
+                            // Search terms should be unique
+                            key={aCity}
+                          >
+                            {aCity}
+                            <div className="ms-2 me-1" size="sm">
+                              <FontAwesomeIcon
+                                className="remove-query"
+                                onClick={() => handleRemoveCity(aCity)}
+                                icon={faTimesCircle}
+                              />
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
                   </form>
                   <hr />
                   <p className="text-secondary">More filters coming soon!</p>
@@ -562,7 +622,7 @@ const SearchPage = () => {
                   <div className="bg-light p-3">
                     <span>Organizations: </span>
                     <span className="badge rounded-pill bg-secondary ms-2">
-                      {resultsState.ent_total}
+                      {resultsState.entTotal}
                     </span>
                   </div>
                 </div>
@@ -570,7 +630,7 @@ const SearchPage = () => {
                   <div className="bg-light p-3">
                     <span>Activities: </span>
                     <span className="badge rounded-pill bg-secondary ms-2">
-                      {resultsState.act_total}
+                      {resultsState.actTotal}
                     </span>
                   </div>
                 </div>
@@ -582,9 +642,10 @@ const SearchPage = () => {
                   <div className="mt-2">
                     <h4>Search Results</h4>
                   </div>
-                  {resultsState.globalQuery && (
+                  {/* TODO: Disabled until downloading data fixed */}
+                  {/* {resultsState.globalQuery && (
                     <a href={resultsState.downloadLink}>Download Results</a>
-                  )}
+                  )} */}
                 </div>
               </div>
               <div className="row">

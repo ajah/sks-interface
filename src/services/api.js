@@ -1,12 +1,15 @@
 import axios from 'axios'
+import { keyBy, omit } from 'lodash'
 
-import { ENTITY, ORGANIZATION } from 'constants'
+import { ENTITY, ORGANIZATION, regions } from 'constants'
 import { getQueryString } from 'utils/query'
 
 const api = axios.create({
   baseURL: `${process.env.REACT_APP_API_URL}`,
   timeout: 90000,
 })
+
+const regionsCodeToNameMap = keyBy(regions, 'code')
 
 api.interceptors.request.use(
   (config) => {
@@ -18,6 +21,20 @@ api.interceptors.request.use(
         config.params.doctype = doctypeParam.map((type) =>
           type === ORGANIZATION ? ENTITY : type
         )
+      }
+
+      const cityParam = config.params?.city
+      if (cityParam) {
+        // Backend uses 'municipality' property instead of 'city'
+        config.params = omit({ ...config.params, municipality: cityParam }, 'city')
+      }
+
+      const regionParam = config.params.region
+      if (regionParam) {
+        const parsedRegionForApi = regionParam.map(
+          (code) => regionsCodeToNameMap[code].name
+        )
+        config.params.region = parsedRegionForApi
       }
 
       // Custom params serializer, for using our preferred array delimiters, etc

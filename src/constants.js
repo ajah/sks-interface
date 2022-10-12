@@ -1,4 +1,4 @@
-export const allowedSearchParams = ['q', 'doctype', 'operator', 'region']
+export const allowedSearchParams = ['q', 'city', 'doctype', 'operator', 'region']
 
 export const AND = 'and'
 export const OR = 'or'
