@@ -1,4 +1,4 @@
-import { useEffect, useState, useContext } from 'react'
+import { useEffect, useState, useContext, Fragment } from 'react'
 import {
   castArray,
   deburr,
@@ -12,7 +12,7 @@ import {
 import { Link, useLocation } from 'react-router-dom'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPlus, faTimesCircle } from '@fortawesome/free-solid-svg-icons'
-
+import { GoTriangleDown, GoTriangleRight } from 'react-icons/go'
 import { SearchBar } from 'components/SearchBar'
 import { SearchContext } from 'context/search-context'
 import { useSearchParams } from 'hooks'
@@ -39,6 +39,10 @@ import {
 // TODO: move styles.css import into SearchPage.css
 import 'assets/css/styles.css'
 import './SearchPage.css'
+
+const sidebarTermsData = [
+  { category: 'EFC', terms: ['Sustainability', 'Climate Change', 'Climate Education'] },
+]
 
 const Badge = ({ type }) => {
   if (type === ACTIVITY) {
@@ -130,6 +134,41 @@ const initialResultsState = {
   city: '',
   downloadData: '',
   downloadLink: '',
+}
+
+const SidebarTerms = ({ category, terms, onChangeHandler }) => {
+  const [termsOpen, setTermsOpen] = useState(false)
+
+  return (
+    <div className="mt-3" key={category}>
+      <strong>
+        {termsOpen && (
+          <button className="sidebar-btn" onClick={() => setTermsOpen(false)}>
+            <GoTriangleDown /> {category}
+          </button>
+        )}
+        {!termsOpen && (
+          <button className="sidebar-btn" onClick={() => setTermsOpen(true)}>
+            <GoTriangleRight /> {category}
+          </button>
+        )}
+      </strong>
+      {termsOpen &&
+        terms.map((term) => (
+          <div className="form-check mt-1" key={term}>
+            <input
+              className="form-check-input"
+              type="checkbox"
+              value=""
+              id={kebabCase(term)}
+            />
+            <label className="form-check-label" htmlFor={kebabCase(term)}>
+              {term}
+            </label>
+          </div>
+        ))}
+    </div>
+  )
 }
 
 const SearchPage = () => {
@@ -409,7 +448,7 @@ const SearchPage = () => {
                       </label>
                     </div>
                   </form>
-                  <form>
+                  <form className="mb-4">
                     <hr />
                     {regions.map(({ name, code }) => {
                       const inputId = `region-checkbox-${kebabCase(name)}`
@@ -488,13 +527,12 @@ const SearchPage = () => {
                     </div>
                   </form>
                   <hr />
-                  <p className="text-secondary">More filters coming soon!</p>
                 </div>
               </div>
-              {/* <div className="row mt-4">
-                  <div className="col">
-                    <h4>Terms</h4>
-                    <div className="mt-3" id="FFBC">
+              <div className="row">
+                <div className="col mb-3">
+                  <h5>Terms</h5>
+                  {/*  <div className="mt-3" id="FFBC">
                       <strong>
                         <GoTriangleDown />
                         {"   "}FFBC
@@ -521,73 +559,12 @@ const SearchPage = () => {
                           Black-Serving
                         </label>
                       </div>
-                    </div>
-                    <div className="mt-3" id="EFC">
-                      <strong>
-                        <GoTriangleDown />
-                        {"   "}EFC
-                      </strong>
-                      <div className="form-check mt-1">
-                        <input
-                          className="form-check-input"
-                          type="checkbox"
-                          value=""
-                          id="defaultCheck1"
-                        />
-                        <label className="form-check-label" for="defaultCheck1">
-                          Sustainability
-                        </label>
-                      </div>
-                      <div className="form-check">
-                        <input
-                          className="form-check-input"
-                          type="checkbox"
-                          value=""
-                          id="defaultCheck2"
-                        />
-                        <label className="form-check-label" for="defaultCheck2">
-                          Climate Change
-                        </label>
-                      </div>
-                      <div className="form-check">
-                        <input
-                          className="form-check-input"
-                          type="checkbox"
-                          value=""
-                          id="defaultCheck2"
-                        />
-                        <label className="form-check-label" for="defaultCheck2">
-                          Climate Education
-                        </label>
-                      </div>
-                      <div className="form-check">
-                        <input
-                          className="form-check-input"
-                          type="checkbox"
-                          value=""
-                          id="defaultCheck2"
-                        />
-                        <label className="form-check-label" for="defaultCheck2">
-                          Water & Oceans
-                        </label>
-                      </div>
-                      <div className="form-check">
-                        <input
-                          className="form-check-input"
-                          type="checkbox"
-                          value=""
-                          id="defaultCheck2"
-                        />
-                        <label className="form-check-label" for="defaultCheck2">
-                          Renewable Energy
-                        </label>
-                      </div>
-                    </div>
-                    <div className="p-2">
-                      <button className="btn btn-primary">Update</button>
-                    </div>
-                  </div>
-                </div> */}
+                        </div> */}
+                  {sidebarTermsData.map(({ category, terms }) => (
+                    <SidebarTerms terms={terms} key={category} category={category} />
+                  ))}
+                </div>
+              </div>
             </div>
           </div>
 
