@@ -10,5 +10,5 @@ export const fpeFormat = (fpe) => {
   return fpe.substring(5)
 }
 
-export const formatDatapoints = (datapoint) =>
+export const datapointsFormat = (datapoint) =>
   datapoint == null ? 'Unavailable' : datapoint
