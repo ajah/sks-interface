@@ -1,4 +1,4 @@
-export const allowedSearchParams = ['q', 'city', 'doctype', 'operator', 'region']
+export const allowedSearchParams = ['q', 'city', 'doctype', 'operator', 'region', 'terms']
 
 export const AND = 'and'
 export const OR = 'or'
@@ -28,3 +28,10 @@ export const regions = [
   { name: 'Saskatchewan', code: 'sk' },
   { name: 'Yukon', code: 'yk' },
 ]
+
+export const sidebarTermsData = {
+  efc: {
+    display: 'EFC',
+    terms: ['Sustainability', 'Climate Change', 'Climate Education'],
+  },
+}
