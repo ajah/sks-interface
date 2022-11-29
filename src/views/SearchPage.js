@@ -12,7 +12,7 @@ import {
 import { Link, useLocation } from 'react-router-dom'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPlus, faTimesCircle } from '@fortawesome/free-solid-svg-icons'
-
+import { GoTriangleDown, GoTriangleRight } from 'react-icons/go'
 import { SearchBar } from 'components/SearchBar'
 import { SearchContext } from 'context/search-context'
 import { useSearchParams } from 'hooks'
@@ -34,6 +34,7 @@ import {
 
   // Other constants
   regions,
+  sidebarTermsData,
 } from 'constants'
 
 // TODO: move styles.css import into SearchPage.css
@@ -132,13 +133,66 @@ const initialResultsState = {
   downloadLink: '',
 }
 
+const SidebarTerms = ({
+  category,
+  categoryDisplay,
+  termsUsed,
+  termsDisplay,
+  onChangeHandler,
+}) => {
+  const [termsOpen, setTermsOpen] = useState(true)
+
+  return (
+    <div className="mt-3" key={category}>
+      <strong>
+        {termsOpen && (
+          <button className="sidebar-btn" onClick={() => setTermsOpen(false)}>
+            <GoTriangleDown /> {categoryDisplay}
+          </button>
+        )}
+        {!termsOpen && (
+          <button className="sidebar-btn" onClick={() => setTermsOpen(true)}>
+            <GoTriangleRight /> {categoryDisplay}
+          </button>
+        )}
+      </strong>
+      {termsOpen &&
+        termsDisplay.map((term) => {
+          const key = `${category}_${toLower(term)}`
+
+          return (
+            <div className="form-check mt-1" key={key}>
+              <input
+                className="form-check-input"
+                type="checkbox"
+                onChange={() => onChangeHandler(key)}
+                checked={termsUsed.includes(key)}
+                id={kebabCase(key)}
+              />
+              <label className="form-check-label" htmlFor={kebabCase(key)}>
+                {term}
+              </label>
+            </div>
+          )
+        })}
+    </div>
+  )
+}
+
 const SearchPage = () => {
   const searchContext = useContext(SearchContext)
   const [searchParams, setSearchParams] = useSearchParams()
   const [resultsState, setResultsState] = useState(initialResultsState)
   const [cityInput, setCityInput] = useState('')
 
-  const { q = [], city = [], doctype = [], operator = '', region = [] } = searchParams
+  const {
+    q = [],
+    city = [],
+    doctype = [],
+    operator = '',
+    region = [],
+    terms = [],
+  } = searchParams
 
   // Params that can have multiple values separated by commas will be a string when one value is provided,
   // and an array when multiple values are provided
@@ -146,6 +200,7 @@ const SearchPage = () => {
   const doctypeStr = doctype.toString()
   const regionStr = region.toString()
   const cityStr = city.toString()
+  const termsStr = terms.toString()
 
   useEffect(() => {
     try {
@@ -211,12 +266,27 @@ const SearchPage = () => {
         regions.some(({ code }) => code === regionCode)
       )
 
+      // Check 'terms' that can be selected in sidebar
+      const termsArr = termsStr ? termsStr.split(',') : []
+
+      const parsedTermsArr = uniq(termsArr).filter((catAndTerm) => {
+        const [catLower, termLower] = catAndTerm.split('_').map(toLower)
+
+        if (!catLower || !termLower) return false
+
+        const termsForCat = sidebarTermsData[catLower]
+        if (!termsForCat?.terms.map(toLower).includes(termLower)) return false
+
+        return true
+      })
+
       const changedParams =
         qStr.length !== parsedQArr.toString().length ||
         doctypeArr.length !== parsedDoctypeArr.length ||
         operator !== parsedOperator ||
         regionArr.length !== parsedRegionArr.length ||
-        !isEqual(cityArr.map(toLower), parsedCityArr.map(toLower))
+        !isEqual(cityArr.map(toLower), parsedCityArr.map(toLower)) ||
+        !isEqual(termsArr.map(toLower), parsedTermsArr.map(toLower))
 
       if (changedParams) {
         setSearchParams(
@@ -226,12 +296,15 @@ const SearchPage = () => {
             doctype: parsedDoctypeArr,
             operator: parsedOperator,
             region: parsedRegionArr,
+            terms: parsedTermsArr,
           },
           { replaceParams: true }
         )
 
         return
       }
+
+      // TODO: combine terms with parsedQArr
 
       Promise.all([
         Get('/search', {
@@ -240,6 +313,7 @@ const SearchPage = () => {
           operator: parsedOperator,
           region: parsedRegionArr,
           city: parsedCityArr,
+          terms: parsedTermsArr,
         }),
         // TODO: Check why count route does not take more params?
         Get('/count', { q: parsedQArr, operator: parsedOperator }),
@@ -259,7 +333,7 @@ const SearchPage = () => {
       console.log('Query parsing error', error)
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [qStr, cityStr, doctypeStr, operator, regionStr])
+  }, [qStr, cityStr, doctypeStr, operator, regionStr, termsStr])
 
   const handleRegionFilter = (e) => {
     const regionCode = e.target.name
@@ -292,6 +366,23 @@ const SearchPage = () => {
     if (cityArrLower.includes(cleanedCityInputLower)) return
 
     setSearchParams({ city: [...cityArr, cleanedCityInput] })
+  }
+
+  const handleTermsFilter = (key) => {
+    const termsArr = castArray(terms)
+    const termsArrLower = toLower(termsArr)
+
+    if (termsArrLower.includes(key)) {
+      const index = termsArrLower.indexOf(key)
+      setSearchParams({
+        terms: without(termsArr, termsArr[index]),
+      })
+      return
+    }
+
+    setSearchParams({
+      terms: [...termsArr, key],
+    })
   }
 
   const handleRemoveCity = (cityToRemove) => {
@@ -409,7 +500,7 @@ const SearchPage = () => {
                       </label>
                     </div>
                   </form>
-                  <form>
+                  <form className="mb-4">
                     <hr />
                     {regions.map(({ name, code }) => {
                       const inputId = `region-checkbox-${kebabCase(name)}`
@@ -488,13 +579,12 @@ const SearchPage = () => {
                     </div>
                   </form>
                   <hr />
-                  <p className="text-secondary">More filters coming soon!</p>
                 </div>
               </div>
-              {/* <div className="row mt-4">
-                  <div className="col">
-                    <h4>Terms</h4>
-                    <div className="mt-3" id="FFBC">
+              <div className="row">
+                <div className="col mb-3">
+                  <h5>Terms</h5>
+                  {/*  <div className="mt-3" id="FFBC">
                       <strong>
                         <GoTriangleDown />
                         {"   "}FFBC
@@ -521,73 +611,21 @@ const SearchPage = () => {
                           Black-Serving
                         </label>
                       </div>
-                    </div>
-                    <div className="mt-3" id="EFC">
-                      <strong>
-                        <GoTriangleDown />
-                        {"   "}EFC
-                      </strong>
-                      <div className="form-check mt-1">
-                        <input
-                          className="form-check-input"
-                          type="checkbox"
-                          value=""
-                          id="defaultCheck1"
-                        />
-                        <label className="form-check-label" for="defaultCheck1">
-                          Sustainability
-                        </label>
-                      </div>
-                      <div className="form-check">
-                        <input
-                          className="form-check-input"
-                          type="checkbox"
-                          value=""
-                          id="defaultCheck2"
-                        />
-                        <label className="form-check-label" for="defaultCheck2">
-                          Climate Change
-                        </label>
-                      </div>
-                      <div className="form-check">
-                        <input
-                          className="form-check-input"
-                          type="checkbox"
-                          value=""
-                          id="defaultCheck2"
-                        />
-                        <label className="form-check-label" for="defaultCheck2">
-                          Climate Education
-                        </label>
-                      </div>
-                      <div className="form-check">
-                        <input
-                          className="form-check-input"
-                          type="checkbox"
-                          value=""
-                          id="defaultCheck2"
-                        />
-                        <label className="form-check-label" for="defaultCheck2">
-                          Water & Oceans
-                        </label>
-                      </div>
-                      <div className="form-check">
-                        <input
-                          className="form-check-input"
-                          type="checkbox"
-                          value=""
-                          id="defaultCheck2"
-                        />
-                        <label className="form-check-label" for="defaultCheck2">
-                          Renewable Energy
-                        </label>
-                      </div>
-                    </div>
-                    <div className="p-2">
-                      <button className="btn btn-primary">Update</button>
-                    </div>
-                  </div>
-                </div> */}
+                        </div> */}
+                  {Object.entries(sidebarTermsData).map(
+                    ([category, { display, terms: termsDisplay }]) => (
+                      <SidebarTerms
+                        key={category}
+                        onChangeHandler={handleTermsFilter}
+                        termsUsed={castArray(terms)}
+                        termsDisplay={termsDisplay}
+                        category={category}
+                        categoryDisplay={display}
+                      />
+                    )
+                  )}
+                </div>
+              </div>
             </div>
           </div>
 
