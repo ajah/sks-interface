@@ -1,5 +1,5 @@
 import axios from 'axios'
-import { keyBy, omit } from 'lodash'
+import { castArray, keyBy, omit } from 'lodash'
 
 import { ENTITY, ORGANIZATION, regions } from 'constants'
 import { getQueryString } from 'utils/query'
@@ -32,15 +32,13 @@ api.interceptors.request.use(
 
 const interceptGetQueryParamsForApi = (params) => {
   const doctypeParam = params?.doctype
+  console.log('doctypeParam:', doctypeParam)
+
   if (doctypeParam) {
     // Backend uses 'entity' keyword instead of 'organization
-    params.doctype = doctypeParam.map((type) => (type === ORGANIZATION ? ENTITY : type))
-  }
-
-  const cityParam = params?.city
-  if (cityParam) {
-    // Backend uses 'municipality' property instead of 'city'
-    params = { ...omit(params, 'city'), municipality: cityParam }
+    params.doctype = castArray(doctypeParam).map((type) =>
+      type === ORGANIZATION ? ENTITY : type
+    )
   }
 
   const regionParam = params.region
