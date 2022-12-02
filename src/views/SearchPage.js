@@ -262,9 +262,9 @@ const SearchPage = () => {
 
       // Check 'region'
       const regionArr = regionStr ? regionStr.split(',') : []
-      const parsedRegionArr = uniq(regionArr).filter((regionCode) =>
-        regions.some(({ code }) => code === regionCode)
-      )
+      const parsedRegionArr = uniq(regionArr)
+        .map(toLower)
+        .filter((regionCode) => regions.some(({ codes }) => codes.includes(regionCode)))
 
       // Check 'terms' that can be selected in sidebar
       const termsArr = termsStr ? termsStr.split(',') : []
@@ -305,18 +305,19 @@ const SearchPage = () => {
       }
 
       // TODO: combine terms with parsedQArr
+      const finalParams = {
+        q: parsedQArr,
+        doctype: parsedDoctypeArr,
+        operator: parsedOperator,
+        region: parsedRegionArr,
+        city: parsedCityArr,
+        terms: parsedTermsArr,
+      }
 
       Promise.all([
-        Get('/search', {
-          q: parsedQArr,
-          doctype: parsedDoctypeArr,
-          operator: parsedOperator,
-          region: parsedRegionArr,
-          city: parsedCityArr,
-          terms: parsedTermsArr,
-        }),
+        Get('/search', finalParams),
         // TODO: Check why count route does not take more params?
-        Get('/count', { q: parsedQArr, operator: parsedOperator }),
+        Get('/count', finalParams),
       ]).then(
         ([search, count]) =>
           setResultsState((prevState) => ({
@@ -502,11 +503,12 @@ const SearchPage = () => {
                   </form>
                   <form className="mb-4">
                     <hr />
-                    {regions.map(({ name, code }) => {
+                    {regions.map(({ name, codes }) => {
+                      const code = codes[0]
                       const inputId = `region-checkbox-${kebabCase(name)}`
-                      const isChecked = Array.isArray(region)
-                        ? region.includes(code)
-                        : region === code
+                      const isChecked = codes.some((aCode) =>
+                        castArray(region).includes(aCode)
+                      )
 
                       return (
                         <div className="form-check" key={code}>

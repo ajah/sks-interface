@@ -1,5 +1,5 @@
 import axios from 'axios'
-import { keyBy, omit } from 'lodash'
+import { castArray, keyBy, toLower } from 'lodash'
 
 import { ENTITY, ORGANIZATION, regions } from 'constants'
 import { getQueryString } from 'utils/query'
@@ -9,7 +9,7 @@ const api = axios.create({
   timeout: 90000,
 })
 
-const regionsCodeToNameMap = keyBy(regions, 'code')
+const regionsCodeToNameMap = keyBy(regions, 'codes.0')
 
 api.interceptors.request.use(
   (config) => {
@@ -32,20 +32,22 @@ api.interceptors.request.use(
 
 const interceptGetQueryParamsForApi = (params) => {
   const doctypeParam = params?.doctype
+  console.log('doctypeParam:', doctypeParam)
+
   if (doctypeParam) {
     // Backend uses 'entity' keyword instead of 'organization
-    params.doctype = doctypeParam.map((type) => (type === ORGANIZATION ? ENTITY : type))
-  }
-
-  const cityParam = params?.city
-  if (cityParam) {
-    // Backend uses 'municipality' property instead of 'city'
-    params = { ...omit(params, 'city'), municipality: cityParam }
+    params.doctype = castArray(doctypeParam).map((type) =>
+      type === ORGANIZATION ? ENTITY : type
+    )
   }
 
   const regionParam = params.region
   if (regionParam) {
-    const parsedRegionForApi = regionParam.map((code) => regionsCodeToNameMap[code].name)
+    const lowerRegionParam = castArray(regionParam).map(toLower)
+    const parsedRegionForApi = regions
+      .filter(({ codes }) => codes.some((code) => lowerRegionParam.includes(code)))
+      .map(({ codes }) => regionsCodeToNameMap[codes[0]].name)
+
     params.region = parsedRegionForApi
   }
 
