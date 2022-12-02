@@ -1,5 +1,5 @@
 import axios from 'axios'
-import { castArray, keyBy, omit } from 'lodash'
+import { castArray, keyBy, toLower } from 'lodash'
 
 import { ENTITY, ORGANIZATION, regions } from 'constants'
 import { getQueryString } from 'utils/query'
@@ -9,7 +9,7 @@ const api = axios.create({
   timeout: 90000,
 })
 
-const regionsCodeToNameMap = keyBy(regions, 'code')
+const regionsCodeToNameMap = keyBy(regions, 'codes.0')
 
 api.interceptors.request.use(
   (config) => {
@@ -43,7 +43,11 @@ const interceptGetQueryParamsForApi = (params) => {
 
   const regionParam = params.region
   if (regionParam) {
-    const parsedRegionForApi = regionParam.map((code) => regionsCodeToNameMap[code].name)
+    const lowerRegionParam = castArray(regionParam).map(toLower)
+    const parsedRegionForApi = regions
+      .filter(({ codes }) => codes.some((code) => lowerRegionParam.includes(code)))
+      .map(({ codes }) => regionsCodeToNameMap[codes[0]].name)
+
     params.region = parsedRegionForApi
   }
 

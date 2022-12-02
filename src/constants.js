@@ -14,19 +14,19 @@ export const allowedDoctypes = [ACTIVITY, ORGANIZATION]
 export const defaultDoctype = [ACTIVITY, ORGANIZATION]
 
 export const regions = [
-  { name: 'Alberta', code: 'alberta' },
-  { name: 'British Columbia', code: 'british columbia' },
-  { name: 'Manitoba', code: 'manitoba' },
-  { name: 'New Brunswick', code: 'new brunswick' },
-  { name: 'Newfoundland and Labrador', code: 'newfoundland and labrador' },
-  { name: 'Northwest Territories', code: 'northwest territories' },
-  { name: 'Nova Scotia', code: 'nova scotia' },
-  { name: 'Nunavut', code: 'nunavut' },
-  { name: 'Ontario', code: 'ontario' },
-  { name: 'Prince Edward Island', code: 'prince edward island' },
-  { name: 'Quebec', code: 'quebec' },
-  { name: 'Saskatchewan', code: 'saskatchewan' },
-  { name: 'Yukon', code: 'yukon' },
+  { name: 'Alberta', codes: ['alberta', 'ab'] },
+  { name: 'British Columbia', codes: ['bc', 'british columbia'] },
+  { name: 'Manitoba', codes: ['mb', 'manitoba'] },
+  { name: 'New Brunswick', codes: ['nb', 'new brunswick'] },
+  { name: 'Newfoundland and Labrador', codes: ['nl', 'newfoundland and labrador'] },
+  { name: 'Northwest Territories', codes: ['nt', 'northwest territories'] },
+  { name: 'Nova Scotia', codes: ['ns', 'nova scotia'] },
+  { name: 'Nunavut', codes: ['nu', 'nunavut'] },
+  { name: 'Ontario', codes: ['on', 'ontario'] },
+  { name: 'Prince Edward Island', codes: ['pe', 'prince edward island'] },
+  { name: 'Quebec', codes: ['qc', 'quebec'] },
+  { name: 'Saskatchewan', codes: ['sk', 'saskatchewan'] },
+  { name: 'Yukon', codes: ['yk', 'yukon'] },
 ]
 
 export const sidebarTermsData = {
