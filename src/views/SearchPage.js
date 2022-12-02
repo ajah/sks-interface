@@ -119,20 +119,6 @@ const TableRows = ({ results }) => {
   })
 }
 
-const initialResultsState = {
-  // TODO: Review state vars below and see which are unnecessry
-  total: '',
-  results: [],
-  actTotal: '',
-  entTotal: '',
-  incActivities: true,
-  incOrganizations: true,
-  globalQuery: '',
-  city: '',
-  downloadData: '',
-  downloadLink: '',
-}
-
 const SidebarTerms = ({
   category,
   categoryDisplay,
@@ -145,16 +131,9 @@ const SidebarTerms = ({
   return (
     <div className="mt-3" key={category}>
       <strong>
-        {termsOpen && (
-          <button className="sidebar-btn" onClick={() => setTermsOpen(false)}>
-            <GoTriangleDown /> {categoryDisplay}
-          </button>
-        )}
-        {!termsOpen && (
-          <button className="sidebar-btn" onClick={() => setTermsOpen(true)}>
-            <GoTriangleRight /> {categoryDisplay}
-          </button>
-        )}
+        <button className="sidebar-btn" onClick={() => setTermsOpen(!termsOpen)}>
+          {termsOpen ? <GoTriangleDown /> : <GoTriangleRight />} {categoryDisplay}
+        </button>
       </strong>
       {termsOpen &&
         termsDisplay.map((term) => {
@@ -177,6 +156,20 @@ const SidebarTerms = ({
         })}
     </div>
   )
+}
+
+const initialResultsState = {
+  // TODO: Review state vars below and see which are unnecessry
+  total: '',
+  results: [],
+  actTotal: '',
+  entTotal: '',
+  incActivities: true,
+  incOrganizations: true,
+  globalQuery: '',
+  city: '',
+  downloadData: '',
+  downloadLink: '',
 }
 
 const SearchPage = () => {
@@ -371,7 +364,7 @@ const SearchPage = () => {
 
   const handleTermsFilter = (key) => {
     const termsArr = castArray(terms)
-    const termsArrLower = toLower(termsArr)
+    const termsArrLower = termsArr.map(toLower)
 
     if (termsArrLower.includes(key)) {
       const index = termsArrLower.indexOf(key)

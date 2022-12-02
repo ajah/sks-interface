@@ -32,7 +32,6 @@ api.interceptors.request.use(
 
 const interceptGetQueryParamsForApi = (params) => {
   const doctypeParam = params?.doctype
-  console.log('doctypeParam:', doctypeParam)
 
   if (doctypeParam) {
     // Backend uses 'entity' keyword instead of 'organization
