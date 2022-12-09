@@ -1,12 +1,12 @@
 import { useContext, useState } from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faSearch, faTimesCircle } from '@fortawesome/free-solid-svg-icons'
-import { castArray, without } from 'lodash'
+import { castArray, toLower, without } from 'lodash'
 import { useLocation } from 'react-router-dom'
 
 import { SearchContext } from 'context/search-context'
 
-import { AND, OR, DEFAULT_OPERATOR } from 'constants'
+import { AND, OR, DEFAULT_OPERATOR, sidebarTermsData } from 'constants'
 import { useSearchParams } from 'hooks'
 import { maxQueryTermLength, maxQueryTerms } from 'utils/query'
 
@@ -19,8 +19,9 @@ const SearchBar = () => {
   const [searchParams, setSearchParams] = useSearchParams()
 
   const isOnSearchPage = pathname === '/search'
-  const { q = [] } = searchParams
+  const { q = [], terms = [] } = searchParams
   const qArr = castArray(q).slice(0, maxQueryTerms)
+  const termsArr = castArray(terms)
 
   const [existingQueries, setExistingQueries] = useState(qArr)
   const [inputQuery, setInputQuery] = useState('')
@@ -66,8 +67,8 @@ const SearchBar = () => {
     )
   }
 
-  const removeQueryHandler = (key) => {
-    const newExistingQueries = without(existingQueries, existingQueries[key])
+  const removeQueryHandler = (index) => {
+    const newExistingQueries = without(existingQueries, existingQueries[index])
     setExistingQueries(newExistingQueries)
     setSearchParams(
       { q: newExistingQueries, operator: searchContext.searchOperator },
@@ -75,9 +76,59 @@ const SearchBar = () => {
     )
   }
 
+  const removeFilterTermHandler = (index) => {
+    const newExistingTerms = without(termsArr, termsArr[index])
+    setSearchParams({ terms: newExistingTerms }, { requestedPathname: '/search' })
+  }
+
+  const getTermIndex = (category, term) =>
+    sidebarTermsData[category].terms.map(toLower).indexOf(term)
+
+  const parseFilterTerms = (termKeys) =>
+    termKeys
+      .filter((termKey) => {
+        try {
+          const [category, term] = termKey.split('_').map(toLower)
+          if (!sidebarTermsData[category]) return false
+
+          const existingTermIndex = getTermIndex(category, term)
+
+          if (existingTermIndex === -1) return false
+
+          return true
+        } catch {
+          return false
+        }
+      })
+      .map((termKey) => {
+        const [category, term] = termKey.split('_').map(toLower)
+        const existingTermIndex = getTermIndex(category, term)
+        return sidebarTermsData[category].terms[existingTermIndex]
+      })
+
   return (
     <div className="container pb-3 pt-1 mt-1">
       <form>
+        <div className="row mb-1">
+          <div className="col-2"></div>
+          <div className="col-5 inter-bar">
+            {parseFilterTerms(termsArr).map((filterTerm, i) => (
+              <div
+                className="search-filter-term border col-2 ps-3 rounded-pill bg-dark"
+                key={filterTerm}
+              >
+                {filterTerm}
+                <div className="ms-2 me-1" size="sm">
+                  <FontAwesomeIcon
+                    className="remove-query"
+                    onClick={() => removeFilterTermHandler(i)}
+                    icon={faTimesCircle}
+                  />
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
         <div className="row mb-1">
           <div className="col-2"></div>
           <div className="col-5 inter-bar">

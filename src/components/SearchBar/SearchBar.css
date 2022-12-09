@@ -39,6 +39,14 @@
   margin-right: 0.3em;
 }
 
+.search-filter-term {
+  display: flex;
+  max-width: 10em;
+  min-width: max-content;
+  margin-right: 0.3em;
+  color: #fff;
+}
+
 .remove-query {
   cursor: pointer;
   margin-left: auto;
