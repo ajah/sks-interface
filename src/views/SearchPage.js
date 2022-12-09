@@ -119,7 +119,7 @@ const TableRows = ({ results }) => {
   })
 }
 
-const SidebarTerms = ({
+const SidebarFilterTerms = ({
   category,
   categoryDisplay,
   termsUsed,
@@ -609,7 +609,7 @@ const SearchPage = () => {
                         </div> */}
                   {Object.entries(sidebarTermsData).map(
                     ([category, { display, terms: termsDisplay }]) => (
-                      <SidebarTerms
+                      <SidebarFilterTerms
                         key={category}
                         onChangeHandler={handleTermsFilter}
                         termsUsed={castArray(terms)}
