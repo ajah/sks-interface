@@ -96,7 +96,6 @@ const SearchPage = () => {
       }
 
       // Check 'q'
-      if (!qStr) return setResultsState(initialResultsState)
       const qArr = castArray(q)
 
       // Each query term should be limited to maxQueryTermLength chars
@@ -148,7 +147,10 @@ const SearchPage = () => {
       const termsArr = termsStr ? termsStr.split(',') : []
 
       const parsedTermsArr = uniq(termsArr).filter((catAndTerm) => {
-        const [catLower, termLower] = catAndTerm.split('_').map(toLower)
+        const [catLower, termLower] = catAndTerm
+          .split('_')
+          .map(toLower)
+          .map((s) => s.trim())
 
         if (!catLower || !termLower) return false
 
@@ -157,6 +159,14 @@ const SearchPage = () => {
 
         return true
       })
+
+      const incompleteParams =
+        !parsedQArr.length &&
+        !parsedCityArr.length &&
+        !parsedTermsArr.length &&
+        !parsedRegionArr.length
+
+      if (incompleteParams) return setResultsState(initialResultsState)
 
       const changedParams =
         qStr.length !== parsedQArr.toString().length ||
@@ -523,6 +533,7 @@ const SearchPage = () => {
                         doctype,
                         operator,
                         region,
+                        terms,
                       })}
                     >
                       Download Results
