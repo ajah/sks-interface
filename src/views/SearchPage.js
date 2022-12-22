@@ -9,11 +9,13 @@ import {
   without,
   uniq,
 } from 'lodash'
-import { Link, useLocation } from 'react-router-dom'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPlus, faTimesCircle } from '@fortawesome/free-solid-svg-icons'
-import { GoTriangleDown, GoTriangleRight } from 'react-icons/go'
+
 import { SearchBar } from 'components/SearchBar'
+import { SidebarFilterTerms } from 'components/SidebarFilterTerms'
+import { TableRows } from 'components/TableRows'
+
 import { SearchContext } from 'context/search-context'
 import { useSearchParams } from 'hooks'
 import { createDownloadLink, Get } from 'services/api'
@@ -40,123 +42,6 @@ import {
 // TODO: move styles.css import into SearchPage.css
 import 'assets/css/styles.css'
 import './SearchPage.css'
-
-const Badge = ({ type }) => {
-  if (type === ACTIVITY) {
-    return <span className="badge badge-primary">Activity</span>
-  }
-
-  if (type === ORGANIZATION) {
-    return <span className="badge bg-primary">Organization</span>
-  }
-
-  return null
-}
-
-const Row = (props) => (
-  <tr>
-    <td>
-      <div>
-        <Link
-          to={props.url}
-          state={{ from: `${props.location.pathname}${props.location.search}` }}
-        >
-          {props.name}
-        </Link>
-      </div>
-    </td>
-    <td>
-      <div>
-        {props.city}
-        {props.region ? `, ${props.region}` : ''}
-      </div>
-    </td>
-    <td>
-      <div>
-        <Badge type={props.type} />
-      </div>
-    </td>
-  </tr>
-)
-
-const TableRows = ({ results }) => {
-  const location = useLocation()
-
-  return results.map(({ _id, _index, _source }) => {
-    let name
-    let city
-    let region
-    let type
-    let url
-
-    if (_index === 'new-activities') {
-      name = _source.grant_title
-      city = _source.grant_municipality
-      region = _source.grant_region
-      type = ACTIVITY
-      url = `/activities/${_source.act_sks_id}`
-    }
-
-    if (_index === 'entities') {
-      name = _source.name
-      city = _source.location_municipality
-      region = _source.location_region
-      type = ORGANIZATION
-      url = `/organizations/${_source.ent_sks_id}`
-    }
-
-    return (
-      <Row
-        key={_id}
-        location={location}
-        name={name}
-        city={city}
-        region={region}
-        type={type}
-        url={url}
-      />
-    )
-  })
-}
-
-const SidebarFilterTerms = ({
-  category,
-  categoryDisplay,
-  termsUsed,
-  termsDisplay,
-  onChangeHandler,
-}) => {
-  const [termsOpen, setTermsOpen] = useState(true)
-
-  return (
-    <div className="mt-3" key={category}>
-      <strong>
-        <button className="sidebar-btn" onClick={() => setTermsOpen(!termsOpen)}>
-          {termsOpen ? <GoTriangleDown /> : <GoTriangleRight />} {categoryDisplay}
-        </button>
-      </strong>
-      {termsOpen &&
-        termsDisplay.map((term) => {
-          const key = `${category}_${toLower(term)}`
-
-          return (
-            <div className="form-check mt-1" key={key}>
-              <input
-                className="form-check-input"
-                type="checkbox"
-                onChange={() => onChangeHandler(key)}
-                checked={termsUsed.includes(key)}
-                id={kebabCase(key)}
-              />
-              <label className="form-check-label" htmlFor={kebabCase(key)}>
-                {term}
-              </label>
-            </div>
-          )
-        })}
-    </div>
-  )
-}
 
 const initialResultsState = {
   // TODO: Review state vars below and see which are unnecessry
@@ -390,36 +275,6 @@ const SearchPage = () => {
 
     handleCityFilter(e)
   }
-
-  // const handleButton = (e) => {
-  //   e.preventDefault()
-
-  //   let filter = []
-  // if (resultsState.incActivities) {
-  //   filter.push(ACTIVITY)
-  // } else if (resultsState.incOrganizations) {
-  //   filter.push('entity')
-  // } else if (!resultsState.incActivities & !resultsState.incOrganizations) {
-  //   filter.push('activity,entity') //.push("entity"); //
-  // } else if (resultsState.incActivities & resultsState.incOrganizations) {
-  //   filter.push('activity,entity') //.push("entity"); //
-  // }
-
-  /*   const queryParams = queryString.parse(window.location.search);
-      // const newQueries = { ...queryParams, filter: filter.toString() };
-      const orig_q = queryParams["q"];
-  
-      const { history } = this.props;
-  
-      if (filter) {
-        history.push(`/search?q=${orig_q}&filter=${filter.toString()}`);
-        window.location.reload(false);
-        setFilter(filter.toString)
-      }
-  
-      history.push(`/search?q=${encodeURI(orig_q)}&filter=${filter.toString()}`);
-      window.location.reload(false);*/
-  // }
 
   // TODO: Move city filter into own component along with line below:
   const cityInputDisabled =
