@@ -202,23 +202,23 @@ const SearchPage = () => {
         terms: parsedTermsArr,
       }
 
+      searchContext.setIsLoading(true)
       Promise.all([
         Get('/search', finalParams),
         // TODO: Check why count route does not take more params?
         Get('/count', finalParams),
-      ]).then(
-        ([search, count]) =>
-          setResultsState((prevState) => ({
-            ...prevState,
-            results: search.hits,
-            total: count['new-activities,entities'],
-            actTotal: count['new-activities'],
-            entTotal: count['entities'],
-          }))
-
-        // searchContext.isLoadingHandler(false)
-      )
+      ]).then(([search, count]) => {
+        setResultsState((prevState) => ({
+          ...prevState,
+          results: search.hits,
+          total: count['new-activities,entities'],
+          actTotal: count['new-activities'],
+          entTotal: count['entities'],
+        }))
+        searchContext.setIsLoading(false)
+      })
     } catch (error) {
+      searchContext.setIsLoading(false)
       console.log('Query parsing error', error)
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -543,20 +543,37 @@ const SearchPage = () => {
               </div>
               <div className="row">
                 <div className="col">
-                  <table className="table table-striped">
-                    <thead className="thead-light">
-                      <tr>
-                        <th style={{ width: '55%' }} scope="col">
-                          Name
-                        </th>
-                        <th scope="col">Location</th>
-                        <th scope="col">Record Type</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <TableRows results={resultsState.results} />
-                    </tbody>
-                  </table>
+                  {searchContext.isLoading && (
+                    <div
+                      className="d-flex align-items-center justify-content-center"
+                      style={{ minHeight: '35vh' }}
+                    >
+                      <div
+                        className="spinner-border"
+                        style={{ height: '4rem', width: '4rem' }}
+                        role="status"
+                      >
+                        <span className="sr-only">Loading...</span>
+                      </div>
+                    </div>
+                  )}
+
+                  {!searchContext.isLoading && (
+                    <table className="table table-striped">
+                      <thead className="thead-light">
+                        <tr>
+                          <th style={{ width: '55%' }} scope="col">
+                            Name
+                          </th>
+                          <th scope="col">Location</th>
+                          <th scope="col">Record Type</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <TableRows results={resultsState.results} />
+                      </tbody>
+                    </table>
+                  )}
                 </div>
               </div>
             </div>
