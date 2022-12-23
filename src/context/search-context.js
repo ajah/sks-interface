@@ -4,7 +4,7 @@ import { AND, allowedOperators } from 'constants'
 
 export const SearchContext = createContext({
   isLoading: false,
-  isLoadingHandler: () => {},
+  setIsLoading: () => {},
   searchOperator: AND,
   setOperatorHandler: () => {},
 })
@@ -12,10 +12,6 @@ export const SearchContext = createContext({
 const SearchContextProvider = ({ children }) => {
   const [isLoading, setIsLoading] = useState(false)
   const [searchOperator, setSearchOperator] = useState(AND)
-
-  const isLoadingHandler = (newIsLoading) => {
-    setIsLoading(newIsLoading)
-  }
 
   const setOperatorHandler = (newOperator) => {
     if (!allowedOperators.includes(newOperator)) return
@@ -26,7 +22,7 @@ const SearchContextProvider = ({ children }) => {
   const contextValue = useMemo(
     () => ({
       isLoading,
-      isLoadingHandler,
+      setIsLoading,
       searchOperator,
       setOperatorHandler,
     }),
